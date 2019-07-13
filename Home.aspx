@@ -155,6 +155,5 @@
         </div>
     </article>
     <!--End of Blog section-->
-    <asp:Label runat="server" />
 </asp:Content>
 
