@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "Sass/MainStyleSheet.css",
+    "inputFile": "Sass/MainStyleSheet.scss"
+  },
+  {
+    "outputFile": "Content/MainStyleSheet.css",
+    "inputFile": "Content/MainStyleSheet.scss"
+  },
+  {
+    "outputFile": "Content/Site.css",
+    "inputFile": "Content/Site.scss"
+  }
+]
