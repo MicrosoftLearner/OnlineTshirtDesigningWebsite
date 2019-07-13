@@ -22,6 +22,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.1/flexslider.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.1/flexslider.min.css.map" rel="stylesheet" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="Content/font-awesome.css">
 
 </head>
 <body>
