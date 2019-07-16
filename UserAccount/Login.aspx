@@ -107,6 +107,9 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <asp:TextBox ID="TextBoxUserSignUpEmail" Text="Email" TextMode="Email" CssClass=" form-control" runat="server"></asp:TextBox>
+
+                                                   <%--Validation--%>
+                                                    <<asp:RequiredFieldValidator ID="ValidatorEmailSignUp" runat="server" Text="Invalid Email Id"  ControlToValidate="TextBoxUserSignUpEmail"></asp:RequiredFieldValidator>
                                                 </div>
                                                 <div class="form-group">
                                                     <asp:TextBox ID="TextBoxUserSignUpMobNo" Text="Mob No" TextMode="Number" CssClass=" form-control" runat="server"></asp:TextBox>
@@ -121,7 +124,7 @@
                                                     <!--<span ng-show='registerForm.formData.confirm.$error.hsPswdMatch'>Passwords don't match</span>-->
                                                 </div>
                                                 <div class="marginTop">
-                                                    <asp:Button ID="ButtonUserSignUp" CssClass="btn btn-login btn-block" runat="server" Text="Sign Up" />
+                                                    <asp:Button ID="ButtonUserSignUp" CssClass="btn btn-login btn-block" runat="server" Text="Sign Up" OnClick="ButtonUserSignUp_Click" />
 
                                                 </div>
                                             </div>
@@ -182,5 +185,9 @@
             </div>
         </asp:View>
     </asp:MultiView>
+
+    <div>
+        <asp:Label ID="LblError" runat="server"></asp:Label>
+    </div>
 </asp:Content>
 

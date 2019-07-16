@@ -22,7 +22,7 @@ public enum SelectionChoice
 
     public SelectionChoice objSelection;
 
-    private int id;
+    protected int MyId { get; set; }
 
     private int sessionId;
 
@@ -108,7 +108,7 @@ public enum SelectionChoice
                             {
                                 if ((EmailId == reader["CustEmailAddr"].ToString()) && (GetPwd == reader["CustPwd"].ToString()))
                                 {
-                                    id = Convert.ToInt32(reader["CustId"].ToString());
+                                    MyId = Convert.ToInt32(reader["CustId"].ToString());
                                 }
 
                             }
@@ -120,7 +120,7 @@ public enum SelectionChoice
                             {
                                 if ((EmailId == reader["AdminEmailAddr"].ToString()) && (GetPwd == reader["AdminPwd"].ToString()))
                                 {
-                                    id = Convert.ToInt32(reader["AdminId"].ToString()); ;
+                                    MyId = Convert.ToInt32(reader["AdminId"].ToString()); ;
                                 }
 
                             }
@@ -139,7 +139,7 @@ public enum SelectionChoice
                 errorLbl.Text = error.ToString();
             }
 
-            return id;
+            return MyId;
         }
     }
 
