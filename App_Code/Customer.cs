@@ -155,6 +155,14 @@ public class Customer : Shopping
       
     private void SendSignUpMail()
     {
-       
+        CustomerMail cs = new CustomerMail();
+    }
+
+    public string CustFullName
+    {
+       get
+        {
+            return CustFirstName + " " + CustFirstName;
+        }
     }
 }
