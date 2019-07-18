@@ -16,13 +16,13 @@ public enum SelectionChoice
     Admin
 }
 
- public class Shopping
+public class Shopping
 {
     protected string connectionString = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["OnlineTshirtDesigning"].ConnectionString;
 
     public SelectionChoice objSelection;
 
-    protected int MyId { get; set; }
+    public int MyId { get; set; }
 
     private int sessionId;
 
@@ -38,7 +38,9 @@ public enum SelectionChoice
 
     public string OrderTime { get; set; }
 
-    public const ushort productInialCountl = 1; // to set the oroduct intial count  
+    public const ushort productInialCountl = 1; // to set the oroduct intial count 
+
+    public HttpCookie cookie;
 
     // Member methods 
     public string GetPwd
@@ -57,10 +59,12 @@ public enum SelectionChoice
     {
         get
         {
-            string selectSqlQueryCust = "SELECT  CustId, CustEmail, CustPwd FROM customer";
+            cookie = System.Web.HttpContext.Current.Request.Cookies["CustInfo"];
+
+            string selectSqlQueryCust = "SELECT  CustId, CustEmailAddr, CustPwd FROM customer";
             selectSqlQueryCust += "WHERE CustEmailAddr = @CustEmailAddr";
 
-            string selectSqlQueryAdmin = "SELECT AdminId, AdminEmail, AdminPwd FROM Admin";
+            string selectSqlQueryAdmin = "SELECT AdminId, AdminEmailAddr, AdminPwd FROM Admin";
             selectSqlQueryAdmin += "WHERE AdminEmailAddr = @AdminEmailAddr";
 
             MySqlConnection connection = new MySqlConnection(connectionString);

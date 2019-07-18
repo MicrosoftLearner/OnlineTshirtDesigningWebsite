@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.UI.WebControls;
 using MySql.Data.MySqlClient;
 using System.Text;
+using System.Configuration;
+
 
 /// <summary>
 /// Summary description for Customer
@@ -34,7 +36,15 @@ public class Customer : Shopping
 
     public string CustComment { get; set; }
 
-    HttpCookie cookie = new HttpCookie("CustomerInfo");
+    public string CustFullName
+    {
+        get
+        {
+            return CustFirstName + " " + CustFirstName;
+        }
+    }
+
+    //HttpCookie cookie = new HttpCookie("CustomerInfo");
 
     public Customer()
     {
@@ -66,7 +76,7 @@ public class Customer : Shopping
 
         MySqlConnection connection = new MySqlConnection(connectionString);
 
-        MySqlCommand cmd = new MySqlCommand(selectSqlQuery , connection );
+        MySqlCommand cmd = new MySqlCommand(selectSqlQuery, connection);
 
         MySqlCommand cmdInsert = new MySqlCommand(insertSqlQuery, connection);
 
@@ -75,10 +85,9 @@ public class Customer : Shopping
         MySqlDataReader reader;
 
         // Add the parameters
-        cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
-
-
         cmdInsert.Parameters.AddWithValue("@CustId", MyId);
+
+        cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
 
         cmdInsert.Parameters.AddWithValue("@CustFirstName", CustFirstName);
 
@@ -86,12 +95,14 @@ public class Customer : Shopping
 
         cmdInsert.Parameters.AddWithValue("@CustPwd", GetPwd);
 
-        cmdInsert.Parameters.AddWithValue("@CustMobNo",CustMobNo );
+        cmdInsert.Parameters.AddWithValue("@CustMobNo", CustMobNo);
 
         cmdInsert.Parameters.AddWithValue("@CustEmailAddr", EmailId);
 
         //Will use Try & catch block to be suscessful connection
         int added = 0;
+
+
 
         try
         {
@@ -109,7 +120,7 @@ public class Customer : Shopping
                 {
                     //If exist 
 
-                    if ( EmailId == reader["CustEmailAddr"].ToString())
+                    if (EmailId == reader["CustEmailAddr"].ToString())
                     {
                         validatorEmail.Text = "Email Id is already exist";
                         validatorEmail.Text += "Click on forgot password";
@@ -120,8 +131,8 @@ public class Customer : Shopping
                     else
                     {
                         //If inserted successfully it returns 1
-                                             
-                       added =  cmdInsert.ExecuteNonQuery();
+
+                        added = cmdInsert.ExecuteNonQuery();
                     }
                 }
             }
@@ -135,12 +146,18 @@ public class Customer : Shopping
 
         if (added > 0)
         {
+            //Create cookie 
+            cookie = new HttpCookie("CustomerInfo");
+
             // Store CustId to cookie
             cookie["CustId"] = MyId.ToString();
             cookie.Expires = DateTime.Now.AddDays(2);
 
             //Add it to the current web response
             System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
+
+            //Navigate customer to home page 
+            System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
 
             //Mail info to client
             SendSignUpMail();
@@ -152,17 +169,103 @@ public class Customer : Shopping
      * to send the Customer info to the Class  member properties 
      * which then Only sets the values form customer Obj 
      */
-      
+
     private void SendSignUpMail()
     {
-        CustomerMail cs = new CustomerMail();
+        CustomerMail custMail = new CustomerMail();
+
+        //Set Email Sender's Email
+        custMail.EmailSender = ConfigurationManager.AppSettings["SenderEmail"];
+
+        //Set Email Sender's password
+        custMail.EmailSenderPwd = ConfigurationManager.AppSettings["SenderPwd"];
+
+        //Set Email Sender's Host
+        custMail.EmailSenderHost = ConfigurationManager.AppSettings["SmtpServerHost"];
+
+        //Set Email Sender's Port
+        custMail.EmailSenderPort = System.Convert.ToInt32(ConfigurationManager.AppSettings["SenderPortNo"]);
+
+        //Set Email Sender's Isssl
+        custMail.EmailIsSSL = System.Convert.ToBoolean(ConfigurationManager.AppSettings["IsSSL"]);
+
+        //will take .html Email Template 
+        custMail.EmailSenderFilePath = "WelcomeEmailer.html";
+
+        //will replace the [CustFullName] word from Template 
+        custMail.EmailContentText = custMail.EmailContentText.Replace("[CustFullName]", CustFullName);
+
+
+
     }
 
-    public string CustFullName
+
+    /* Note: If customer Signs up successfully 
+     * Retrive all customer data with associated customer Id  
+      i.e Troughout their name to what they ardered 
+     */
+    public void DisplayCustomerData()
     {
-       get
+        string selectSqlQueryCust = "SELECT  CustId, CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg, CustShippingAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode, CustComment FROM customer";
+        selectSqlQueryCust += "WHERE CustId = @CustId";
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        MySqlCommand cmd;
+
+        MySqlDataAdapter adaptor;
+
+        MySqlDataReader reader;
+
+        cmd = new MySqlCommand(selectSqlQueryCust, connection);
+
+        //Add the paramaters 
+        cmd.Parameters.AddWithValue("@CustId", MyId);
+
+        adaptor = new MySqlDataAdapter(cmd);
+
+        try
         {
-            return CustFirstName + " " + CustFirstName;
+            //To automatically dispose the connction Obj
+            using (connection)
+            {
+                // Open the database connection
+                connection.Open();
+                reader = cmd.ExecuteReader();
+
+                //Read the data from Customer table 
+                //and Set the Customer's Object fields  
+                while (reader.Read())
+                {
+                    MyId = Convert.ToInt32(reader["CustId"]);
+
+                    CustFirstName = reader["CustFirstName"].ToString();
+
+                    CustLastName = reader["CustLastName"].ToString();
+
+                    CustMobNo = Convert.ToInt32(reader["CustMobNo"]);
+
+                    EmailId = reader["CustEmailAddr"].ToString();
+
+                    CustImg = reader["CustImg"].ToString();
+
+                    CustShippAddr = reader["CustShippingAddr"].ToString();
+
+                    CustShipCountry = reader["CustShipCountry"].ToString();
+
+                    CustShipState = reader["CustShipState"].ToString();
+
+                    CustShipPinCode = Convert.ToInt32(reader["CustShipPinCode"]);
+
+                    CustComment = reader["CustComment"].ToString();
+                }
+            }
+        }
+
+        catch (Exception error)
+        {
+            Label errorLbl = new Label();
+            errorLbl.Text = error.ToString();
         }
     }
 }
