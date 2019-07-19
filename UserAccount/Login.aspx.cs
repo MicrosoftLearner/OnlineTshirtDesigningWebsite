@@ -15,7 +15,9 @@ public partial class UserAccount_Login : System.Web.UI.Page
     }
     protected void ButtonLoginModal_Click(object sender, EventArgs e)
     {
-
+        cust = new Customer();
+        cust.objSelection = SelectionChoice.Customer;
+        cust.Login();
     }
 
     protected void ButtonUserSignUp_Click(object sender, EventArgs e)

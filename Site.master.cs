@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -73,9 +74,11 @@ public partial class SiteMaster : MasterPage
         }
     }
 
+    
+
     protected void Page_Load(object sender, EventArgs e)
     {
-       // Need to check cookie is present or not 
+       
     }
 
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)

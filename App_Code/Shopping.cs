@@ -40,6 +40,8 @@ public class Shopping
 
     public const ushort productInialCountl = 1; // to set the oroduct intial count 
 
+    public ushort SizeQuantity { get; set; }
+
     public HttpCookie cookie;
 
     // Member methods 
@@ -55,99 +57,121 @@ public class Shopping
         }
     }
 
-    public int Login
+    public void Login()
     {
-        get
+       
+        string selectSqlQueryCust = "SELECT  CustId, CustEmailAddr, CustPwd FROM customer";
+        selectSqlQueryCust += "WHERE CustEmailAddr = @CustEmailAddr";
+
+        string selectSqlQueryAdmin = "SELECT AdminId, AdminEmailAddr, AdminPwd FROM Admin";
+        selectSqlQueryAdmin += "WHERE AdminEmailAddr = @AdminEmailAddr";
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        MySqlCommand cmd;
+
+        MySqlDataAdapter adaptor;
+
+        MySqlDataReader reader;
+
+        if (objSelection == SelectionChoice.Customer)
         {
-            cookie = System.Web.HttpContext.Current.Request.Cookies["CustInfo"];
+            cmd = new MySqlCommand(selectSqlQueryCust, connection);
 
-            string selectSqlQueryCust = "SELECT  CustId, CustEmailAddr, CustPwd FROM customer";
-            selectSqlQueryCust += "WHERE CustEmailAddr = @CustEmailAddr";
+            //Add the paramaters 
+            cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
+            adaptor = new MySqlDataAdapter(cmd);
+        }
+        else
+        {
+            cmd = new MySqlCommand(selectSqlQueryAdmin, connection);
 
-            string selectSqlQueryAdmin = "SELECT AdminId, AdminEmailAddr, AdminPwd FROM Admin";
-            selectSqlQueryAdmin += "WHERE AdminEmailAddr = @AdminEmailAddr";
+            //Add the parameters
+            cmd.Parameters.AddWithValue("@AdminEmailAddr", EmailId);
 
-            MySqlConnection connection = new MySqlConnection(connectionString);
+            adaptor = new MySqlDataAdapter(cmd);
+        }
 
-            MySqlCommand cmd;
-
-            MySqlDataAdapter adaptor;
-
-            MySqlDataReader reader;
-
-            if (objSelection == SelectionChoice.Customer)
+        try
+        {
+            //To automatically dispose the connction Obj
+            using (connection)
             {
-                cmd = new MySqlCommand(selectSqlQueryCust, connection);
+                // Open the database connection
+                connection.Open();
+                reader = cmd.ExecuteReader();
 
-                //Add the paramaters 
-                cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
-                adaptor = new MySqlDataAdapter(cmd);
-            }
-            else
-            {
-                cmd = new MySqlCommand(selectSqlQueryAdmin, connection);
-
-                //Add the parameters
-                cmd.Parameters.AddWithValue("@AdminEmailAddr", EmailId);
-
-                adaptor = new MySqlDataAdapter(cmd);
-            }
-
-            try
-            {
-                //To automatically dispose the connction Obj
-                using (connection)
+                switch (objSelection)
                 {
-                    // Open the database connection
-                    connection.Open();
-                    reader = cmd.ExecuteReader();
+                    case SelectionChoice.Customer:
 
-                    switch (objSelection)
-                    {
-                        case SelectionChoice.Customer:
-
-                            //Read the data from Customer table 
-                            //If matches the given EmailId and password return true 
-                            while (reader.Read())
+                        //Read the data from Customer table 
+                        //If matches the given EmailId and password return true 
+                        while (reader.Read())
+                        {
+                            if ((EmailId == reader["CustEmailAddr"].ToString()) && (GetPwd == reader["CustPwd"].ToString()))
                             {
-                                if ((EmailId == reader["CustEmailAddr"].ToString()) && (GetPwd == reader["CustPwd"].ToString()))
-                                {
-                                    MyId = Convert.ToInt32(reader["CustId"].ToString());
-                                }
+                                MyId = Convert.ToInt32(reader["CustId"].ToString());
+
+                                // Create the cookie 
+                                cookie = new HttpCookie("CustomerInfo");
+
+                                //Set value to cookie 
+                                cookie["CustId"] = MyId.ToString();
+
+                                //Add cookie to web browser with validaty
+                                cookie.Expires = DateTime.Now.AddDays(2);
+                                System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
+
+                                //Navigate customer to home page 
+                                System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
 
                             }
-                            break;
-
-                        case SelectionChoice.Admin:
-
-                            while (reader.Read())
+                            else
                             {
-                                if ((EmailId == reader["AdminEmailAddr"].ToString()) && (GetPwd == reader["AdminPwd"].ToString()))
-                                {
-                                    MyId = Convert.ToInt32(reader["AdminId"].ToString()); ;
-                                }
+
+                                HttpContext.Current.Response.Write("<script>alert('user name & pwd dont match')</script>");
 
                             }
-                            break;
 
-                        default:
-                            break;
-                    }
+                        }
+                        break;
 
+                    case SelectionChoice.Admin:
+
+                        while (reader.Read())
+                        {
+                            if ((EmailId == reader["AdminEmailAddr"].ToString()) && (GetPwd == reader["AdminPwd"].ToString()))
+                            {
+                                MyId = Convert.ToInt32(reader["AdminId"].ToString()); ;
+                            }
+
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
 
             }
-            catch (Exception error)
-            {
-                Label errorLbl = new Label();
-                errorLbl.Text = error.ToString();
-            }
 
-            return MyId;
         }
+        catch (Exception error)
+        {
+            Label errorLbl = new Label();
+            errorLbl.Text = error.ToString();
+        }
+
     }
 
-    public ushort SizeQuantity { get; set; }
+    public virtual void Logout()
+    {
+        //Get saved cookie
+        cookie = System.Web.HttpContext.Current.Request.Cookies["CustomerInfo"];
+
+     
+
+    }
 
     public Shopping()
     {

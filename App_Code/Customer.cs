@@ -102,8 +102,6 @@ public class Customer : Shopping
         //Will use Try & catch block to be suscessful connection
         int added = 0;
 
-
-
         try
         {
             //To dispose the connection Obj successfully
