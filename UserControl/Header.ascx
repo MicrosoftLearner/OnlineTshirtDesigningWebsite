@@ -109,7 +109,8 @@
                             </li>
                             <!-- <li class="text-uppercase"><a href="">forgot password?</a> </li> -->
                             <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkLogout" NavigateUrl="#" runat="server">logout</asp:HyperLink>
+                                <asp:LinkButton ID="HyperLinkLogout" OnClick="HyperLinkLogout_Click" runat="server">logout</asp:LinkButton>
+                                <%--<asp:HyperLink ID="HyperLinkLogout" On NavigateUrl="#" runat="server">logout</asp:HyperLink>--%>
 
                             </li>
                              

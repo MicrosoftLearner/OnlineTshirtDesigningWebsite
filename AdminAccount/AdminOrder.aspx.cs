@@ -12,6 +12,7 @@ using System.Data.OleDb;
 
 public partial class Account_AdminOrder : System.Web.UI.Page
 {
+    Admin adm1;
     private string uploadDirectory;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -21,6 +22,9 @@ public partial class Account_AdminOrder : System.Web.UI.Page
         //this.TboxBannerName.Focus();
         //this.TboxBannerDesc.Focus();
         //this.TboxBannerName. += 
+        adm1 = new Admin();
+
+        LblAdminName.Text = "Hi " + adm1.Name;
 
         if (!this.IsPostBack)
         {
@@ -245,5 +249,10 @@ public partial class Account_AdminOrder : System.Web.UI.Page
 
         //Call UpdateBanenr to display data 
         UpdateHomeBanner();
+    }
+
+    protected void AdminLogout_Click(object sender, EventArgs e)
+    {
+        adm1.Logout();
     }
 }

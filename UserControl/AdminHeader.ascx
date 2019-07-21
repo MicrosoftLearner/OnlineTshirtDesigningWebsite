@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="AdminHeader.ascx.cs" Inherits="UserControl_AdminHeader" %>
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-inverse navbar-fixed-top ">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Admin Panel</a>
@@ -21,7 +21,8 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <%--<li><a ><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>--%>
-            <li><a href="../Account/AdminLogin.aspx"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
+            <li>
+                <a href="../Account/AdminLogin.aspx"><span class="glyphicon glyphicon-log-in"></span>Logout</a></li>
         </ul>
     </div>
 </nav>

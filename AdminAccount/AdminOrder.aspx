@@ -6,8 +6,8 @@
 
     <div class="container">
         <asp:Panel CssClass="well well-lg" runat="server">
-            <asp:Label Text="Welcome Siddhesh" runat="server" />
-            <asp:Button ID="AdminLogout" Text="Log out" CssClass="btn btn--brown pull-right" runat="server" />
+            <asp:Label ID="LblAdminName" runat="server" />
+            <asp:Button ID="AdminLogout" OnClick="AdminLogout_Click" Text="Log out" CssClass="btn btn--brown pull-right" runat="server" />
         </asp:Panel>
 
         <div class="row">

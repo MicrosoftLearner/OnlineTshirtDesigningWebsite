@@ -30,7 +30,7 @@ public class Shopping
 
     private string pwd;
 
-    public string Name { get; set; }
+    public string Name { get; protected set; }
 
     public double Price { get; set; }
 
@@ -57,14 +57,16 @@ public class Shopping
         }
     }
 
-    public void Login()
+    public bool Login()
     {
        
         string selectSqlQueryCust = "SELECT  CustId, CustEmailAddr, CustPwd FROM customer";
         selectSqlQueryCust += "WHERE CustEmailAddr = @CustEmailAddr";
 
-        string selectSqlQueryAdmin = "SELECT AdminId, AdminEmailAddr, AdminPwd FROM Admin";
+        string selectSqlQueryAdmin = "SELECT AdminId, AdminName,  AdminEmailAddr, AdminPwd FROM admin ";
         selectSqlQueryAdmin += "WHERE AdminEmailAddr = @AdminEmailAddr";
+
+        bool readerResult = false;
 
         MySqlConnection connection = new MySqlConnection(connectionString);
 
@@ -89,7 +91,7 @@ public class Shopping
             //Add the parameters
             cmd.Parameters.AddWithValue("@AdminEmailAddr", EmailId);
 
-            adaptor = new MySqlDataAdapter(cmd);
+          //  adaptor = new MySqlDataAdapter(cmd);
         }
 
         try
@@ -124,13 +126,8 @@ public class Shopping
                                 System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
 
                                 //Navigate customer to home page 
-                                System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
-
-                            }
-                            else
-                            {
-
-                                HttpContext.Current.Response.Write("<script>alert('user name & pwd dont match')</script>");
+                                //   System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
+                                readerResult = true;
 
                             }
 
@@ -141,9 +138,24 @@ public class Shopping
 
                         while (reader.Read())
                         {
-                            if ((EmailId == reader["AdminEmailAddr"].ToString()) && (GetPwd == reader["AdminPwd"].ToString()))
+                            if ( EmailId == reader["AdminEmailAddr"].ToString() && GetPwd == reader["AdminPwd"].ToString() )
                             {
-                                MyId = Convert.ToInt32(reader["AdminId"].ToString()); ;
+                                MyId = Convert.ToInt32(reader["AdminId"]);
+
+                                Name = reader["AdminName"].ToString();
+                                // Create the cookie 
+                                cookie = new HttpCookie("AdminInfo");
+
+                                //Set value to cookie 
+                                cookie["AdminId"] = MyId.ToString();
+
+                                //Add cookie to web browser with validaty
+                                cookie.Expires = DateTime.Now.AddDays(2);
+                                System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
+
+                                ////Navigate customer to home page 
+                                //System.Web.HttpContext.Current.Response.Redirect("AdminOrder.aspx");
+                                readerResult = true;
                             }
 
                         }
@@ -159,17 +171,27 @@ public class Shopping
         catch (Exception error)
         {
             Label errorLbl = new Label();
+            System.Diagnostics.Debug.WriteLine("Database Error Message", error);
             errorLbl.Text = error.ToString();
         }
-
+        return readerResult;
     }
 
-    public virtual void Logout()
+    //if it implements in Admin, needs to override it
+    //For other cookie 
+    virtual public void Logout()
     {
         //Get saved cookie
         cookie = System.Web.HttpContext.Current.Request.Cookies["CustomerInfo"];
 
-     
+        //Set cookie expire date 
+        cookie.Expires = DateTime.Now.AddDays(-1);
+
+        //Set cookie to the web 
+        System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
+
+        //Navigate customer to home page 
+        System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
 
     }
 

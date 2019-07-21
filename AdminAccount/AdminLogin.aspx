@@ -19,7 +19,7 @@
                             <asp:Label runat="server" AssociatedControlID="Email" CssClass="col-md-2 control-label">Email</asp:Label>
                             <div class="col-md-10">
                                 <asp:TextBox runat="server" ID="Email" CssClass="form-control" TextMode="Email" />
-                                <asp:RequiredFieldValidator runat="server" ControlToValidate="Email"
+                                <asp:RequiredFieldValidator ID="ValidEmail" runat="server" ControlToValidate="Email"
                                     CssClass="text-danger" ErrorMessage="The email field is required." />
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                             <asp:Label runat="server" AssociatedControlID="Password" CssClass="col-md-2 control-label">Password</asp:Label>
                             <div class="col-md-10">
                                 <asp:TextBox runat="server" ID="Password" TextMode="Password" CssClass="form-control" />
-                                <asp:RequiredFieldValidator runat="server" ControlToValidate="Password" CssClass="text-danger" ErrorMessage="The password field is required." />
+                                <asp:RequiredFieldValidator ID="ValidPwd" runat="server" ControlToValidate="Password" CssClass="text-danger" ErrorMessage="The password field is required." />
                             </div>
                         </div>
                         <div class="form-group">
@@ -40,7 +40,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
-                                <asp:Button runat="server" Text="Log in" CssClass="btn btn-default" />
+                                <asp:Button ID="BtnAdminLogin" UseSubmitBehavior="false" OnClick="BtnAdminLogin_Click" runat="server" Text="Log in" CssClass="btn btn-default" />
                             </div>
                         </div>
                     </div>
@@ -54,6 +54,8 @@
                     </p>
                 </section>
             </div>
+            <%--Error section--%>
+           
         </div>
     </div>
 </asp:Content>

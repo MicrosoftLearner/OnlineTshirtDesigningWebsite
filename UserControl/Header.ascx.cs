@@ -16,7 +16,7 @@ public partial class UserControl_Header : System.Web.UI.UserControl
     {
 
         //Check for cookie 
-        CheckForCookie();
+     //   CheckForCookie();
    
     }
 
@@ -55,5 +55,10 @@ public partial class UserControl_Header : System.Web.UI.UserControl
         //ButtonLogin.Attributes.Add("data-toggle", "modal");
         //ButtonLogin.Attributes.Add("data-target", "#LoginModal");
 
+    }
+
+    protected void HyperLinkLogout_Click(object sender, EventArgs e)
+    {
+        cust.Logout();
     }
 }
