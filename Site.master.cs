@@ -23,6 +23,48 @@ public partial class SiteMaster : MasterPage
 
     public string connectionString = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["OnlineTshirtDesigning"].ConnectionString;
 
+    public bool HeaderVisibility
+    {
+
+        get
+        {
+            return HeaderPanel.Visible;
+        }
+        set
+        {
+            HeaderPanel.Visible = value;
+        }
+
+    }
+
+    public bool AdminHeaderVisibility
+    {
+
+        get
+        {
+            return AdminHeaderPanel.Visible;
+        }
+        set
+        {
+            AdminHeaderPanel.Visible = value;
+        }
+
+    }
+
+    public bool FooterVisibility
+    {
+
+        get
+        {
+            return FooterPanel.Visible;
+        }
+        set
+        {
+            FooterPanel.Visible = value;
+        }
+
+    }
+
     protected void Page_Init(object sender, EventArgs e)
     {
         // The code below helps to protect against XSRF attacks
@@ -74,12 +116,12 @@ public partial class SiteMaster : MasterPage
         }
     }
 
-    
-
     protected void Page_Load(object sender, EventArgs e)
     {
        
     }
+
+
 
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
     {
@@ -89,45 +131,6 @@ public partial class SiteMaster : MasterPage
     // This prperty will set the visiblity of header control
     // When in the admin page for admin own navigation 
 
-    public bool HeaderVisibility
-    {
-
-        get
-        {
-            return HeaderPanel.Visible;
-        }
-        set
-        {
-            HeaderPanel.Visible = value;
-        }
-
-    }
-
-    public bool AdminHeaderVisibility
-    {
-
-        get
-        {
-            return AdminHeaderPanel.Visible;
-        }
-        set
-        {
-            AdminHeaderPanel.Visible = value;
-        }
-
-    }
-
-    public bool FooterVisibility
-    {
-
-        get
-        {
-            return FooterPanel.Visible;
-        }
-        set
-        {
-            FooterPanel.Visible = value;
-        }
-
-    }
+   
+    
 }

@@ -12,10 +12,11 @@ public class Admin: Shopping
 {
     public override void Logout()
     {
+        HttpCookie cookie;
         //Get saved cookie
         cookie = System.Web.HttpContext.Current.Request.Cookies["AdminInfo"];
 
-        //Set cookie expire date 
+        //Set cookie expire date to remove existing cookie
         cookie.Expires = DateTime.Now.AddDays(-1);
 
         //Set cookie to the web 

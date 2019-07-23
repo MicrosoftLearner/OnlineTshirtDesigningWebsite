@@ -12,6 +12,7 @@ using System.Configuration;
 /// <summary>
 /// Summary description for Customer
 /// </summary>
+[Serializable]
 public class Customer : Shopping
 {
     public string CustFirstName { get; set; }
@@ -66,6 +67,7 @@ public class Customer : Shopping
 
     private void SaveDataInDb(RequiredFieldValidator validatorEmail, Label lblError)
     {
+        HttpCookie cookie;
         string selectSqlQuery = "SELECT CustEmailAddr";
         selectSqlQuery += "WHERE CustEmailAddr = @CustEmailAddr";
 

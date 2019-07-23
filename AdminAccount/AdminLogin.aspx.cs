@@ -19,12 +19,12 @@ public partial class Account_AdminLogin : System.Web.UI.Page
         {
             CheckForCookie();
         }
-        else
-        {
-            //Restore Admin obj
-            adm = (Admin)ViewState["CurrentAdmin"];
+        //else
+        //{
+        //    //Restore Admin obj
+        //    adm = (Admin)ViewState["CurrentAdmin"];
 
-        }
+        //}
     }
 
     //protected void Page_preRender(object sender, EventArgs e)
@@ -64,13 +64,13 @@ public partial class Account_AdminLogin : System.Web.UI.Page
         //Get pwd from Textbox
         adm.GetPwd = Password.Text;
 
-        // Persist view state 
+        // Store Admin in view state 
         ViewState["CurrentAdmin"] = adm;
 
         //call login method 
         if (adm.Login())
             Response.Redirect("AdminOrder.aspx");
 
-        else Page.ClientScript.RegisterStartupScript(this.GetType(), "toastr_message", "toastr.error('Enter right Creditional', 'Error')", true); ;
+        else Page.ClientScript.RegisterStartupScript(this.GetType(), "toastr_message", "toastr.error('Enter right Creditional', 'Error')", true);
     }
 }

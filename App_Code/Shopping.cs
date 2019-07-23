@@ -16,6 +16,7 @@ public enum SelectionChoice
     Admin
 }
 
+[Serializable]
 public class Shopping
 {
     protected string connectionString = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["OnlineTshirtDesigning"].ConnectionString;
@@ -42,7 +43,7 @@ public class Shopping
 
     public ushort SizeQuantity { get; set; }
 
-    public HttpCookie cookie;
+   
 
     // Member methods 
     public string GetPwd
@@ -59,7 +60,7 @@ public class Shopping
 
     public bool Login()
     {
-       
+        HttpCookie cookie;
         string selectSqlQueryCust = "SELECT  CustId, CustEmailAddr, CustPwd FROM customer";
         selectSqlQueryCust += "WHERE CustEmailAddr = @CustEmailAddr";
 

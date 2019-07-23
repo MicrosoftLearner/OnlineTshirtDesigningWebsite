@@ -12,9 +12,9 @@ using System.Data.OleDb;
 
 public partial class Account_AdminOrder : System.Web.UI.Page
 {
-    Admin adm1;
+     Admin adm;
     private string uploadDirectory;
-
+ 
     protected void Page_Load(object sender, EventArgs e)
     {
         //To erase the default text in TextBox
@@ -22,20 +22,30 @@ public partial class Account_AdminOrder : System.Web.UI.Page
         //this.TboxBannerName.Focus();
         //this.TboxBannerDesc.Focus();
         //this.TboxBannerName. += 
-        adm1 = new Admin();
-
-        LblAdminName.Text = "Hi " + adm1.Name;
-
+     
         if (!this.IsPostBack)
         {
             // to stay upadated for gridview even after page referesh 
             UpdateHomeBanner();
+
+            Master.HeaderVisibility = false;
+            Master.FooterVisibility = false;
+            Master.AdminHeaderVisibility = true;
+      
         }
 
-        Master.HeaderVisibility = false;
-        Master.FooterVisibility = false;
-        Master.AdminHeaderVisibility = true;
+        //Retrieve the View State value 
+        adm = (Admin)ViewState["CurrentAdmin"];
+        LblAdminName.Text = "Hi " + adm.Name;
+
+        
     }
+
+    //protected void Page_preRender(object sender, EventArgs e)
+    //{
+    //    // Persist view state 
+    //    ViewState["CurrentAdmin"] = null;
+    //}
 
     protected void BtnAddHomeImg_Click(object sender, EventArgs e)
     {
@@ -253,6 +263,10 @@ public partial class Account_AdminOrder : System.Web.UI.Page
 
     protected void AdminLogout_Click(object sender, EventArgs e)
     {
-        adm1.Logout();
+        //Make ViewState empty
+        ViewState["CurrentAdmin"] = null;
+
+        //Logout method will remove the existing Customer cookie
+        adm.Logout();
     }
 }

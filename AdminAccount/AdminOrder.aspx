@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="AdminOrder.aspx.cs" Inherits="Account_AdminOrder" %>
 
-<%@ MasterType VirtualPath="~/Site.Master" %>
+<%@ MasterType VirtualPath="~/Site.master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
 
