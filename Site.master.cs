@@ -89,7 +89,7 @@ public partial class SiteMaster : MasterPage
     // This prperty will set the visiblity of header control
     // When in the admin page for admin own navigation 
 
-    public bool HeaderVisibility
+    public bool HeaderVisibility1
     {
 
         get
