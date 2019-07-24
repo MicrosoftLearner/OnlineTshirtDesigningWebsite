@@ -15,9 +15,21 @@ public partial class UserAccount_Login : System.Web.UI.Page
     }
     protected void ButtonLoginModal_Click(object sender, EventArgs e)
     {
+        //If page controls aren't valid 
+        //Dont proceed
+        if (!Page.IsValid) return;
+
+
         cust = new Customer();
+
         cust.objSelection = SelectionChoice.Customer;
-        cust.Login();
+
+        
+        if (cust.Login())
+            Response.Redirect("Home.aspx");
+
+        else Page.ClientScript.RegisterStartupScript(this.GetType(), "toastr_message", "toastr.error('Enter right Creditional OR Click Sign Up', 'Error')", true);
+
     }
 
     protected void ButtonUserSignUp_Click(object sender, EventArgs e)

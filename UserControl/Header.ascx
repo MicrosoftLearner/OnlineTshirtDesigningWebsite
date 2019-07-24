@@ -89,33 +89,38 @@
                             <asp:Button ID="ButtonLogin" UseSubmitBehavior="false" CssClass="btn header--login" OnClick="ButtonLogin_Click" PostBackUrl="~/Login.aspx" runat="server" Text="LOGIN" />
                         </a>
                     </li>
-                    <li id="NavCustInfo" class="hidden" runat="server">
+                    <li id="NavCustInfo" runat="server">
 
-                        <asp:HyperLink ID="HyperLinkUserName" CssClass="user-name" runat="server"> <i class="fa fa-caret-down"></i></asp:HyperLink>
                         <!--<button class=" btn header--logout" ng-click="logout(); " ng-if="userId !='' ">Hi, siddhesh</button>-->
-                        <ul class="header-top-right-dropdown list-unstyled">
-                            <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkProfile" NavigateUrl="~/UserAccount.aspx" runat="server">profile</asp:HyperLink>
-                            </li>
-                            <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkManageAddress" NavigateUrl="~/UserAccount.aspx" runat="server">manage address</asp:HyperLink>
-                            </li>
-                            <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkOrder" NavigateUrl="~/OrderDetails.aspx" runat="server">order</asp:HyperLink>
-                            </li>
-                            <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkWishlist" NavigateUrl="#" runat="server">Wishlist</asp:HyperLink>
 
-                            </li>
-                            <!-- <li class="text-uppercase"><a href="">forgot password?</a> </li> -->
-                            <li class="text-uppercase">
-                                <asp:LinkButton ID="HyperLinkLogout" OnClick="HyperLinkLogout_Click" runat="server">logout</asp:LinkButton>
-                                <%--<asp:HyperLink ID="HyperLinkLogout" On NavigateUrl="#" runat="server">logout</asp:HyperLink>--%>
+                        <asp:HyperLink ID="HyperLinkUserName" CssClass="user-name display-block " runat="server">
+                            <i class="fa fa-caret-down"></i>
+                            <ul class="header-top-right-dropdown list-unstyled">
 
-                            </li>
-                             
-                        </ul>
-                       
+                                <li class="text-uppercase">
+                                    <asp:HyperLink ID="HyperLinkProfile" NavigateUrl="~/UserAccount.aspx" runat="server">profile</asp:HyperLink>
+                                </li>
+                                <li class="text-uppercase">
+                                    <asp:HyperLink ID="HyperLinkManageAddress" NavigateUrl="~/UserAccount.aspx" runat="server">manage address</asp:HyperLink>
+                                </li>
+                                <li class="text-uppercase">
+                                    <asp:HyperLink ID="HyperLinkOrder" NavigateUrl="~/OrderDetails.aspx" runat="server">order</asp:HyperLink>
+                                </li>
+                                <li class="text-uppercase">
+                                    <asp:HyperLink ID="HyperLinkWishlist" NavigateUrl="#" runat="server">Wishlist</asp:HyperLink>
+
+                                </li>
+                                <!-- <li class="text-uppercase"><a href="">forgot password?</a> </li> -->
+                                <li class="text-uppercase">
+                                    <asp:LinkButton ID="HyperLinkLogout" OnClick="HyperLinkLogout_Click" runat="server">logout</asp:LinkButton>
+                                    <%--<asp:HyperLink ID="HyperLinkLogout" On NavigateUrl="#" runat="server">logout</asp:HyperLink>--%>
+
+                                </li>
+
+                            </ul>
+                        </asp:HyperLink>
+
+
                     </li>
                 </ul>
             </div>

@@ -6208,6 +6208,9 @@ body {
   padding: 8px 5px;
   line-height: 1.428571429; }
 
+.display-block {
+  display: block; }
+
 .display-row {
   display: table-row; }
 

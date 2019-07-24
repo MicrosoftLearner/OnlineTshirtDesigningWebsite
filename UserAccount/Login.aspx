@@ -18,7 +18,7 @@
                                         <div>
                                             <div class="modal__customized-form">
                                                 <div class="form-group">
-                                                    <%--                      <asp:TextBox ID="TextBoxUserEmailModalLogin" CssClass="form-control" Text="Email Address" TextMode="Email" runat="server"></asp:TextBox>--%>
+                                                                          <asp:TextBox ID="TextBoxUserEmailModalLogin" CssClass="form-control" Text="Email Address" TextMode="Email" runat="server"></asp:TextBox>
                                                 </div>
                                                 <div class="form-group">
                                                     <asp:TextBox ID="TextBoxUserPwd" CssClass="form-control" Text="Password" runat="server"></asp:TextBox>
@@ -28,6 +28,9 @@
                                                     <asp:Button ID="ButtonLoginModal" OnClick="ButtonLoginModal_Click" CssClass="btn btn-login btn-block" runat="server" Text=" log in" />
                                                 </div>
 
+                                                <asp:RequiredFieldValidator ID="ValidatorEmail" runat="server" ErrorMessage="Enter Email id" CssClass="alert-danger" ControlToValidate="TextBoxUserEmailModalLogin"></asp:RequiredFieldValidator>
+
+                                                <asp:RequiredFieldValidator ID="ValidatorPwd" runat="server" ErrorMessage="Enter password" CssClass="alert-danger"  ControlToValidate="TextBoxUserPwd"></asp:RequiredFieldValidator>
                                             </div>
                                         </div>
                                     </div>

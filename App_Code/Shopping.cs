@@ -61,6 +61,7 @@ public class Shopping
     public bool Login()
     {
         HttpCookie cookie;
+
         string selectSqlQueryCust = "SELECT  CustId, CustEmailAddr, CustPwd FROM customer";
         selectSqlQueryCust += "WHERE CustEmailAddr = @CustEmailAddr";
 
@@ -112,7 +113,7 @@ public class Shopping
                         //If matches the given EmailId and password return true 
                         while (reader.Read())
                         {
-                            if ((EmailId == reader["CustEmailAddr"].ToString()) && (GetPwd == reader["CustPwd"].ToString()))
+                            if ( EmailId == reader["CustEmailAddr"].ToString() && GetPwd == reader["CustPwd"].ToString() )
                             {
                                 MyId = Convert.ToInt32(reader["CustId"].ToString());
 

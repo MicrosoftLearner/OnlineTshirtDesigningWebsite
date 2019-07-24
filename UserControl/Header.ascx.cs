@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
 
 public partial class UserControl_Header : System.Web.UI.UserControl
 {
@@ -14,40 +15,13 @@ public partial class UserControl_Header : System.Web.UI.UserControl
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
-        //Check for cookie 
-     //   CheckForCookie();
-   
-    }
-
-    private void CheckForCookie()
-    {
-        cust = new Customer();
-
-        // Need to check cookie is present or not 
-        cookie = Request.Cookies["CustomerInfo"];
-
-        if (cookie != null)
+        // If this page is being viewd 1st time 
+        if (!this.IsPostBack)
         {
-            //Set Id 
-            cust.MyId = Convert.ToInt32(cookie["CustId"]);
-
-            //Disable the controls on header 
-            ButtonLogin.Enabled = false;
-
-            //Retrive all the customer data 
-            cust.DisplayCustomerData();
-
-            //Set the Object field's value to controls 
-            NavCustInfo.Attributes.Add("class" , "show");
-            HyperLinkUserName.Text = "Hi" + cust.CustFirstName;
+            //Check for cookie 
+       //     CheckForCookie();
         }
-        else
-        {
-            NavCustInfo.Attributes.Add("class", "hidden");
-            ButtonLogin.Enabled = true;
-          
-        }
+
     }
 
     protected void ButtonLogin_Click(object sender, EventArgs e)
@@ -59,6 +33,7 @@ public partial class UserControl_Header : System.Web.UI.UserControl
 
     protected void HyperLinkLogout_Click(object sender, EventArgs e)
     {
+        cust = new Customer();
         cust.Logout();
     }
 }
