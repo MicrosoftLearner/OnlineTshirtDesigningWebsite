@@ -19,7 +19,7 @@ public enum SelectionChoice
 [Serializable]
 public class Shopping
 {
-    protected string connectionString = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["OnlineTshirtDesigning"].ConnectionString;
+    public string connectionString = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["OnlineTshirtDesigning"].ConnectionString;
 
     public SelectionChoice objSelection;
 
@@ -31,7 +31,7 @@ public class Shopping
 
     private string pwd;
 
-    public string Name { get; protected set; }
+    public string Name { get;  set; }
 
     public double Price { get; set; }
 
@@ -149,6 +149,7 @@ public class Shopping
 
                                 //Set value to cookie 
                                 cookie["AdminId"] = MyId.ToString();
+                                cookie["AdminName"] = Name;
 
                                 //Add cookie to web browser with validaty
                                 cookie.Expires = DateTime.Now.AddDays(2);
@@ -182,6 +183,7 @@ public class Shopping
     //For other cookie 
     virtual public void Logout()
     {
+        HttpCookie cookie;
         //Get saved cookie
         cookie = System.Web.HttpContext.Current.Request.Cookies["CustomerInfo"];
 

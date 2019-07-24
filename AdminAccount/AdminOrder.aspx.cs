@@ -10,42 +10,51 @@ using System.Data;
 using System.Text;
 using System.Data.OleDb;
 
-public partial class Account_AdminOrder : System.Web.UI.Page
+public partial class AdminOrder : System.Web.UI.Page
 {
-     Admin adm;
+    Admin adm;
+
     private string uploadDirectory;
- 
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        //To erase the default text in TextBox
-        // Onfocus event needs to be created 
-        //this.TboxBannerName.Focus();
-        //this.TboxBannerDesc.Focus();
-        //this.TboxBannerName. += 
-     
         if (!this.IsPostBack)
         {
             // to stay upadated for gridview even after page referesh 
             UpdateHomeBanner();
 
-            Master.HeaderVisibility = false;
-            Master.FooterVisibility = false;
-            Master.AdminHeaderVisibility = true;
-      
+            //Set admin info
+            SetAdminInfo();
         }
 
-        //Retrieve the View State value 
-        adm = (Admin)ViewState["CurrentAdmin"];
-        LblAdminName.Text = "Hi " + adm.Name;
-
-        
     }
 
-    //protected void Page_preRender(object sender, EventArgs e)
-    //{
-    //    // Persist view state 
-    //    ViewState["CurrentAdmin"] = null;
-    //}
+    private void SetAdminInfo()
+    {
+        //Initialize the Obj
+        adm = new Admin();
+
+        // 1st check the parameters 
+        if (Request.QueryString["Id"] != null && Request.QueryString["Name"] != null)
+        {
+
+            adm.MyId = Convert.ToInt32(Request.QueryString["Id"]);
+            adm.Name = Request.QueryString["Name"];
+
+            // Set User controls
+            ((this.Master.FindControl("AdminHeader") as UserControl).FindControl("PnlAdminIdentity") as Panel).Visible = true;
+
+           ( (this.Master.FindControl("AdminHeader") as UserControl).FindControl("LblAdminName") as Label ).Text = "Hi " + adm.Name;
+
+            //LblAdminName.Text = "Hi " + adm.Name;
+
+            // Call DisplayAdminData to display record
+            adm.DisplayAdminData();
+
+        }
+        else Response.Redirect("AdminLogin.aspx");
+    }
+
 
     protected void BtnAddHomeImg_Click(object sender, EventArgs e)
     {
@@ -151,7 +160,14 @@ public partial class Account_AdminOrder : System.Web.UI.Page
 
     private void UpdateHomeBanner()
     {
+        Master.HeaderVisibility = false;
+
+        Master.FooterVisibility = false;
+
+        Master.AdminHeaderVisibility = true;
+
         // need to reterive the info from database 
+
         string selectSQL = "SELECT * FROM home_banner";
         DataTable dt = new DataTable();
         MySqlConnection connection = new MySqlConnection(Master.connectionString);
@@ -263,10 +279,8 @@ public partial class Account_AdminOrder : System.Web.UI.Page
 
     protected void AdminLogout_Click(object sender, EventArgs e)
     {
-        //Make ViewState empty
-        ViewState["CurrentAdmin"] = null;
-
-        //Logout method will remove the existing Customer cookie
-        adm.Logout();
+        adm = new Admin();
+        
+        //adm.Logout();
     }
 }

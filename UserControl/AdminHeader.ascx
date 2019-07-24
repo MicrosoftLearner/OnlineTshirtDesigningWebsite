@@ -22,7 +22,17 @@
         <ul class="nav navbar-nav navbar-right">
             <%--<li><a ><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>--%>
             <li>
-                <a href="../Account/AdminLogin.aspx"><span class="glyphicon glyphicon-log-in"></span>Logout</a></li>
+                <asp:Panel ID="PnlAdminIdentity" Visible="false" runat="server">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>&nbsp;
+                <asp:Label ID="LblAdminName" runat="server">
+                </asp:Label>
+                    <asp:Button ID="BtnAdminLogout" CssClass="btn btn--brown pull-right " OnClick="BtnAdminLogout_Click" runat="server" Text="Logout" />
+
+                </asp:Panel>
+
+              <%--  <a href="../Account/AdminLogin.aspx"><span class="glyphicon glyphicon-log-in"></span>Logout</a>--%>
+
+            </li>
         </ul>
     </div>
 </nav>

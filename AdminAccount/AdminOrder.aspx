@@ -1,11 +1,9 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="AdminOrder.aspx.cs" Inherits="Account_AdminOrder" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="AdminOrder.aspx.cs" Inherits="AdminOrder" %>
 
 <%@ MasterType VirtualPath="~/Site.master" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
-
     <div class="container">
-        <asp:Panel CssClass="well well-lg" runat="server">
+        <asp:Panel CssClass="well well-lg hidden " runat="server">
             <asp:Label ID="LblAdminName" runat="server" />
             <asp:Button ID="AdminLogout" OnClick="AdminLogout_Click" Text="Log out" CssClass="btn btn--brown pull-right" runat="server" />
         </asp:Panel>

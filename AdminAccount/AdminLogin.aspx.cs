@@ -5,20 +5,30 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Account_AdminLogin : System.Web.UI.Page
+public partial class AdminLogin : System.Web.UI.Page
 {
     HttpCookie cookie;
 
     Admin adm;
 
+    private string url = "AdminOrder.aspx?";
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        adm = new Admin();
         // if this page is being viewed 1st time 
         if (!this.IsPostBack)
         {
+            Master.HeaderVisibility = false;
+
+            Master.FooterVisibility = false;
+
+            Master.AdminHeaderVisibility = true;
+
             CheckForCookie();
         }
+     
+
         //else
         //{
         //    //Restore Admin obj
@@ -40,9 +50,15 @@ public partial class Account_AdminLogin : System.Web.UI.Page
 
         if (cookie != null)
         {
-            //Set Id 
+            //Set Id & name
             adm.MyId = Convert.ToInt32(cookie["AdminId"]);
-            Response.Redirect("AdminOrder.aspx");
+
+            adm.Name = cookie["AdminName"];
+
+            url += "Id=" + adm.MyId + "&";
+            url += "Name=" + adm.Name;
+
+            Response.Redirect(url);
         }
 
     }
@@ -57,19 +73,22 @@ public partial class Account_AdminLogin : System.Web.UI.Page
         adm = new Admin();
 
         adm.objSelection = SelectionChoice.Admin;
-        
+
         //Get email id from texbox 
         adm.EmailId = Email.Text;
 
         //Get pwd from Textbox
         adm.GetPwd = Password.Text;
 
-        // Store Admin in view state 
-        ViewState["CurrentAdmin"] = adm;
 
         //call login method 
         if (adm.Login())
-            Response.Redirect("AdminOrder.aspx");
+        {
+            url += "Id=" + adm.MyId + "&";
+            url += "Name=" + adm.Name;
+
+            Response.Redirect(url);
+        }
 
         else Page.ClientScript.RegisterStartupScript(this.GetType(), "toastr_message", "toastr.error('Enter right Creditional', 'Error')", true);
     }

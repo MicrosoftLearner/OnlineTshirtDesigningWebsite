@@ -1,8 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="AdminLogin.aspx.cs" Inherits="Account_AdminLogin" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="AdminLogin.aspx.cs" Inherits="AdminLogin" %>
+
+<%@ MasterType VirtualPath="~/Site.master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
-
-
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -55,7 +55,6 @@
                 </section>
             </div>
             <%--Error section--%>
-           
         </div>
     </div>
 </asp:Content>

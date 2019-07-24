@@ -26,6 +26,11 @@ public class Admin: Shopping
         System.Web.HttpContext.Current.Response.Redirect("AdminLogin.aspx");
     }
 
+    public void DisplayAdminData()
+    {
+        System.Diagnostics.Debug.WriteLine(" In Display Admin data");
+    }
+
     public Admin()
     {
         //

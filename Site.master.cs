@@ -23,6 +23,51 @@ public partial class SiteMaster : MasterPage
 
     public string connectionString = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["OnlineTshirtDesigning"].ConnectionString;
 
+    // This prperty will set the visiblity of header control
+    // When in the admin page for admin own navigation 
+
+    public bool HeaderVisibility
+    {
+
+        get
+        {
+            return HeaderPanel.Visible;
+        }
+        set
+        {
+            HeaderPanel.Visible = value;
+        }
+
+    }
+
+    public bool AdminHeaderVisibility
+    {
+
+        get
+        {
+            return AdminHeaderPanel.Visible;
+        }
+        set
+        {
+            AdminHeaderPanel.Visible = value;
+        }
+
+    }
+
+    public bool FooterVisibility
+    {
+
+        get
+        {
+            return FooterPanel.Visible;
+        }
+        set
+        {
+            FooterPanel.Visible = value;
+        }
+
+    }
+
 
     protected void Page_Init(object sender, EventArgs e)
     {
@@ -85,51 +130,6 @@ public partial class SiteMaster : MasterPage
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
     {
         Context.GetOwinContext().Authentication.SignOut();
-    }
-
-    // This prperty will set the visiblity of header control
-    // When in the admin page for admin own navigation 
-
-    public bool HeaderVisibility1
-    {
-
-        get
-        {
-            return HeaderPanel.Visible;
-        }
-        set
-        {
-            HeaderPanel.Visible = value;
-        }
-
-    }
-
-    public bool AdminHeaderVisibility
-    {
-
-        get
-        {
-            return AdminHeaderPanel.Visible;
-        }
-        set
-        {
-            AdminHeaderPanel.Visible = value;
-        }
-
-    }
-
-    public bool FooterVisibility
-    {
-
-        get
-        {
-            return FooterPanel.Visible;
-        }
-        set
-        {
-            FooterPanel.Visible = value;
-        }
-
     }
 }
 
