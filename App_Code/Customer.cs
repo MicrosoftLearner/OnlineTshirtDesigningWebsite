@@ -41,7 +41,7 @@ public class Customer : Shopping
     {
         get
         {
-            return CustFirstName + " " + CustFirstName;
+            return CustFirstName + " " + CustLastName;
         }
     }
 
@@ -56,25 +56,30 @@ public class Customer : Shopping
 
     //Member Methods
 
-    public void SignUp(RequiredFieldValidator validatorEmail, Label lblError)
+    public bool SignUp()
     {
-        SaveDataInDb(validatorEmail, lblError);
+        
+        return SaveDataInDb();
     }
 
     //NOTE: SaveDataInDb() method will save all the member'fields in DB
     //and also will check an Email Id is already exist or not
     //Will return true if not exist and false if exist
 
-    private void SaveDataInDb(RequiredFieldValidator validatorEmail, Label lblError)
+    private bool SaveDataInDb()
     {
+
         HttpCookie cookie;
-        string selectSqlQuery = "SELECT CustEmailAddr";
-        selectSqlQuery += "WHERE CustEmailAddr = @CustEmailAddr";
+
+        bool signupStatus = true;
+
+        string selectSqlQuery = "SELECT * FROM customer ";
+        selectSqlQuery += " WHERE CustEmailAddr = @CustEmailAddr";
 
         string insertSqlQuery = "INSERT INTO customer (";
-        insertSqlQuery += "CustId, CustFirstName, CustLastName, CustPwd, CustMobNo, CustEmailAddr) ";
+        insertSqlQuery += "CustId, CustFirstName, CustLastName, CustPwd, CustMobNo, CustEmailAddr, CustImg ) ";
         insertSqlQuery += "VALUES (";
-        insertSqlQuery += "@CustId, @CustFirstName, @CustLastName, @CustPwd, @CustMobNo, @CustEmailAddr )";
+        insertSqlQuery += "@CustId, @CustFirstName, @CustLastName, @CustPwd, @CustMobNo, @CustEmailAddr, @CustImg )";
 
         MySqlConnection connection = new MySqlConnection(connectionString);
 
@@ -82,14 +87,17 @@ public class Customer : Shopping
 
         MySqlCommand cmdInsert = new MySqlCommand(insertSqlQuery, connection);
 
-        MySqlDataAdapter adapter = new MySqlDataAdapter();
+       // MySqlDataAdapter adapter = new MySqlDataAdapter();
 
-        MySqlDataReader reader;
+        MySqlDataReader readerSignup;
 
-        // Add the parameters
+        //Add parameters for Selct 
+        cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
+
+        // Add the parameters for insert
         cmdInsert.Parameters.AddWithValue("@CustId", MyId);
 
-        cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
+        cmdInsert.Parameters.AddWithValue("@CustEmailAddr", EmailId);
 
         cmdInsert.Parameters.AddWithValue("@CustFirstName", CustFirstName);
 
@@ -99,7 +107,9 @@ public class Customer : Shopping
 
         cmdInsert.Parameters.AddWithValue("@CustMobNo", CustMobNo);
 
-        cmdInsert.Parameters.AddWithValue("@CustEmailAddr", EmailId);
+        cmdInsert.Parameters.AddWithValue("@CustImg", CustImg);
+
+        //  cmdInsert.Parameters.AddWithValue("@CustEmailAddr", EmailId);
 
         //Will use Try & catch block to be suscessful connection
         int added = 0;
@@ -112,34 +122,37 @@ public class Customer : Shopping
             {
                 //Open Databse connection 
                 connection.Open();
-                reader = cmd.ExecuteReader();
+
+                readerSignup = cmd.ExecuteReader();
 
                 //Will check an Email id is already exist or not 
 
-                while (reader.Read())
+                while (readerSignup.Read())
                 {
-                    //If exist 
+                    //If exist  
 
-                    if (EmailId == reader["CustEmailAddr"].ToString())
+                    if ( EmailId == readerSignup["CustEmailAddr"].ToString() )
                     {
-                        validatorEmail.Text = "Email Id is already exist";
-                        validatorEmail.Text += "Click on forgot password";
+                        signupStatus = false;
+                        //validatorEmail.Text = "Email Id is already exist";
+                        //validatorEmail.Text += "Click on forgot password";
+         
                     }
 
-                    //If not 
-
-                    else
-                    {
-                        //If inserted successfully it returns 1
-
-                        added = cmdInsert.ExecuteNonQuery();
-                    }
                 }
+
+                //Insert record if no existing user in Database
+                if (signupStatus)
+                {
+                    readerSignup.Close();
+                    added = cmdInsert.ExecuteNonQuery();
+                }
+                
             }
         }
         catch (Exception error)
         {
-            lblError.Text = error.ToString();
+            System.Diagnostics.Debug.WriteLine("Sign up Error" + error);
         }
 
         //If record is added sucessfully set cookie and mail info to client
@@ -157,12 +170,15 @@ public class Customer : Shopping
             System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
 
             //Navigate customer to home page 
-            System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
+          //  System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
 
             //Mail info to client
             SendSignUpMail();
+
+            signupStatus = true;
         }
 
+       return signupStatus;
     }
 
     /* Note: SendSignUpMail() function uses seperate CustomerMail Class
@@ -172,33 +188,33 @@ public class Customer : Shopping
 
     private void SendSignUpMail()
     {
+        //Initialize this Obj for Email 
         CustomerMail custMail = new CustomerMail();
-
-        //Set Email Sender's Email
-        custMail.EmailSender = ConfigurationManager.AppSettings["SenderEmail"];
-
-        //Set Email Sender's password
-        custMail.EmailSenderPwd = ConfigurationManager.AppSettings["SenderPwd"];
-
-        //Set Email Sender's Host
-        custMail.EmailSenderHost = ConfigurationManager.AppSettings["SmtpServerHost"];
-
-        //Set Email Sender's Port
-        custMail.EmailSenderPort = System.Convert.ToInt32(ConfigurationManager.AppSettings["SenderPortNo"]);
-
-        //Set Email Sender's Isssl
-        custMail.EmailIsSSL = System.Convert.ToBoolean(ConfigurationManager.AppSettings["IsSSL"]);
-
+        
         //will take .html Email Template 
-        custMail.EmailSenderFilePath = "WelcomeEmailer.html";
+        custMail.EmailSenderFileName = "WelcomeEmailer.html";
+
+        //will set the Email subject
+        custMail.EmailSubject = "Welcome To Burnt Umber";
 
         //will replace the [CustFullName] word from Template 
-        custMail.EmailContentText = custMail.EmailContentText.Replace("[CustFullName]", CustFullName);
 
+        //Use Srtring Bulder class to Replace multiple things 
+        StringBuilder emailContentReplaceText = new StringBuilder(custMail.EmailContentText);
 
+        emailContentReplaceText.Replace("[CustFullName]", CustFullName);
 
+        emailContentReplaceText.Replace("[CustEmail]", EmailId);
+
+        //Set the replaced one text 
+        custMail.EmailContentText = emailContentReplaceText.ToString();
+
+        //Set to which customer Email id 
+        custMail.EmailRecieverId = EmailId;
+        //Send mail to the recipant
+        custMail.SendingMail();
+       
     }
-
 
     /* Note: If customer Signs up successfully 
      * Retrive all customer data with associated customer Id  
@@ -206,14 +222,17 @@ public class Customer : Shopping
      */
     public void DisplayCustomerData()
     {
-        string selectSqlQueryCust = "SELECT  CustId, CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg, CustShippingAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode, CustComment FROM customer";
-        selectSqlQueryCust += "WHERE CustId = @CustId";
+        string selectSqlQueryCust = "SELECT CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode FROM customer ";
+
+        selectSqlQueryCust += "INNER JOIN customer_address ";
+
+        selectSqlQueryCust += " ON customer.CustId = customer_address.CustId ";
+
+        selectSqlQueryCust += " WHERE customer.CustId = @CustId";
 
         MySqlConnection connection = new MySqlConnection(connectionString);
 
         MySqlCommand cmd;
-
-        MySqlDataAdapter adaptor;
 
         MySqlDataReader reader;
 
@@ -222,7 +241,6 @@ public class Customer : Shopping
         //Add the paramaters 
         cmd.Parameters.AddWithValue("@CustId", MyId);
 
-        adaptor = new MySqlDataAdapter(cmd);
 
         try
         {
@@ -237,8 +255,7 @@ public class Customer : Shopping
                 //and Set the Customer's Object fields  
                 while (reader.Read())
                 {
-                    MyId = Convert.ToInt32(reader["CustId"]);
-
+                   
                     CustFirstName = reader["CustFirstName"].ToString();
 
                     CustLastName = reader["CustLastName"].ToString();
@@ -249,15 +266,16 @@ public class Customer : Shopping
 
                     CustImg = reader["CustImg"].ToString();
 
-                    CustShippAddr = reader["CustShippingAddr"].ToString();
+                    CustShippAddr = reader["CustShipAddr"].ToString();
 
                     CustShipCountry = reader["CustShipCountry"].ToString();
 
                     CustShipState = reader["CustShipState"].ToString();
 
+                    CustShipCity = reader["CustShipCity"].ToString();
+
                     CustShipPinCode = Convert.ToInt32(reader["CustShipPinCode"]);
 
-                    CustComment = reader["CustComment"].ToString();
                 }
             }
         }

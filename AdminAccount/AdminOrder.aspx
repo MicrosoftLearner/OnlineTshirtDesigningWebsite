@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="AdminOrder.aspx.cs" Inherits="AdminOrder" %>
 
 <%@ MasterType VirtualPath="~/Site.master" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
     <div class="container">
         <asp:Panel CssClass="well well-lg hidden " runat="server">

@@ -62,7 +62,7 @@ public class Shopping
     {
         HttpCookie cookie;
 
-        string selectSqlQueryCust = "SELECT  CustId, CustEmailAddr, CustPwd FROM customer";
+        string selectSqlQueryCust = "SELECT  CustId, CustEmailAddr, CustPwd FROM customer ";
         selectSqlQueryCust += "WHERE CustEmailAddr = @CustEmailAddr";
 
         string selectSqlQueryAdmin = "SELECT AdminId, AdminName,  AdminEmailAddr, AdminPwd FROM admin ";
@@ -84,7 +84,7 @@ public class Shopping
 
             //Add the paramaters 
             cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
-            adaptor = new MySqlDataAdapter(cmd);
+          //  adaptor = new MySqlDataAdapter(cmd);
         }
         else
         {

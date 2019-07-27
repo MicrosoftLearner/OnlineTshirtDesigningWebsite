@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using OnlineTshirtDesigningWebsite;
 
 public partial class AdminLogin : System.Web.UI.Page
 {
@@ -12,19 +13,28 @@ public partial class AdminLogin : System.Web.UI.Page
     Admin adm;
 
     private string url = "AdminOrder.aspx?";
-
+    
     protected void Page_Load(object sender, EventArgs e)
     {
         adm = new Admin();
         // if this page is being viewed 1st time 
         if (!this.IsPostBack)
         {
-            Master.HeaderVisibility = false;
 
-            Master.FooterVisibility = false;
+            //Master.HeaderVisibility = false;
 
-            Master.AdminHeaderVisibility = true;
+            //Master.FooterVisibility = false;
 
+            //Master.AdminHeaderVisibility = true;
+
+            // Set User controls
+            (this.Master.FindControl("HeaderPanel") as Panel).Visible = false;
+
+            (this.Master.FindControl("AdminHeaderPanel") as Panel).Visible = true;
+
+            (this.Master.FindControl("FooterPanel") as Panel).Visible = false;
+
+            //First check the cookie
             CheckForCookie();
         }
      

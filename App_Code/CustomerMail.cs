@@ -19,15 +19,20 @@ using System.IO;
 /// </summary>
 public class CustomerMail
 {
-    public string EmailSender { private get; set; }
+    //Set Email Sender's Email
+    private string  emailSender = ConfigurationManager.AppSettings["SenderEmail"];
 
-    public string EmailSenderPwd { private get; set; }
+    //Set Email Sender's password
+    private string emailSenderPwd = ConfigurationManager.AppSettings["SenderPwd"];
 
-    public string EmailSenderHost { private get; set; }
+    //Set Email Sender's Host
+    private string emailSenderHost = ConfigurationManager.AppSettings["SmtpServerHost"];
 
-    public int EmailSenderPort { private get; set; }
+    //Set Email Sender's Port
+    private int emailSenderPort = System.Convert.ToInt32(ConfigurationManager.AppSettings["SenderPortNo"]);
 
-    public bool EmailIsSSL { private get; set; }
+    //Set Email Sender's Isssl
+    private bool emailIsSSL = System.Convert.ToBoolean(ConfigurationManager.AppSettings["IsSSL"]);
 
     StreamReader str;
 
@@ -39,20 +44,15 @@ public class CustomerMail
 
     //EmailSenderPath will set your Email Template Path 
     //According to your Email Template i.e(.html)
-
-    public string EmailSenderFilePath
+   
+    public string EmailSenderFileName
     {
-        private get
-        {
-            return EmailSenderFilePath;
-        }
-
         set
         {
             //EmailTemplates is the folder where all Email Templates are present
 
             string emailTemplateFolder = "EmailTemplates";
-
+            string filePath;
             //Wil get actual path along with the Folder name
 
             string emailTemplateDirectory = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath, emailTemplateFolder);
@@ -60,10 +60,10 @@ public class CustomerMail
             //Need to set the Email Template name with .html extension
             //from calling class
 
-            Path.GetFileName(emailTemplateDirectory + value);
+            filePath = Path.Combine(emailTemplateDirectory , value);
 
             // Read file 
-            str = new StreamReader(EmailSenderFilePath);
+            str = new StreamReader(filePath);
 
             //Save entire HTML to EmailContentText prop
 
@@ -82,13 +82,14 @@ public class CustomerMail
         try
         {
             //Base class for seding Mail
-            MailMessage mailMsg = new MailMessage();
+            using (var mailMsg = new MailMessage())
+            {
 
             // We are sending .html template in body
             mailMsg.IsBodyHtml = true;
 
             //Set from Email Id i.e(Company Email id )
-            mailMsg.From = new MailAddress(EmailSender);
+            mailMsg.From = new MailAddress(emailSender);
 
             //Set to Email id i.e (At customer email id)
             mailMsg.To.Add(EmailRecieverId);
@@ -103,21 +104,23 @@ public class CustomerMail
             SmtpClient smtp = new SmtpClient();
 
             //Set Host server SMTP details
-            smtp.Host = EmailSenderHost;
+            smtp.Host = emailSenderHost;
 
             //Set port number of SMTP
-            smtp.Port = EmailSenderPort;
+            smtp.Port = emailSenderPort;
 
             //Set SSL --> True/False 
-            smtp.EnableSsl = EmailIsSSL;
+            smtp.EnableSsl = emailIsSSL;
 
             //Set sender's Email id & Password 
-            NetworkCredential network = new NetworkCredential(EmailSender, EmailSenderPwd);
+            NetworkCredential network = new NetworkCredential(emailSender, emailSenderPwd);
 
             smtp.Credentials = network;
 
             //Send Method will send your Mail Message created above 
             smtp.Send(mailMsg);
+            }
+         
         }
         catch (Exception errorMail)
         {

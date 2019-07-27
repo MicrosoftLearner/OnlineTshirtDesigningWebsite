@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="UserAccount_Login" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
     <asp:MultiView ID="multiviewloginmodal" ActiveViewIndex="0" runat="server">
         <asp:View ID="viewuserloinmodal" runat="server">
@@ -18,19 +20,21 @@
                                         <div>
                                             <div class="modal__customized-form">
                                                 <div class="form-group">
-                                                                          <asp:TextBox ID="TextBoxUserEmailModalLogin" CssClass="form-control" Text="Email Address" TextMode="Email" runat="server"></asp:TextBox>
-                                                </div>
-                                                <div class="form-group">
-                                                    <asp:TextBox ID="TextBoxUserPwd" CssClass="form-control" Text="Password" runat="server"></asp:TextBox>
-
-                                                </div>
-                                                <div class="marginTop">
-                                                    <asp:Button ID="ButtonLoginModal" OnClick="ButtonLoginModal_Click" CssClass="btn btn-login btn-block" runat="server" Text=" log in" />
+                                                    <asp:TextBox  ID="TextBoxUserEmailModalLogin" CssClass="form-control" Text="Email Address" TextMode="Email" runat="server"></asp:TextBox>
                                                 </div>
 
                                                 <asp:RequiredFieldValidator ID="ValidatorEmail" runat="server" ErrorMessage="Enter Email id" CssClass="alert-danger" ControlToValidate="TextBoxUserEmailModalLogin"></asp:RequiredFieldValidator>
 
-                                                <asp:RequiredFieldValidator ID="ValidatorPwd" runat="server" ErrorMessage="Enter password" CssClass="alert-danger"  ControlToValidate="TextBoxUserPwd"></asp:RequiredFieldValidator>
+                                                <div class="form-group">
+                                                    <asp:TextBox ID="TextBoxUserPwd"  CssClass="form-control" Text="Password" runat="server"></asp:TextBox>
+
+                                                </div>
+
+                                                <asp:RequiredFieldValidator ID="ValidatorPwd" runat="server" ErrorMessage="Enter password" CssClass="alert-danger" ControlToValidate="TextBoxUserPwd"></asp:RequiredFieldValidator>
+
+                                                <div class="marginTop">
+                                                    <asp:Button ID="ButtonLoginModal" OnClick="ButtonLoginModal_Click" UseSubmitBehavior="false" CssClass="btn btn-login btn-block" runat="server" Text=" log in" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -103,31 +107,40 @@
                                         <div>
                                             <div class="modal__customized-form">
                                                 <div class="form-group">
-                                                    <input type="text" placeholder="First Name" name="firstname" runat="server" class="form-control">
+                                                    <asp:TextBox ID="TBoxFirstName" placeholder="First Name"  runat="server" class="form-control"></asp:TextBox>
+                                                  <%--  <input type="text" placeholder="First Name" name="firstname" runat="server" class="form-control">--%>
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="text" placeholder="Last Name" name="lastname" runat="server" class="form-control">
+                                                    <asp:TextBox ID="TBoxLastName" placeholder="Last Name"  runat="server" class="form-control"></asp:TextBox>
+                                                  <%--  <input type="text" placeholder="Last Name" name="lastname" runat="server" class="form-control">--%>
                                                 </div>
                                                 <div class="form-group">
-                                                    <asp:TextBox ID="TextBoxUserSignUpEmail" Text="Email" TextMode="Email" CssClass=" form-control" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="TextBoxUserSignUpEmail" Placeholder="Email" TextMode="Email" CssClass=" form-control" runat="server"></asp:TextBox>
 
-                                                   <%--Validation--%>
-                                                    <<asp:RequiredFieldValidator ID="ValidatorEmailSignUp" runat="server" Text="Invalid Email Id"  ControlToValidate="TextBoxUserSignUpEmail"></asp:RequiredFieldValidator>
+                                                    <%--Validation--%>
+                                                    <asp:RequiredFieldValidator ID="ValidatorEmailSignUp" runat="server" Text="Invalid Email Id" ControlToValidate="TextBoxUserSignUpEmail" CssClass="alert-danger"></asp:RequiredFieldValidator>
                                                 </div>
-                                                <div class="form-group">
-                                                    <asp:TextBox ID="TextBoxUserSignUpMobNo" Text="Mob No" TextMode="Number" CssClass=" form-control" runat="server"></asp:TextBox>
-                                                </div>
-                                                <div class="form-group">
-                                                    <asp:TextBox ID="TextBoxUserSignUpPwd" Text="Password" TextMode="Password" CssClass=" form-control" runat="server"></asp:TextBox>
 
-                                                </div>
                                                 <div class="form-group">
-                                                    <asp:TextBox ID="TextBoxUserUserSignUpCnfPwd" Text="Confirm Password" TextMode="Password" CssClass="form-control" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="TextBoxUserSignUpMobNo" Placeholder="Mob No" TextMode="Number" CssClass=" form-control" runat="server"></asp:TextBox>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <asp:TextBox ID="TextBoxUserSignUpPwd" placeholder="Password"   TextMode="Password" CssClass=" form-control" runat="server"></asp:TextBox>
+
+                                                <asp:RequiredFieldValidator ID="ValidatorPwdSignUp" runat="server" ErrorMessage="Enter Password" ControlToValidate="TextBoxUserSignUpPwd" CssClass="alert-danger"></asp:RequiredFieldValidator>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <asp:TextBox ID="TextBoxUserUserSignUpCnfPwd" Placeholder="Confirm Password" TextMode="Password" CssClass="form-control" runat="server"></asp:TextBox>
+
+                                                    <asp:CompareValidator ID="CompValidatorSignUp" runat="server" ErrorMessage="Password doesn't match" ControlToCompare="TextBoxUserSignUpPwd" ControlToValidate="TextBoxUserUserSignUpCnfPwd" CssClass="form-control alert-danger "  ></asp:CompareValidator>
 
                                                     <!--<span ng-show='registerForm.formData.confirm.$error.hsPswdMatch'>Passwords don't match</span>-->
                                                 </div>
                                                 <div class="marginTop">
-                                                    <asp:Button ID="ButtonUserSignUp" CssClass="btn btn-login btn-block" runat="server" Text="Sign Up" OnClick="ButtonUserSignUp_Click" />
+                                                    <asp:Button ID="ButtonUserSignUp" CssClass="btn btn-login btn-block" runat="server" UseSubmitBehavior="false" Text="Sign Up" OnClick="ButtonUserSignUp_Click" />
 
                                                 </div>
                                             </div>

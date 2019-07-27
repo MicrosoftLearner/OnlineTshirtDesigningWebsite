@@ -12,6 +12,7 @@ using System.Data;
 using System.Text;
 using System.Data.OleDb;
 
+
 public partial class SiteMaster : MasterPage
 {
     private const string AntiXsrfTokenKey = "__AntiXsrfToken";
@@ -67,6 +68,8 @@ public partial class SiteMaster : MasterPage
         }
 
     }
+
+   
 
 
     protected void Page_Init(object sender, EventArgs e)
@@ -124,8 +127,8 @@ public partial class SiteMaster : MasterPage
     {
        
     }
-
-
+    
+    public int MyProperty { get; set; }
 
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
     {

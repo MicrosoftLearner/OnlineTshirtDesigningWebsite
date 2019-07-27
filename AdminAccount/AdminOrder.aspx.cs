@@ -160,18 +160,26 @@ public partial class AdminOrder : System.Web.UI.Page
 
     private void UpdateHomeBanner()
     {
-        Master.HeaderVisibility = false;
+        // Initialize the Obj
+        adm = new Admin();
 
-        Master.FooterVisibility = false;
+        // Set User controls
+        (this.Master.FindControl("HeaderPanel") as Panel).Visible = false;
 
-        Master.AdminHeaderVisibility = true;
+        (this.Master.FindControl("AdminHeaderPanel") as Panel).Visible = true;
+
+        (this.Master.FindControl("FooterPanel") as Panel).Visible = false;
 
         // need to reterive the info from database 
 
         string selectSQL = "SELECT * FROM home_banner";
+
         DataTable dt = new DataTable();
-        MySqlConnection connection = new MySqlConnection(Master.connectionString);
+
+        MySqlConnection connection = new MySqlConnection(adm.connectionString);
+
         MySqlCommand cmd = new MySqlCommand(selectSQL, connection);
+
         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
 
         try

@@ -69,6 +69,13 @@ $(document).ready(function () {
         }
     });
 
-    
+    // to wipe out defaut Text from Text box
+    function WipeOutDefaultText(id) {
+
+        alert("In focus");
+        document.getElementById("TextBoxUserEmailModalLogin").innerText = "";
+
+        document.getElementById("TextBoxUserPwd").innerText = "";
+    }
 });
 
