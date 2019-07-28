@@ -93,19 +93,20 @@
 
                         <!--<button class=" btn header--logout" ng-click="logout(); " ng-if="userId !='' ">Hi, siddhesh</button>-->
 
-                        <asp:HyperLink ID="HyperLinkUserName" Visible="false" CssClass="user-name" runat="server">
+                        <asp:HyperLink ID="HyperLinkUserName" Target="_self" Visible="false" CssClass="user-name" runat="server">
                             <i class="fa fa-caret-down"></i>      
                         </asp:HyperLink>
+
                         <ul class="header-top-right-dropdown list-unstyled">
 
                             <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkProfile" NavigateUrl="~/UserAccount.aspx" runat="server">profile</asp:HyperLink>
+                                <asp:HyperLink ID="HyperLinkProfile"  NavigateUrl="~/UserAccount/UserAccount.aspx" runat="server">profile</asp:HyperLink>
                             </li>
                             <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkManageAddress" NavigateUrl="~/UserAccount.aspx" runat="server">manage address</asp:HyperLink>
+                                <asp:HyperLink ID="HyperLinkManageAddress"  NavigateUrl="~/UserAccount/UserAccount.aspx" runat="server">manage address</asp:HyperLink>
                             </li>
                             <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkOrder" NavigateUrl="~/OrderDetails.aspx" runat="server">order</asp:HyperLink>
+                                <asp:HyperLink ID="HyperLinkOrder" NavigateUrl="~/UserOrderDetails/OrderDetails.aspx" runat="server">order</asp:HyperLink>
                             </li>
                             <li class="text-uppercase">
                                 <asp:HyperLink ID="HyperLinkWishlist" NavigateUrl="#" runat="server">Wishlist</asp:HyperLink>

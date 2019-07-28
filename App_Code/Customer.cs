@@ -216,6 +216,23 @@ public class Customer : Shopping
        
     }
 
+    public bool CheckCookie()
+    {
+        HttpCookie cookie;
+
+        bool isCookiePresent = false;
+
+        cookie = System.Web.HttpContext.Current.Request.Cookies["CustomerInfo"];
+
+        if (cookie != null)
+        {
+            MyId = Convert.ToInt32(cookie["CustId"]);
+
+            isCookiePresent = true;
+        }
+        return isCookiePresent;
+    }
+
     /* Note: If customer Signs up successfully 
      * Retrive all customer data with associated customer Id  
       i.e Troughout their name to what they ardered 

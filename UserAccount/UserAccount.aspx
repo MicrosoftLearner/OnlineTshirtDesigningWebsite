@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
     <div class="usr-account">
         <div>
-            <img src="Images/UserAccount/myaccount-banner.jpg" alt="BannerImage" class="img-responsive">
+            <img src="../Images/UserAccount/myaccount-banner.jpg" alt="BannerImage" class="img-responsive">
         </div>
         <div class="container">
             <div class="content-spacing">
@@ -15,11 +15,11 @@
 
                             </div>
                             <div class="checkout-tab-btn">
-                                <asp:LinkButton ID="LinkButtonUserAddr" CssClass="btn btn--list" runat="server">MANAGE
+                                <asp:LinkButton ID="LinkButtonUserAddr" CssClass="btn btn--list" runat="server" OnClick="LinkButtonUserAddr_Click">MANAGE
                                 ADDRESS</asp:LinkButton>
                             </div>
                             <div class="checkout-tab-btn">
-                                <asp:LinkButton ID="LinkButtonuserOrdered" CssClass="btn order-list--btn text-uppercase" runat="server">Orders</asp:LinkButton>
+                                <asp:LinkButton ID="LinkButtonuserOrdered" CssClass="btn order-list--btn text-uppercase" OnClick="LinkButtonuserOrdered_Click" runat="server">Orders</asp:LinkButton>
                             </div>
                             <%--<div class="checkout-tab-btn">
                                 <asp:LinkButton ID="LinkButtonUserReturn" CssClass="btn order-list--btn text-uppercase" runat="server">Return/Exchange</asp:LinkButton>
@@ -32,6 +32,7 @@
                             </div>--%>
                         </div>
                     </div>
+
                     <!--To open profile Tab-->
                     <asp:Panel ID="PanelUserProf" CssClass="prof-tab" runat="server">
                         <asp:MultiView ID="MultiViewUserChoice" runat="server">
@@ -40,23 +41,25 @@
                                     <div class="row">
                                         <div class="col-md-6 col-sm-12  col-xs-12">
                                             <div class="userdtl-main">
-                                                <asp:MultiView ID="MultiViewUserDtl" ActiveViewIndex="1" runat="server">
+                                                <asp:MultiView ID="MultiViewUserDtl" ActiveViewIndex="0" runat="server">
 
                                                     <asp:View ID="ViewUserDtlSaved" runat="server">
                                                         <asp:Panel ID="PanelUserDtlSave" runat="server">
                                                             <div class="usrdtl-title">
                                                                 <h3 class="tab-title">YOUR DETAILS
-                                                     <asp:HyperLink ID="HyperLinkUserEdit" NavigateUrl="#" CssClass-="linking" runat="server"><span>edit</span> </asp:HyperLink>
+                                                     <%--<asp:HyperLink ID="HyperLinkUserEdit"  NavigateUrl="#" CssClass-="linking" runat="server"><span>edit</span> </asp:HyperLink>--%>
                                                                 </h3>
                                                             </div>
                                                             <div class="usrdtl">
                                                                 <p class="usrdtl-info">
-                                                                    Name: <span class="text-capitalize left-space">{{userDetails.firstName}}
-                                                {{userDetails.lastName}}</span><br>
-                                                                    Email id: <span class="text-capitalize left-space">{{userDetails.email}}</span><br>
+                                                                    Name: <asp:Label ID="LblUserProfFullName" runat="server"  CssClass="text-capitalize left-space"></asp:Label>
+                                                                    <br>
+
+                                                                    Email id: <asp:Label ID="LblUserProfEmail" runat="server"  CssClass="text-lowercase left-space"></asp:Label>
+                                                                    <%--<span class="text-capitalize left-space"><%= cust.EmailId %></span>--%><br>
                                                                     Mobile:
                                            
-                                                    <span class="text-capitalize left-space">{{userDetails.mobile}}</span>
+                                                  <asp:Label ID="LblUserProfMob" CssClass="text-uppercase left-space"  runat="server" ></asp:Label>  
                                                                 </p>
 
                                                                 <p class="usrdtl-info">
@@ -75,9 +78,9 @@
                                                         <div class="userdtl-main">
                                                             <h3 class="tab-title">YOUR DETAILS 
                                                    
-                                                        <asp:HyperLink ID="HyperLinkuserSave" NavigateUrl="#" CssClass="linking" runat="server">
+                                                        <%--<asp:HyperLink ID="HyperLinkuserSave" NavigateUrl="#" CssClass="linking" runat="server">
                                                             <asp:Label ID="LabelUserSave" runat="server" Text="Save"></asp:Label>
-                                                        </asp:HyperLink>
+                                                        </asp:HyperLink>--%>
 
                                                             </h3>
                                                         </div>
@@ -122,17 +125,13 @@
                                 </div>
                             </asp:View>
 
-                            <asp:View ID="ViewUserAddr" runat="server">
-                                <h2>In view 2</h2>
-                            </asp:View>
-                            <asp:View ID="ViewUserReturn" runat="server">
-                            </asp:View>
                         </asp:MultiView>
                     </asp:Panel>
 
                     <%--To open Manage address panel--%>
                     <asp:Panel ID="PanelUserAddr" runat="server">
                         <asp:MultiView ID="MultiViewUserAddr" runat="server">
+
                             <asp:View ID="ViewUserAddrSaved" runat="server">
                                 <!--To open Manage Address Tab-->
                                 <div class="col-md-9 col-sm-12 col-xs-12">
@@ -156,22 +155,28 @@
 
                                     <div class="manage-addrs custom-checkbox">
                                         <p class="usrdtl-info">
-                                            <span class="usr-name text-capitalize">{{userDetails.firstName}}
-                                            {{userDetails.lastName}}</span> {{userDetails.mobile}}
+                                            <asp:Label ID="LblUserAddrFullName" CssClass="usr-name text-capitalize" runat="server"></asp:Label>
+                                           
                                        
                                             <br>
-                                            {{userDetails.email}}
+                                            <asp:Label ID="LblUserAddrEmail" runat="server"></asp:Label>
+                                         
                                         </p>
                                         <address class="usrdtl-info">
-                                            {{shippingAdd.line1}}<br>
-                                            <span class="text-capitalize city">{{shippingAdd.city}}</span>{{shippingAdd.pinCode}}<br>
-                                            {{shippingAdd.country}}
+                                            <asp:Label ID="LblUserShipAddr" CssClass="text-capitalize" runat="server"></asp:Label>
+
+                                            <asp:Label ID="LblUserShipCity" CssClass="text-capitalize city" runat="server"></asp:Label>
+
+                                            <asp:Label ID="LblUserShipPinCode" runat="server" Text="Label"></asp:Label>
+                                          <br>
+                                            <asp:Label ID="LblUserShipContry" runat="server" Text="Label"></asp:Label>
+                                         
                                         </address>
                                         <div class="checkbox usrdtl-info">
                                             <asp:CheckBox ID="CheckBoxUserAddrDef" Text="Use this as default shipping address" runat="server" />
                                         </div>
                                         <p>
-                                            <asp:Button ID="ButtonUserAddrEdit" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrEdit" CssClass="btn address-edit-btn" runat="server" Text="Edit" />
+                                            <asp:Button ID="ButtonUserAddrEdit" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrEdit" UseSubmitBehavior="false" CssClass="btn address-edit-btn" runat="server" Text="Edit" />
                                             <asp:Button ID="ButtonUserAddrDelete" CssClass="btn address-delt-btn" runat="server" Text="Delete" />
                                         </p>
                                     </div>
@@ -188,36 +193,29 @@
                                                 </div>
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group">
-                                                        <input type="text" placeholder="Line 1*" class="form-control">
+                                                        <asp:TextBox ID="TboxLine1" CssClass="form-control" placeholder="Line 1*" runat="server"></asp:TextBox>
+                                                       
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group">
-                                                        <input type="text" placeholder="Line 2" class="form-control">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-4 col-sm-6 col-xs-12">
-                                                    <div class="form-group">
-                                                        <input type="text" placeholder="Line 3" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 col-sm-6 col-xs-12">
-                                                    <div class="form-group">
-                                                        <input type="text" placeholder="Line 4" class="form-control">
+                                                           <asp:TextBox ID="TboxLine2" CssClass="form-control" placeholder="Line 2*" runat="server"></asp:TextBox>
+                                                       
                                                     </div>
                                                 </div>
                                             </div>
+                                          
                                             <div class="row">
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group">
-                                                        <input type="text" placeholder="City" class="form-control">
+                                                        <asp:TextBox ID="TboxCity"  placeholder="City" CssClass="form-control"  runat="server"></asp:TextBox>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group">
-                                                        <input type="text" placeholder="Pincode" class="form-control">
+                                                         <asp:TextBox ID="TboxPinCode" TextMode="Number" placeholder="Pincode" CssClass="form-control"  runat="server"></asp:TextBox>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -262,14 +260,11 @@
                                                 </asp:Panel>
 
                                                 <asp:Panel ID="PanelUserAddrCountryNot" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
-                                                    <div class="form-group">
-                                                        <input type="text" placeholder="state" class="form-control">
-                                                    </div>
-
+                                                    
                                                 </asp:Panel>
                                             </div>
                                             <p>
-                                                <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" Text="save" />
+                                                <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" Text="save" />
                                                 <asp:Button ID="ButtonUserAddrCancel" CssClass="btn delt--btn text-uppercase" runat="server" Text="cancel" />
                                             </p>
                                         </div>
@@ -285,8 +280,8 @@
 
                     <%--To open Ordered product panel--%>
 
-                    <asp:Panel ID="PanelUserOrder" runat="server">
-                        <asp:Panel ID="PaneluserOrderButtons" CssClass="col-md-9 col-sm-12 col-xs-12" runat="server">
+                    <asp:Panel ID="PanelUserOrder" Visible="false" runat="server">
+                        <asp:Panel ID="PaneluserOrderButtons"  CssClass="col-md-9 col-sm-12 col-xs-12" runat="server">
 
                             <p class="text-uppercase order-list-action text-center">
                                 <asp:Button ID="ButtonUserOrders" OnClick="ButtonUserOrders_Click" CssClass="btn order-list--btn text-capitalize" runat="server" Text="orders" UseSubmitBehavior="false" />

@@ -47,7 +47,15 @@ public partial class UserControl_Header : System.Web.UI.UserControl
             //Retrive all the customer data 
             cust.DisplayCustomerData();
 
-            (this.FindControl("HyperLinkUserName") as HyperLink).Text = "Hi" + " " + cust.CustFirstName;
+            (this.FindControl("HyperLinkUserName") as HyperLink).Text = "Hi" + " " + cust.CustFirstName + " " + "<i class='fa fa-caret-down'></i> ";
+
+            //HtmlGenericControl fontAsm = new HtmlGenericControl();
+
+            //fontAsm.TagName = "i";
+
+            //fontAsm.Attributes["class"] = "fa fa-caret-down";
+
+            //(this.FindControl("HyperLinkUserName") as HyperLink).Controls.Add(fontAsm);
         }
         else
         {
@@ -57,9 +65,6 @@ public partial class UserControl_Header : System.Web.UI.UserControl
 
             //Set the Object field's value to controls 
             (this.FindControl("HyperLinkUserName") as HyperLink).Visible = false;
-
-            //NavCustInfo.Attributes.Add("class", "hidden");
-            //ButtonLogin.Enabled = true;
 
         }
 
