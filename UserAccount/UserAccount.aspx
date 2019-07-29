@@ -222,12 +222,10 @@
                                             <div class="row">
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group country-dropdown">
-                                                        <asp:DropDownList ID="DropDownListUserState" runat="server">
-                                                            <asp:ListItem Text="State" />
-                                                            <asp:ListItem Text="Maharashtra" />
-                                                            <asp:ListItem Text="India" />
+                                                            <asp:DropDownList ID="DropDownListUserCountry" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DropDownListUserCountry_SelectedIndexChanged">
 
                                                         </asp:DropDownList>
+                                                        
                                                         <%--<button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.country"type="button" >
                                                             {{countryButton}} <span class="caret"></span>
                                                         </button>
@@ -242,10 +240,7 @@
 
                                                 <asp:Panel ID="PanelUserAddrCountry" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
                                                     <div class="form-group country-dropdown">
-                                                        <asp:DropDownList ID="DropDownListUserCountry" runat="server">
-                                                            <asp:ListItem Text="Country" />
-                                                            <asp:ListItem Text="Maha" />
-
+                                                     <asp:DropDownList ID="DropDownListUserState" runat="server" DataTextField="State">
                                                         </asp:DropDownList>
                                                         <%-- <button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.state"
                                                             type="button" uib-dropdown-toggle>
@@ -264,7 +259,7 @@
                                                 </asp:Panel>
                                             </div>
                                             <p>
-                                                <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" Text="save" />
+                                                <asp:Button  ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" OnClick="ButtonUserAddrSave_Click" Text="save" />
                                                 <asp:Button ID="ButtonUserAddrCancel" CssClass="btn delt--btn text-uppercase" runat="server" Text="cancel" />
                                             </p>
                                         </div>

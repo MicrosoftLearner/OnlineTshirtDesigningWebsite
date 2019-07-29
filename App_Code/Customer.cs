@@ -58,7 +58,7 @@ public class Customer : Shopping
 
     public bool SignUp()
     {
-        
+
         return SaveDataInDb();
     }
 
@@ -87,7 +87,7 @@ public class Customer : Shopping
 
         MySqlCommand cmdInsert = new MySqlCommand(insertSqlQuery, connection);
 
-       // MySqlDataAdapter adapter = new MySqlDataAdapter();
+        // MySqlDataAdapter adapter = new MySqlDataAdapter();
 
         MySqlDataReader readerSignup;
 
@@ -131,12 +131,12 @@ public class Customer : Shopping
                 {
                     //If exist  
 
-                    if ( EmailId == readerSignup["CustEmailAddr"].ToString() )
+                    if (EmailId == readerSignup["CustEmailAddr"].ToString())
                     {
                         signupStatus = false;
                         //validatorEmail.Text = "Email Id is already exist";
                         //validatorEmail.Text += "Click on forgot password";
-         
+
                     }
 
                 }
@@ -147,7 +147,7 @@ public class Customer : Shopping
                     readerSignup.Close();
                     added = cmdInsert.ExecuteNonQuery();
                 }
-                
+
             }
         }
         catch (Exception error)
@@ -170,7 +170,7 @@ public class Customer : Shopping
             System.Web.HttpContext.Current.Response.Cookies.Add(cookie);
 
             //Navigate customer to home page 
-          //  System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
+            //  System.Web.HttpContext.Current.Response.Redirect("Home.aspx");
 
             //Mail info to client
             SendSignUpMail();
@@ -178,7 +178,7 @@ public class Customer : Shopping
             signupStatus = true;
         }
 
-       return signupStatus;
+        return signupStatus;
     }
 
     /* Note: SendSignUpMail() function uses seperate CustomerMail Class
@@ -190,7 +190,7 @@ public class Customer : Shopping
     {
         //Initialize this Obj for Email 
         CustomerMail custMail = new CustomerMail();
-        
+
         //will take .html Email Template 
         custMail.EmailSenderFileName = "WelcomeEmailer.html";
 
@@ -213,7 +213,7 @@ public class Customer : Shopping
         custMail.EmailRecieverId = EmailId;
         //Send mail to the recipant
         custMail.SendingMail();
-       
+
     }
 
     public bool CheckCookie()
@@ -231,6 +231,56 @@ public class Customer : Shopping
             isCookiePresent = true;
         }
         return isCookiePresent;
+    }
+
+    public void SaveShipAddr()
+    {
+        
+        string updateSqlQury = "UPDATE customer_address ";
+
+        updateSqlQury += "SET CustShipAddr = @CustShipAddr , CustShipCountry = @CustShipCountry , CustShipState = @CustShipState , CustShipCity = @CustShipCity , CustShipPinCode = @CustShipPinCode ";
+
+        updateSqlQury += "WHERE CustId = @CustId";
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        MySqlCommand cmd = new MySqlCommand(updateSqlQury, connection);
+
+
+        //Add parameters for Selct 
+        cmd.Parameters.AddWithValue(" @CustShipAddr", CustShippAddr);
+
+        cmd.Parameters.AddWithValue(" @CustShipCountry", CustShipCountry );
+
+        cmd.Parameters.AddWithValue(" @CustShipState", CustShipState);
+
+        cmd.Parameters.AddWithValue(" @CustShipCity", CustShipCity);
+
+        cmd.Parameters.AddWithValue(" @CustShipPinCode",  CustShipPinCode);
+
+        cmd.Parameters.AddWithValue("@CustId", MyId);
+
+        //Will give 1 if record successfully updated
+        int updated = 0;
+
+        try
+        {
+            using (connection)
+            {
+                // Open database connection 
+                connection.Open();
+
+                updated = cmd.ExecuteNonQuery();
+            }
+        }
+        catch (Exception err)
+        {
+            System.Diagnostics.Debug.WriteLine("Update Query Error" + err);
+        }
+
+        //If updated successfully 
+        //if (updated > 0)
+        //    return true;
     }
 
     /* Note: If customer Signs up successfully 

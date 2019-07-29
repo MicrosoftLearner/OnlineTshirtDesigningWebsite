@@ -77,5 +77,6 @@ $(document).ready(function () {
 
         document.getElementById("TextBoxUserPwd").innerText = "";
     }
+
 });
 

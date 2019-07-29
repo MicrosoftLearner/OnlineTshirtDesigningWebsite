@@ -10,25 +10,47 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
     protected Customer cust;
 
+    
+    protected List<string[]> stateSelection;
+
+
     protected void Page_Load(object sender, EventArgs e)
     {
         //Display user info
         cust = new Customer();
 
+      
         if (!this.IsPostBack)
         {
-            //To show that the button is selected
-           // LinkButtonUserProf.Attributes.Add("CssClass", " order-list--btn");
 
+            //To set the Multiview property 
             LinkButtonUserProf_Click(LinkButtonUserProf, null);
 
-            cust.CheckCookie();
+            if (cust.CheckCookie())
+            {
+                cust.DisplayCustomerData();
 
-            cust.DisplayCustomerData();
+                ShowDisplayedData();
 
-            ShowDisplayedData();
+            }
+            else Response.Redirect("~/UserAccount/Login.aspx");
+
+            //Add Country list
+            stateSelection = new List<string[]>();
+
+            //Add country to it
+            stateSelection.Add(new string[] { "India", "Mumbai",});
+
+            stateSelection.Add("Usa" , new string[] { "usa1", "usa2", "usa3" });
+
+            foreach (string key in stateSelection.Keys)
+            {
+                DropDownListUserCountry.Items.Add(key);
+            }
+
         }
 
+ 
         //List<Table> orderedProductList = new List<Table>();
         //int productCatCount = 5;
 
@@ -137,7 +159,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //    //}
 
         //    orderedProductList.Add(table);
-            
+
         //}
 
         //foreach (Table item in orderedProductList)
@@ -145,6 +167,12 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //    PanelUserOrderTable.Controls.Add(item);
         //}
     }
+
+    //protected void Page_PreRender(object sender, EventArgs e)
+    //{
+    //    //Persist Variable
+    //    ViewState["CountrySelection"] = stateSelection;
+    //}
 
     private void ShowDisplayedData()
     {
@@ -450,5 +478,49 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         MultiViewUserChoice.ActiveViewIndex = -1;
 
         MultiViewUserAddr.ActiveViewIndex = -1;
+    }
+
+    protected void ButtonUserAddrSave_Click(object sender, EventArgs e)
+    {
+        string fullAddr = String.Concat(TboxLine1.Text, TboxLine2.Text).Trim();
+
+        //Set the objects properties
+        cust.CustShippAddr = fullAddr;
+
+        cust.CustShipCountry = DropDownListUserCountry.SelectedItem.Text;
+
+        cust.CustShipState = DropDownListUserState.SelectedItem.Text;
+
+        cust.CustShipCity = TboxCity.Text;
+
+        cust.CustShipPinCode = Convert.ToInt32(TboxPinCode.Text);
+    }
+
+    protected void DropDownListUserCountry_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        stateSelection = new Dictionary<string, string[]>();
+
+        //Add country to it
+        stateSelection.Add("India", new string[] { "Mumbai", "NaviMumbai", "Borivali" });
+
+        stateSelection.Add("Usa", new string[] { "usa1", "usa2", "usa3" });
+
+        // fill this state dropdown through Dictionary's Key 
+
+        //foreach (var key in stateSelection[new ListItem(DropDownListUserCountry.SelectedItem.Text)])
+        //{
+        //    DropDownListUserState.DataSource = from key;
+        //    ////Activate Binding
+        //    DropDownListUserState.DataBind();
+        //}
+        //DropDownListUserState.Items.Add(stateSelection[new ListItem(DropDownListUserCountry.SelectedItem.Text)])
+
+        //DropDownListUserState.DataSource = from obj in stateSelection[(DropDownListUserCountry.SelectedItem.Text] select new { Name = obj[0] };
+        string[] test = { "Mumbai", "NaviMumbai", "Borivali" };
+
+        DropDownListUserState.DataSource = test;
+     //   DropDownListUserState.DataTextField = "Value";
+        ////Activate Binding
+        DropDownListUserState.DataBind();
     }
 }
