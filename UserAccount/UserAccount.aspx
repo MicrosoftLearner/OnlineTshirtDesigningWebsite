@@ -52,14 +52,15 @@
                                                             </div>
                                                             <div class="usrdtl">
                                                                 <p class="usrdtl-info">
-                                                                    Name: <asp:Label ID="LblUserProfFullName" runat="server"  CssClass="text-capitalize left-space"></asp:Label>
+                                                                    Name:
+                                                                    <asp:Label ID="LblUserProfFullName" runat="server" CssClass="text-capitalize left-space"></asp:Label>
                                                                     <br>
-
-                                                                    Email id: <asp:Label ID="LblUserProfEmail" runat="server"  CssClass="text-lowercase left-space"></asp:Label>
+                                                                    Email id:
+                                                                    <asp:Label ID="LblUserProfEmail" runat="server" CssClass="text-lowercase left-space"></asp:Label>
                                                                     <%--<span class="text-capitalize left-space"><%= cust.EmailId %></span>--%><br>
                                                                     Mobile:
                                            
-                                                  <asp:Label ID="LblUserProfMob" CssClass="text-uppercase left-space"  runat="server" ></asp:Label>  
+                                                  <asp:Label ID="LblUserProfMob" CssClass="text-uppercase left-space" runat="server"></asp:Label>
                                                                 </p>
 
                                                                 <p class="usrdtl-info">
@@ -91,22 +92,34 @@
                                                                         <div class="customized-form">
                                                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                                                 <div class="form-group">
-                                                                                    <input type="text" placeholder="First Name" class="form-control ">
+                                                                                    <asp:TextBox ID="TBoxFirstName" CssClass="form-control" placeholder="First Name" runat="server"></asp:TextBox>
+
+                                                                                    <asp:RequiredFieldValidator ID="ValidatorFirstName" runat="server" ErrorMessage="Enter first name" ControlToValidate="TBoxFirstName" CssClass="alert-danger">
+                                                                                    </asp:RequiredFieldValidator>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                                                 <div class="form-group">
-                                                                                    <input type="text" placeholder="Last Name" class="form-control ">
+                                                                                    <asp:TextBox ID="TBoxLastName" CssClass="form-control" placeholder="Last Name" runat="server"></asp:TextBox>
+
+                                                                                    <asp:RequiredFieldValidator ID="ValidatorLastName" runat="server" ErrorMessage="Enter last name" ControlToValidate="TBoxLastName" CssClass="alert-danger">
+                                                                                    </asp:RequiredFieldValidator>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-6 col-sm-6 col-xs-12 ">
                                                                                 <div class="form-group">
-                                                                                    <input type="text" placeholder="Mobile No" class="form-control ">
+                                                                                    <asp:TextBox ID="TBoxMobNo" CssClass="form-control" placeholder="Mobile No" runat="server"></asp:TextBox>
+
+                                                                                    <asp:RequiredFieldValidator ID="ValidatorMobNo" runat="server" ErrorMessage="Enter Mobile no" ControlToValidate="TBoxMobNo" CssClass="alert-danger">
+                                                                                    </asp:RequiredFieldValidator>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-6 col-sm-6 col-xs-12">
+
                                                                                 <div class="form-group">
-                                                                                    <input type="email" placeholder="Email Address" class="form-control ">
+                                                                                    <asp:TextBox ID="TBoxEmail" CssClass="form-control" TextMode="Email" placeholder="Email Address" runat="server"></asp:TextBox>
+                                                                                    <asp:RequiredFieldValidator ID="ValidatorEmail" runat="server" ErrorMessage="Enter Email" ControlToValidate="TBoxEmail" CssClass="alert-danger">
+                                                                                    </asp:RequiredFieldValidator>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -114,7 +127,7 @@
                                                                 </div>
                                                             </div>
                                                             <p>
-                                                                <asp:Button ID="Button2" CommandName="SwitchViewByID" CommandArgument="ViewUserDtlSaved" UseSubmitBehavior="false" CssClass="btn btn--brown" runat="server" Text="Save" />
+                                                                <asp:Button ID="BtnUserDtlSaved" CommandName="SwitchViewByID" CommandArgument="ViewUserDtlSaved" UseSubmitBehavior="false" OnClick="BtnUserDtlSaved_Click" CssClass="btn btn--brown" runat="server" Text="Save" />
                                                             </p>
                                                         </asp:Panel>
                                                     </asp:View>
@@ -156,11 +169,11 @@
                                     <div class="manage-addrs custom-checkbox">
                                         <p class="usrdtl-info">
                                             <asp:Label ID="LblUserAddrFullName" CssClass="usr-name text-capitalize" runat="server"></asp:Label>
-                                           
-                                       
+
+
                                             <br>
                                             <asp:Label ID="LblUserAddrEmail" runat="server"></asp:Label>
-                                         
+
                                         </p>
                                         <address class="usrdtl-info">
                                             <asp:Label ID="LblUserShipAddr" CssClass="text-capitalize" runat="server"></asp:Label>
@@ -168,9 +181,9 @@
                                             <asp:Label ID="LblUserShipCity" CssClass="text-capitalize city" runat="server"></asp:Label>
 
                                             <asp:Label ID="LblUserShipPinCode" runat="server" Text="Label"></asp:Label>
-                                          <br>
+                                            <br>
                                             <asp:Label ID="LblUserShipContry" runat="server" Text="Label"></asp:Label>
-                                         
+
                                         </address>
                                         <div class="checkbox usrdtl-info">
                                             <asp:CheckBox ID="CheckBoxUserAddrDef" Text="Use this as default shipping address" runat="server" />
@@ -194,38 +207,49 @@
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group">
                                                         <asp:TextBox ID="TboxLine1" CssClass="form-control" placeholder="Line 1*" runat="server"></asp:TextBox>
-                                                       
+
+                                                        <<asp:RequiredFieldValidator ID="ValidatorShipAddrLine1" runat="server" ErrorMessage="Enter Address" ControlToValidate="TboxLine1" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
+
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group">
-                                                           <asp:TextBox ID="TboxLine2" CssClass="form-control" placeholder="Line 2*" runat="server"></asp:TextBox>
-                                                       
+                                                        <asp:TextBox ID="TboxLine2" CssClass="form-control" placeholder="Line 2*" runat="server"></asp:TextBox>
+
+                                                        <<asp:RequiredFieldValidator ID="ValidatorShipAddrLine2" runat="server" ErrorMessage="Enter Address" ControlToValidate="TboxLine2" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
                                                     </div>
                                                 </div>
                                             </div>
-                                          
+
                                             <div class="row">
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group">
-                                                        <asp:TextBox ID="TboxCity"  placeholder="City" CssClass="form-control"  runat="server"></asp:TextBox>
-                                                        
+                                                        <asp:TextBox ID="TboxCity" placeholder="City" CssClass="form-control" runat="server"></asp:TextBox>
+
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipAddrCity" runat="server" ErrorMessage="Enter City" ControlToValidate="TboxCity" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group">
-                                                         <asp:TextBox ID="TboxPinCode" TextMode="Number" placeholder="Pincode" CssClass="form-control"  runat="server"></asp:TextBox>
-                                                        
+                                                        <asp:TextBox ID="TboxPinCode" TextMode="Number" placeholder="Pincode" CssClass="form-control" runat="server"></asp:TextBox>
+
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipAddrPinCode" runat="server" ErrorMessage="Enter City" ControlToValidate="TboxPinCode" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group country-dropdown">
-                                                            <asp:DropDownList ID="DropDownListUserCountry" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DropDownListUserCountry_SelectedIndexChanged">
-                                                                <asp:ListItem Text="Select Country" />
+                                                        <asp:DropDownList ID="DropDownListUserCountry" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DropDownListUserCountry_SelectedIndexChanged">
+                                                            <asp:ListItem Text="Select Country" />
                                                         </asp:DropDownList>
-                                                        
+
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipAddrContry" runat="server" ErrorMessage="Select Country" ControlToValidate="DropDownListUserCountry" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
                                                         <%--<button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.country"type="button" >
                                                             {{countryButton}} <span class="caret"></span>
                                                         </button>
@@ -240,10 +264,13 @@
 
                                                 <asp:Panel ID="PanelUserAddrCountry" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
                                                     <div class="form-group country-dropdown">
-                                                     <asp:DropDownList ID="DropDownListUserState" runat="server">
-                                                         <asp:ListItem Text="Select State" />
-                                                         
+                                                        <asp:DropDownList ID="DropDownListUserState" runat="server">
+                                                            <asp:ListItem Text="Select State" />
+
                                                         </asp:DropDownList>
+
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipAddrState" runat="server" ErrorMessage="Select State" ControlToValidate="DropDownListUserState" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
                                                         <%-- <button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.state"
                                                             type="button" uib-dropdown-toggle>
                                                             {{stateButton}} <span class="caret"></span>
@@ -257,11 +284,10 @@
                                                 </asp:Panel>
 
                                                 <asp:Panel ID="PanelUserAddrCountryNot" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
-                                                    
                                                 </asp:Panel>
                                             </div>
                                             <p>
-                                                <asp:Button  ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" OnClick="ButtonUserAddrSave_Click" Text="save" />
+                                                <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" OnClick="ButtonUserAddrSave_Click" Text="save" />
                                                 <asp:Button ID="ButtonUserAddrCancel" CssClass="btn delt--btn text-uppercase" runat="server" Text="cancel" />
                                             </p>
                                         </div>
@@ -272,13 +298,111 @@
 
                             </asp:View>
 
+                            <asp:View ID="ViewUserAddrPresence" runat="server">
+                                <div class="edit-addrs">
+                                    <div class="customized-form">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <h3 class="tab-title text-uppercase">shipping address</h3>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <asp:TextBox ID="TBoxNewAddrLine1" CssClass="form-control" placeholder="Line 1*" runat="server"></asp:TextBox>
+
+                                                    <<asp:RequiredFieldValidator ID="ValidatorShipNewAddrL1" runat="server" ErrorMessage="Enter Address" ControlToValidate="TBoxNewAddrLine1" CssClass="alert-danger">
+                                                    </asp:RequiredFieldValidator>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <asp:TextBox ID="TBoxNewAddrLine2" CssClass="form-control" placeholder="Line 2*" runat="server"></asp:TextBox>
+
+                                                    <<asp:RequiredFieldValidator ID="ValidatorShipNewAddrL2" runat="server" ErrorMessage="Enter Address" ControlToValidate="TBoxNewAddrLine2" CssClass="alert-danger">
+                                                    </asp:RequiredFieldValidator>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <asp:TextBox ID="TBoxNewAddrCity" placeholder="City" CssClass="form-control" runat="server"></asp:TextBox>
+
+                                                    <asp:RequiredFieldValidator ID="ValidatorShipNewAddrCity" runat="server" ErrorMessage="Enter City" ControlToValidate="TBoxNewAddrCity" CssClass="alert-danger">
+                                                    </asp:RequiredFieldValidator>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <asp:TextBox ID="TBoxNewAddrPinCode" TextMode="Number" placeholder="Pincode" CssClass="form-control" runat="server"></asp:TextBox>
+
+                                                    <asp:RequiredFieldValidator ID="ValidatorShipNewAddrPinCode" runat="server" ErrorMessage="Enter City" ControlToValidate="TBoxNewAddrPinCode" CssClass="alert-danger">
+                                                    </asp:RequiredFieldValidator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                                <div class="form-group country-dropdown">
+                                                    <asp:DropDownList ID="ListShipNewCountry" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DropDownListUserCountry_SelectedIndexChanged">
+                                                        <asp:ListItem Text="Select Country" />
+                                                    </asp:DropDownList>
+
+                                                    <asp:RequiredFieldValidator ID="ValidatorShipNewAddrCont" runat="server" ErrorMessage="Select Country" ControlToValidate="ListShipNewCountry" CssClass="alert-danger">
+                                                    </asp:RequiredFieldValidator>
+                                                    <%--<button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.country"type="button" >
+                                                            {{countryButton}} <span class="caret"></span>
+                                                        </button>
+
+                                                        <ul class="country-dropdown-menu dropdown-menu text-capitalize"
+                                                            uib-dropdown-menu role="menu">
+                                                            <li role="menuitem" ng-repeat="country in selectCounteries"
+                                                                ng-click="changeCountry(country.name)"><a>{{country.name}}</a></li>
+                                                        </ul>--%>
+                                                </div>
+                                            </div>
+
+                                            <asp:Panel ID="Panel1" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
+                                                <div class="form-group country-dropdown">
+                                                    <asp:DropDownList ID="ListShipNewState" runat="server">
+                                                        <asp:ListItem Text="Select State" />
+
+                                                    </asp:DropDownList>
+
+                                                    <asp:RequiredFieldValidator ID="ValidatorShipNewAddrState" runat="server" ErrorMessage="Select State" ControlToValidate="ListShipNewState" CssClass="alert-danger">
+                                                    </asp:RequiredFieldValidator>
+                                                    <%-- <button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.state"
+                                                            type="button" uib-dropdown-toggle>
+                                                            {{stateButton}} <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="country-dropdown-menu dropdown-menu text-capitalize"
+                                                            uib-dropdown-menu role="menu">
+                                                            <li role="menuitem" ng-repeat="state in selectedState" ng-click="changeState(state)"><a>{{state}}</a></li>
+                                                        </ul>--%>
+                                                </div>
+
+                                            </asp:Panel>
+
+                                            <asp:Panel ID="Panel2" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
+                                            </asp:Panel>
+                                        </div>
+                                        <p>
+                                            <asp:Button ID="BtnShipNewAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" OnClick="BtnShipNewAddrSave_Click" Text="save" />
+                                            <%--<asp:Button ID="Button3" CssClass="btn delt--btn text-uppercase" runat="server" Text="cancel" />--%>
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </asp:View>
                         </asp:MultiView>
                     </asp:Panel>
 
                     <%--To open Ordered product panel--%>
 
                     <asp:Panel ID="PanelUserOrder" Visible="false" runat="server">
-                        <asp:Panel ID="PaneluserOrderButtons"  CssClass="col-md-9 col-sm-12 col-xs-12" runat="server">
+                        <asp:Panel ID="PaneluserOrderButtons" CssClass="col-md-9 col-sm-12 col-xs-12" runat="server">
 
                             <p class="text-uppercase order-list-action text-center">
                                 <asp:Button ID="ButtonUserOrders" OnClick="ButtonUserOrders_Click" CssClass="btn order-list--btn text-capitalize" runat="server" Text="orders" UseSubmitBehavior="false" />

@@ -233,6 +233,54 @@ public class Customer : Shopping
         return isCookiePresent;
     }
 
+    public void SaveCustmerInfo()
+    {
+        string updateSqlQury = "UPDATE customer ";
+
+        updateSqlQury += "SET CustFirstName=@CustFirstName , CustLastName=@CustLastName , CustMobNo=@CustMobNo , CustEmailAddr=@CustEmailAddr ";
+
+        updateSqlQury += " WHERE CustId=@CustId";
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        MySqlCommand cmd = new MySqlCommand(updateSqlQury, connection);
+
+
+        //Add parameters for Selct 
+        cmd.Parameters.AddWithValue("@CustFirstName", CustFirstName);
+
+        cmd.Parameters.AddWithValue("@CustLastName", CustLastName);
+
+        cmd.Parameters.AddWithValue("@CustMobNo", CustMobNo);
+
+        cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
+
+        cmd.Parameters.AddWithValue("@CustId", MyId);
+
+        //Will give 1 if record successfully updated
+        int updated = 0;
+
+        try
+        {
+            using (connection)
+            {
+                // Open database connection 
+                connection.Open();
+
+                updated = cmd.ExecuteNonQuery();
+            }
+        }
+        catch (Exception err)
+        {
+            System.Diagnostics.Debug.WriteLine("Update Query Error" + err);
+        }
+
+        //If updated successfully 
+        //if (updated > 0)
+        //    return true;
+    }
+
+
     public void SaveShipAddr()
     {
         

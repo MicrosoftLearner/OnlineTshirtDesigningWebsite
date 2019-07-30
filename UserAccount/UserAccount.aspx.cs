@@ -385,6 +385,16 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         //Disable User profile 
         MultiViewUserChoice.ActiveViewIndex = -1;
+
+        //To check customer has already a Shipping address or not 
+        cust.MyId = id;
+
+        cust.DisplayCustomerData();
+
+        if (cust.CustShippAddr == null && cust.CustShipCountry == null && cust.CustShipState == null && cust.CustShipCity == null)
+
+            MultiViewUserAddr.ActiveViewIndex = 2;
+        
     }
 
     protected void LinkButtonuserOrdered_Click(object sender, EventArgs e)
@@ -399,6 +409,11 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
     protected void ButtonUserAddrSave_Click(object sender, EventArgs e)
     {
+        //If all controls aren't valid 
+        if (!Page.IsValid) return;
+        
+        //If all controls are valid, proceed the underneath code
+
         string fullAddr = String.Concat(TboxLine1.Text, TboxLine2.Text).Trim();
 
         //Set the objects properties
@@ -438,5 +453,39 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         //Activate Binding
         dlUserState.DataBind();
+    }
+
+    protected void BtnUserDtlSaved_Click(object sender, EventArgs e)
+    {
+        //If all controls aren't valid
+        if (!Page.IsValid) return;
+
+        //Id all controls are valid , proceed the underneath code
+
+        //Set obj's properties 
+        cust.CustFirstName = TBoxFirstName.Text.Trim();
+
+        cust.CustLastName = TBoxLastName.Text.Trim();
+
+        cust.CustMobNo = Convert.ToInt32( TBoxMobNo.Text.Trim() ) ;
+
+        cust.EmailId = TBoxEmail.Text;
+
+        cust.MyId = id;
+
+        //Save the details
+        cust.SaveCustmerInfo();
+
+        //Fetch from database
+        cust.DisplayCustomerData();
+
+        //Update UI 
+        ShowDisplayedData();
+
+    }
+
+    protected void BtnShipNewAddrSave_Click(object sender, EventArgs e)
+    {
+        if (!Page.IsValid) return;
     }
 }
