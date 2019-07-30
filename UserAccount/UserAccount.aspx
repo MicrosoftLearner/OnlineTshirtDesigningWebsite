@@ -223,7 +223,7 @@
                                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                                     <div class="form-group country-dropdown">
                                                             <asp:DropDownList ID="DropDownListUserCountry" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DropDownListUserCountry_SelectedIndexChanged">
-
+                                                                <asp:ListItem Text="Select Country" />
                                                         </asp:DropDownList>
                                                         
                                                         <%--<button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.country"type="button" >
@@ -240,7 +240,9 @@
 
                                                 <asp:Panel ID="PanelUserAddrCountry" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
                                                     <div class="form-group country-dropdown">
-                                                     <asp:DropDownList ID="DropDownListUserState" runat="server" DataTextField="State">
+                                                     <asp:DropDownList ID="DropDownListUserState" runat="server">
+                                                         <asp:ListItem Text="Select State" />
+                                                         
                                                         </asp:DropDownList>
                                                         <%-- <button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.state"
                                                             type="button" uib-dropdown-toggle>

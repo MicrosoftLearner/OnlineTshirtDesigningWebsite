@@ -10,169 +10,86 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
     protected Customer cust;
 
-    
-    protected List<string[]> stateSelection;
+    private Dictionary<string, string[]> ContStateCollection
+    {
+        get
+        {
+            //Retreive from ViewState
+            object d = ViewState["ContryStateCollection"];
 
+            //set the condition
+            return (d == null ? null : (Dictionary<string, string[]>)d);
+        }
+
+        set
+        {
+            ViewState["ContryStateCollection"] = value;
+        }
+    }
+    // protected Dictionary<string , string[]> stateSelection;
+
+    private int id;
 
     protected void Page_Load(object sender, EventArgs e)
     {
         //Display user info
         cust = new Customer();
-
-      
+        
         if (!this.IsPostBack)
         {
-
             //To set the Multiview property 
             LinkButtonUserProf_Click(LinkButtonUserProf, null);
 
             if (cust.CheckCookie())
             {
+                ViewState["CustId"] = cust.MyId;
+
                 cust.DisplayCustomerData();
 
                 ShowDisplayedData();
 
             }
+
             else Response.Redirect("~/UserAccount/Login.aspx");
 
             //Add Country list
-            stateSelection = new List<string[]>();
 
-            //Add country to it
-            stateSelection.Add(new string[] { "India", "Mumbai",});
-
-            stateSelection.Add("Usa" , new string[] { "usa1", "usa2", "usa3" });
-
-            foreach (string key in stateSelection.Keys)
+            if (ContStateCollection == null)
             {
-                DropDownListUserCountry.Items.Add(key);
-            }
+                ContStateCollection = new Dictionary<string, string[]>();
 
+                ContStateCollection.Add("India", new string[] { "Maharashtra", "Kerala", "Punjab" });
+
+                ContStateCollection.Add("USA", new string[] { "California ", "Hawaii", "New York" });
+
+            }
+          
+            //Set Dictionary key into Dropdownlist
+            foreach (string key in ContStateCollection.Keys)
+            {
+                DropDownListUserCountry.Items.Add(new ListItem(key));
+            }
         }
 
- 
-        //List<Table> orderedProductList = new List<Table>();
-        //int productCatCount = 5;
+        if (this.IsPostBack)
+        {
+            id = (int)ViewState["CustId"];
+        }
 
-        //Panel pannelUserOrderedProductInfo0; // which will create panel in td
-        //Panel pannelUserOrderedProductInfo1;  // which will create panel in td
-        //Panel pannelUserOrderedProductInfo2; // which will create panel in td
-        //Image productImage;
-        //Button userProductChoiceCancel;
-        //Button userProductChoiceOrderdtl;
-        //Button userProductChoiceOrderdInvoice;
-
-        //Label labelUserOrderedProductName;
-
-        //for (int i = 0; i < 2; i++)
-        //{
-        //    Table table = new Table();
-        //    table.ID = "TableUserOrder" + i.ToString();
-        //    table.CssClass = "table";
-
-        //    TableHeaderRow tr = new TableHeaderRow();
-        //    tr.CssClass = "relate";
-        //    table.Controls.Add(tr);
-
-
-        //    for (int thead = 0; thead < productCatCount; thead++)
-        //    {
-        //        /*<thead> <tr><th></th> </tr></thead>*/
-
-        //        tr.TableSection = TableRowSection.TableHeader;
-        //        TableHeaderCell th = new TableHeaderCell();
-        //        th.Text = "Product (" + thead.ToString() + ")";
-        //        th.CssClass = "align-top";
-        //        tr.Cells.Add(th);
-        //        table.Rows.Add(tr);
-        //    }
-
-        //    tr = new TableHeaderRow();
-        //    table.Controls.Add(tr);
-
-        //    tr.TableSection = TableRowSection.TableBody;
-        //    TableCell td = new TableCell();
-
-        //    pannelUserOrderedProductInfo0 = new Panel();
-        //    pannelUserOrderedProductInfo0.ID = "PannelUserOrderedProductInfo";
-        //    pannelUserOrderedProductInfo0.CssClass = "item-img display-cell align-top";
-
-        //    productImage = new Image();
-        //    productImage.ImageUrl = "../Images/Home/10.jpg";
-        //    productImage.CssClass = "img-responsive";
-        //    // 1st add image in td
-
-        //    // add image to 1st pannel 
-        //    pannelUserOrderedProductInfo0.Controls.Add(productImage);
-        //    td.Controls.Add(pannelUserOrderedProductInfo0);
-
-        //    TableCell td1 = new TableCell();
-        //    pannelUserOrderedProductInfo1 = new Panel();
-        //    labelUserOrderedProductName = new Label();
-        //    labelUserOrderedProductName.Text = "Linen Full sleeve shirt";
-        //    labelUserOrderedProductName.Text += "Product Code";
-        //    //add label to another pannel
-        //    pannelUserOrderedProductInfo1.Controls.Add(labelUserOrderedProductName);
-        //    td1.Controls.Add(pannelUserOrderedProductInfo1);
-
-        //    TableCell td2 = new TableCell();
-
-        //    userProductChoiceCancel = new Button();
-        //    userProductChoiceCancel.ID = "ButtonUserProductChoiceCancel";
-        //    userProductChoiceCancel.CssClass = "btn order-action--btn text-uppercase";
-        //    userProductChoiceCancel.Text = "Cancel purchase";
-
-        //    userProductChoiceOrderdtl = new Button();
-        //    userProductChoiceOrderdtl.ID = "ButtonUserProductChoiceOrderDtl";
-        //    userProductChoiceOrderdtl.CssClass = "btn order-action--btn text-uppercase";
-        //    userProductChoiceOrderdtl.Text = "order detail";
-
-        //    userProductChoiceOrderdInvoice = new Button();
-        //    userProductChoiceOrderdInvoice.ID = "ButtonUserProductChoiceOrderInvoi";
-        //    userProductChoiceOrderdInvoice.CssClass = "btn order-action--btn text-uppercase";
-        //    userProductChoiceOrderdInvoice.Text = "Download invoice";
-
-        //    pannelUserOrderedProductInfo2 = new Panel();
-        //    pannelUserOrderedProductInfo2.Controls.Add(userProductChoiceCancel);
-        //    pannelUserOrderedProductInfo2.Controls.Add(userProductChoiceOrderdtl);
-        //    pannelUserOrderedProductInfo2.Controls.Add(userProductChoiceOrderdInvoice);
-        //    td2.Controls.Add(pannelUserOrderedProductInfo2);
-
-        //    //add all td to TableRow obj
-        //    tr.Controls.Add(td);
-        //    tr.Controls.Add(td1);
-        //    tr.Controls.Add(td2);
-
-        //    //for (int tbody = 0; tbody < 3; tbody++)
-        //    //{
-        //    //    /*<tbody><tr><td></tr>*/
-
-        //    //    tr.TableSection = TableRowSection.TableBody;
-        //    //    TableCell td = new TableCell();
-
-
-        //    //    //tr.Cells.Add(td);
-        //    //    // Put table cell in the TableRow
-        //    //    tr.Controls.Add(td);
-
-        //    //    // table.Rows.Add(tr);
-        //    //}
-
-        //    orderedProductList.Add(table);
-
-        //}
-
-        //foreach (Table item in orderedProductList)
-        //{
-        //    PanelUserOrderTable.Controls.Add(item);
-        //}
+        
     }
 
-    //protected void Page_PreRender(object sender, EventArgs e)
-    //{
-    //    //Persist Variable
-    //    ViewState["CountrySelection"] = stateSelection;
-    //}
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+        //Persist Variable
+        //if (ContStateCollection == null)
+        //{
+        //    ContStateCollection = new Dictionary<string, string[]>();
+        //}
+
+        ContStateCollection = ContStateCollection;
+        
+    }
 
     private void ShowDisplayedData()
     {
@@ -494,33 +411,32 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         cust.CustShipCity = TboxCity.Text;
 
         cust.CustShipPinCode = Convert.ToInt32(TboxPinCode.Text);
+
+        cust.MyId = id;
+        // save info into Database
+        cust.SaveShipAddr();
+
+        //Fetch from database
+        cust.DisplayCustomerData();
+
+        //Update UI 
+        ShowDisplayedData();
     }
 
     protected void DropDownListUserCountry_SelectedIndexChanged(object sender, EventArgs e)
     {
-        stateSelection = new Dictionary<string, string[]>();
+        //Find the Page control through master page     
 
-        //Add country to it
-        stateSelection.Add("India", new string[] { "Mumbai", "NaviMumbai", "Borivali" });
+        ContentPlaceHolder mainContent = Page.Master.FindControl("MainContent") as ContentPlaceHolder;
 
-        stateSelection.Add("Usa", new string[] { "usa1", "usa2", "usa3" });
+        DropDownList dlUserState = (DropDownList)mainContent.FindControl("DropDownListUserState");
 
-        // fill this state dropdown through Dictionary's Key 
+        //   // fill this state dropdown through Dictionary's Key 
+        dlUserState.DataSource = ContStateCollection[DropDownListUserCountry.SelectedItem.Text];
 
-        //foreach (var key in stateSelection[new ListItem(DropDownListUserCountry.SelectedItem.Text)])
-        //{
-        //    DropDownListUserState.DataSource = from key;
-        //    ////Activate Binding
-        //    DropDownListUserState.DataBind();
-        //}
-        //DropDownListUserState.Items.Add(stateSelection[new ListItem(DropDownListUserCountry.SelectedItem.Text)])
+        //   DropDownListUserState.DataTextField = "Value";
 
-        //DropDownListUserState.DataSource = from obj in stateSelection[(DropDownListUserCountry.SelectedItem.Text] select new { Name = obj[0] };
-        string[] test = { "Mumbai", "NaviMumbai", "Borivali" };
-
-        DropDownListUserState.DataSource = test;
-     //   DropDownListUserState.DataTextField = "Value";
-        ////Activate Binding
-        DropDownListUserState.DataBind();
+        //Activate Binding
+        dlUserState.DataBind();
     }
 }

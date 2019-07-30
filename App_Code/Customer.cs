@@ -238,9 +238,9 @@ public class Customer : Shopping
         
         string updateSqlQury = "UPDATE customer_address ";
 
-        updateSqlQury += "SET CustShipAddr = @CustShipAddr , CustShipCountry = @CustShipCountry , CustShipState = @CustShipState , CustShipCity = @CustShipCity , CustShipPinCode = @CustShipPinCode ";
+        updateSqlQury += "SET CustShipAddr=@CustShipAddr , CustShipCountry=@CustShipCountry , CustShipState=@CustShipState , CustShipCity=@CustShipCity , CustShipPinCode=@CustShipPinCode ";
 
-        updateSqlQury += "WHERE CustId = @CustId";
+        updateSqlQury += " WHERE CustId=@CustId";
 
         MySqlConnection connection = new MySqlConnection(connectionString);
 
@@ -248,15 +248,15 @@ public class Customer : Shopping
 
 
         //Add parameters for Selct 
-        cmd.Parameters.AddWithValue(" @CustShipAddr", CustShippAddr);
+        cmd.Parameters.AddWithValue("@CustShipAddr", CustShippAddr);
 
-        cmd.Parameters.AddWithValue(" @CustShipCountry", CustShipCountry );
+        cmd.Parameters.AddWithValue("@CustShipCountry", CustShipCountry );
 
-        cmd.Parameters.AddWithValue(" @CustShipState", CustShipState);
+        cmd.Parameters.AddWithValue("@CustShipState", CustShipState);
 
-        cmd.Parameters.AddWithValue(" @CustShipCity", CustShipCity);
+        cmd.Parameters.AddWithValue("@CustShipCity", CustShipCity);
 
-        cmd.Parameters.AddWithValue(" @CustShipPinCode",  CustShipPinCode);
+        cmd.Parameters.AddWithValue("@CustShipPinCode",  CustShipPinCode);
 
         cmd.Parameters.AddWithValue("@CustId", MyId);
 
