@@ -5,10 +5,13 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+
 public partial class UserAccount_UserAccount : System.Web.UI.Page
 {
 
     protected Customer cust;
+
+    protected ManipulateCustomerData custMpData;
 
     private Dictionary<string, string[]> ContStateCollection
     {
@@ -42,15 +45,22 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
             if (cust.CheckCookie())
             {
+               
                 ViewState["CustId"] = cust.MyId;
 
                 cust.DisplayCustomerData();
+
+                custMpData = cust.ShowCustManupulatedData();
+
+                custMpData.ShowCustIdentity();
 
                 ShowDisplayedData();
 
             }
 
             else Response.Redirect("~/UserAccount/Login.aspx");
+
+
 
             //Add Country list
 
@@ -64,7 +74,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
             }
           
-            //Set Dictionary key into Dropdownlist
+            //Set Dictionary key of country  into Dropdownlist
             foreach (string key in ContStateCollection.Keys)
             {
                 DropDownListUserCountry.Items.Add(new ListItem(key));
@@ -73,10 +83,14 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         if (this.IsPostBack)
         {
+            //Retreive CustId 
             id = (int)ViewState["CustId"];
+
+            //Retreive CustManupulated Obj 
+            custMpData = (ManipulateCustomerData)ViewState["CustManupData"];
         }
 
-        
+ 
     }
 
     protected void Page_PreRender(object sender, EventArgs e)
@@ -88,6 +102,9 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //}
 
         ContStateCollection = ContStateCollection;
+
+        //To store  CustManupulated Obj 
+        ViewState["CustManupData"] = custMpData;
         
     }
 
@@ -98,18 +115,6 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         LblUserProfMob.Text = cust.CustMobNo.ToString();
 
         LblUserProfFullName.Text = cust.CustFullName;
-
-        LblUserAddrFullName.Text = cust.CustFullName;
-
-        LblUserAddrEmail.Text = cust.EmailId;
-
-        LblUserShipAddr.Text = cust.CustShippAddr;
-
-        LblUserShipCity.Text = cust.CustShipCity;
-
-        LblUserShipPinCode.Text = cust.CustShipPinCode.ToString();
-
-        LblUserShipContry.Text = cust.CustShipCountry;
     }
 
     protected void ButtonUserReturn_Click(object sender, EventArgs e)
@@ -381,6 +386,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
     protected void LinkButtonUserAddr_Click(object sender, EventArgs e)
     {
+
         MultiViewUserAddr.ActiveViewIndex = 0;
 
         //Disable User profile 
@@ -394,7 +400,15 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         if (cust.CustShippAddr == null && cust.CustShipCountry == null && cust.CustShipState == null && cust.CustShipCity == null)
 
             MultiViewUserAddr.ActiveViewIndex = 2;
-        
+
+        else
+        {
+          
+            RptUserAddr.DataSource = custMpData.ShowCustIdentity();
+
+            RptUserAddr.DataBind();
+        }
+
     }
 
     protected void LinkButtonuserOrdered_Click(object sender, EventArgs e)
@@ -414,7 +428,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         
         //If all controls are valid, proceed the underneath code
 
-        string fullAddr = String.Concat(TboxLine1.Text, TboxLine2.Text).Trim();
+        string fullAddr = String.Concat(TboxLine1.Text, " ", TboxLine2.Text).Trim();
 
         //Set the objects properties
         cust.CustShippAddr = fullAddr;
@@ -428,11 +442,15 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         cust.CustShipPinCode = Convert.ToInt32(TboxPinCode.Text);
 
         cust.MyId = id;
-        // save info into Database
-        cust.SaveShipAddr();
 
+        // save info into Database
+        cust.SaveShipAddr( Convert.ToInt32(ButtonUserAddrSave.CommandArgument) );
+      
         //Fetch from database
         cust.DisplayCustomerData();
+
+        //Switch to 1st tab
+        MultiViewUserAddr.ActiveViewIndex = 0;
 
         //Update UI 
         ShowDisplayedData();
@@ -487,5 +505,44 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
     protected void BtnShipNewAddrSave_Click(object sender, EventArgs e)
     {
         if (!Page.IsValid) return;
+
+        //If all controls are valid, proceed the underneath code
+
+        string fullAddr = String.Concat(TBoxNewAddrLine1.Text, TBoxNewAddrLine2.Text).Trim();
+
+        //Set the objects properties
+        cust.CustShippAddr = fullAddr;
+
+        cust.CustShipCountry = ListShipNewCountry.SelectedItem.Text;
+
+        cust.CustShipState = ListShipNewState.SelectedItem.Text;
+
+        cust.CustShipCity = TBoxNewAddrCity.Text;
+
+        cust.CustShipPinCode = Convert.ToInt32(TBoxNewAddrPinCode.Text);
+
+        cust.MyId = id;
+        // save info into Database
+        cust.SaveShipNewAddr();
+
+        //Fetch from database
+        cust.DisplayCustomerData();
+
+        //Update UI 
+        ShowDisplayedData();
+    }
+
+    protected void LkBtnAddMoreShipAddr_Click(object sender, EventArgs e)
+    {
+        MultiViewUserAddr.ActiveViewIndex = 2;
+    }
+
+    protected void ButtonUserAddrEdit_Command(object sender, CommandEventArgs e)
+    {
+        //Open edit tab
+        MultiViewUserAddr.ActiveViewIndex = 1;
+
+       ButtonUserAddrSave.CommandArgument = e.CommandArgument.ToString();
+
     }
 }

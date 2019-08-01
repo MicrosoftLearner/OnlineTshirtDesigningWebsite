@@ -41,9 +41,12 @@ public class Customer : Shopping
     {
         get
         {
-            return CustFirstName + " " + CustLastName;
+            return CustFirstName + CustLastName;
         }
+       
     }
+
+    ManipulateCustomerData custMpData;
 
     //HttpCookie cookie = new HttpCookie("CustomerInfo");
 
@@ -53,6 +56,22 @@ public class Customer : Shopping
         // TODO: Add constructor logic here
         //
     }
+
+    public Customer(string theCustFirstName, string theCustLastName, string theCustFullName, int theCustMobNo, string theEmailId, string theCustShipAddr, string theCustShipCountry, string theCustShipState, string theCustShipCity, int theCustShipPinCode)
+    {
+        CustFirstName = theCustFirstName;
+        CustLastName = theCustLastName;
+     
+        CustMobNo = theCustMobNo;
+        EmailId = theEmailId;
+        CustShippAddr = theCustShipAddr;
+        CustShipCountry = theCustShipCountry;
+        CustShipState = theCustShipState;
+        CustShipCity = theCustShipCity;
+        CustShipPinCode = theCustShipPinCode;
+
+    }
+
 
     //Member Methods
 
@@ -281,14 +300,14 @@ public class Customer : Shopping
     }
 
 
-    public void SaveShipAddr()
+    public void SaveShipAddr(int theCustAddrId)
     {
-        
+
         string updateSqlQury = "UPDATE customer_address ";
 
         updateSqlQury += "SET CustShipAddr=@CustShipAddr , CustShipCountry=@CustShipCountry , CustShipState=@CustShipState , CustShipCity=@CustShipCity , CustShipPinCode=@CustShipPinCode ";
 
-        updateSqlQury += " WHERE CustId=@CustId";
+        updateSqlQury += " WHERE CustId=@CustId AND CustAddrId=@CustAddrId";
 
         MySqlConnection connection = new MySqlConnection(connectionString);
 
@@ -298,15 +317,17 @@ public class Customer : Shopping
         //Add parameters for Selct 
         cmd.Parameters.AddWithValue("@CustShipAddr", CustShippAddr);
 
-        cmd.Parameters.AddWithValue("@CustShipCountry", CustShipCountry );
+        cmd.Parameters.AddWithValue("@CustShipCountry", CustShipCountry);
 
         cmd.Parameters.AddWithValue("@CustShipState", CustShipState);
 
         cmd.Parameters.AddWithValue("@CustShipCity", CustShipCity);
 
-        cmd.Parameters.AddWithValue("@CustShipPinCode",  CustShipPinCode);
+        cmd.Parameters.AddWithValue("@CustShipPinCode", CustShipPinCode);
 
         cmd.Parameters.AddWithValue("@CustId", MyId);
+
+        cmd.Parameters.AddWithValue("@CustAddrId", theCustAddrId);
 
         //Will give 1 if record successfully updated
         int updated = 0;
@@ -331,19 +352,77 @@ public class Customer : Shopping
         //    return true;
     }
 
-    /* Note: If customer Signs up successfully 
+
+    /*Note: If user hasn't got any saved address 
+     * This function will  cteate a new address in their record
+     */
+    public void SaveShipNewAddr() {
+        
+        string insertSqlQuery = "INSERT INTO customer_address (";
+
+        insertSqlQuery += "CustAddrId, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode , CustId ) ";
+
+        insertSqlQuery += "VALUES (";
+        insertSqlQuery += "@CustAddrId, @CustShipAddr, @CustShipCountry, @CustShipState, @CustShipCity, @CustShipPinCode, @CustId ) ";
+        
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        MySqlCommand cmd = new MySqlCommand(insertSqlQuery, connection);
+        
+        //Add parameters for Selct 
+        cmd.Parameters.AddWithValue("@CustAddrId", null);
+
+        // Add the parameters for insert
+        cmd.Parameters.AddWithValue("@CustShipAddr", CustShippAddr);
+
+        cmd.Parameters.AddWithValue("@CustShipCountry", CustShipCountry);
+
+        cmd.Parameters.AddWithValue("@CustShipState", CustShipState);
+
+        cmd.Parameters.AddWithValue("@CustShipCity", CustShipCity);
+
+        cmd.Parameters.AddWithValue("@CustShipPinCode", CustShipPinCode);
+
+        cmd.Parameters.AddWithValue("@CustId", MyId);
+
+        //  cmdInsert.Parameters.AddWithValue("@CustEmailAddr", EmailId);
+
+        //Will use Try & catch block to be suscessful connection
+        int added = 0;
+
+
+        try
+        {
+            using (connection)
+            {
+                // Open database connection 
+                connection.Open();
+
+                added = cmd.ExecuteNonQuery();
+            }
+        }
+        catch (Exception err)
+        {
+            System.Diagnostics.Debug.WriteLine("Update Query Error" + err);
+        }
+    }
+    
+    
+    /* Note: If customer Signs up or logins  successfully 
      * Retrive all customer data with associated customer Id  
       i.e Troughout their name to what they ardered 
      */
     public void DisplayCustomerData()
     {
-        string selectSqlQueryCust = "SELECT CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode FROM customer ";
+        string selectSqlQueryCust = "SELECT CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg, CustAddrId, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode FROM customer ";
 
         selectSqlQueryCust += "INNER JOIN customer_address ";
 
         selectSqlQueryCust += " ON customer.CustId = customer_address.CustId ";
 
         selectSqlQueryCust += " WHERE customer.CustId = @CustId";
+
+        int custAddrId;
 
         MySqlConnection connection = new MySqlConnection(connectionString);
 
@@ -381,6 +460,8 @@ public class Customer : Shopping
 
                     CustImg = reader["CustImg"].ToString();
 
+                    custAddrId = Convert.ToInt32( reader["CustAddrId"]);
+
                     CustShippAddr = reader["CustShipAddr"].ToString();
 
                     CustShipCountry = reader["CustShipCountry"].ToString();
@@ -391,14 +472,31 @@ public class Customer : Shopping
 
                     CustShipPinCode = Convert.ToInt32(reader["CustShipPinCode"]);
 
+                    //if data present in CustAddress table i.e(not null)
+                    //Convert.To method will give null as O/P if null is there
+
+                    if (custAddrId != 0)
+                        //To store the entire obj
+                        //Intialize the Obj to manipulate data 
+
+                       custMpData = new ManipulateCustomerData(custAddrId, CustFirstName, CustLastName, CustFullName, CustMobNo, EmailId,  CustShippAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode);
+                   
                 }
+                
+
             }
         }
 
+        
         catch (Exception error)
         {
             Label errorLbl = new Label();
             errorLbl.Text = error.ToString();
         }
+    }
+
+    public ManipulateCustomerData ShowCustManupulatedData()
+    {
+        return custMpData;
     }
 }

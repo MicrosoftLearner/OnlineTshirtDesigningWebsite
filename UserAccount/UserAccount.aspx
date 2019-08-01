@@ -147,53 +147,60 @@
 
                             <asp:View ID="ViewUserAddrSaved" runat="server">
                                 <!--To open Manage Address Tab-->
-                                <div class="col-md-9 col-sm-12 col-xs-12">
-                                    <div class="row">
+                                <asp:Repeater ID="RptUserAddr" runat="server">
+                                    <ItemTemplate>
+                                        <div class="col-md-9 col-sm-12 col-xs-12">
+                                            <div class="row">
 
-                                        <asp:Panel ID="PanelShowEditAddr" CssClass="col-md-12 col-sm-12 col-xs-12" runat="server">
-                                            <h3 class="tab-title text-uppercase">shipping address
+                                                <asp:Panel ID="PanelShowEditAddr" CssClass="col-md-12 col-sm-12 col-xs-12" runat="server">
+                                                    <h3 class="tab-title text-uppercase">shipping address
                                    
-                                                <a class="linking">
-                                                    <span class="tab-title pull-right">
+                                                <asp:LinkButton ID="LkBtnAddMoreShipAddr" data-toggle="popover" data-trigger="hover" data-content="Add new address" data-placement="left" CssClass=" tab-title pull-right" OnClick="LkBtnAddMoreShipAddr_Click" runat="server">
+                                                    <span>
+
                                                         <i class="fa fa-plus"></i>
-                                                    </span>
-                                                </a>
-                                            </h3>
+                                                    </span> 
+                                                </asp:LinkButton>
 
-                                        </asp:Panel>
-                                    </div>
-                                </div>
-
-                                <asp:Panel ID="PanelUserAddrSaved" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
-
-                                    <div class="manage-addrs custom-checkbox">
-                                        <p class="usrdtl-info">
-                                            <asp:Label ID="LblUserAddrFullName" CssClass="usr-name text-capitalize" runat="server"></asp:Label>
-
-
-                                            <br>
-                                            <asp:Label ID="LblUserAddrEmail" runat="server"></asp:Label>
-
-                                        </p>
-                                        <address class="usrdtl-info">
-                                            <asp:Label ID="LblUserShipAddr" CssClass="text-capitalize" runat="server"></asp:Label>
-
-                                            <asp:Label ID="LblUserShipCity" CssClass="text-capitalize city" runat="server"></asp:Label>
-
-                                            <asp:Label ID="LblUserShipPinCode" runat="server" Text="Label"></asp:Label>
-                                            <br>
-                                            <asp:Label ID="LblUserShipContry" runat="server" Text="Label"></asp:Label>
-
-                                        </address>
-                                        <div class="checkbox usrdtl-info">
-                                            <asp:CheckBox ID="CheckBoxUserAddrDef" Text="Use this as default shipping address" runat="server" />
+                                                    </h3>
+                                                </asp:Panel>
+                                            </div>
                                         </div>
-                                        <p>
-                                            <asp:Button ID="ButtonUserAddrEdit" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrEdit" UseSubmitBehavior="false" CssClass="btn address-edit-btn" runat="server" Text="Edit" />
-                                            <asp:Button ID="ButtonUserAddrDelete" CssClass="btn address-delt-btn" runat="server" Text="Delete" />
-                                        </p>
-                                    </div>
-                                </asp:Panel>
+
+                                        <asp:Panel ID="PanelUserAddrSaved" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
+
+                                            <div class="manage-addrs custom-checkbox">
+                                                <p class="usrdtl-info">
+                                                   <%-- <asp:Label ID="LblUserAddrFullName" CssClass="usr-name text-capitalize" runat="server"><%# DataBinder.Eval(Container.DataItem, "CustFullName") %></asp:Label>--%>
+
+
+                                                    <br>
+                                                    <asp:Label ID="LblUserAddrEmail" Text='<%#DataBinder.Eval((KeyValuePair<int,Customer>)Container.DataItem, "EmailId")%>' runat="server"></asp:Label>
+ <%-- 
+                                                    <asp:Label  runat="server"> <%#DataBinder.Eval(Container,"DataItem.EmailId")%></asp:Label>
+                                                </p>
+                                              <address class="usrdtl-info">
+                                                    <asp:Label ID="LblUserShipAddr" CssClass="text-capitalize" runat="server"><%# DataBinder.Eval(Container.DataItem, "CustShipAddr") %></asp:Label>
+
+                                                    <asp:Label ID="LblUserShipCity" CssClass="text-capitalize city" runat="server"><%# DataBinder.Eval(Container.DataItem, "CustShipCity") %></asp:Label>
+
+                                                    <asp:Label ID="LblUserShipPinCode" runat="server" Text="Label"><%# DataBinder.Eval(Container.DataItem, "CustShipPinCode") %> </asp:Label>
+                                                    <br>
+                                                    <asp:Label ID="LblUserShipContry" runat="server" Text="Label"><%# DataBinder.Eval(Container.DataItem, "CustShipCountry") %> </asp:Label>--%>
+
+                                                </address>
+                                                <div class="checkbox usrdtl-info">
+                                                    <asp:CheckBox ID="CheckBoxUserAddrDef" Text="Use this as default shipping address" runat="server" />
+                                                </div>
+                                                <p>
+                                                    <asp:Button ID="ButtonUserAddrEdit"  OnCommand="ButtonUserAddrEdit_Command" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Key") %>' UseSubmitBehavior="false" CssClass="btn address-edit-btn" runat="server" Text="Edit" />
+                                                    <asp:Button ID="ButtonUserAddrDelete" CssClass="btn address-delt-btn" runat="server" Text="Delete" />
+                                                </p>
+                                            </div>
+                                        </asp:Panel>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+
                             </asp:View>
 
                             <asp:View ID="ViewUserAddrEdit" runat="server">
@@ -208,7 +215,7 @@
                                                     <div class="form-group">
                                                         <asp:TextBox ID="TboxLine1" CssClass="form-control" placeholder="Line 1*" runat="server"></asp:TextBox>
 
-                                                        <<asp:RequiredFieldValidator ID="ValidatorShipAddrLine1" runat="server" ErrorMessage="Enter Address" ControlToValidate="TboxLine1" CssClass="alert-danger">
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipAddrLine1" runat="server" ErrorMessage="Enter Address" ControlToValidate="TboxLine1" CssClass="alert-danger">
                                                         </asp:RequiredFieldValidator>
 
                                                     </div>
@@ -217,7 +224,7 @@
                                                     <div class="form-group">
                                                         <asp:TextBox ID="TboxLine2" CssClass="form-control" placeholder="Line 2*" runat="server"></asp:TextBox>
 
-                                                        <<asp:RequiredFieldValidator ID="ValidatorShipAddrLine2" runat="server" ErrorMessage="Enter Address" ControlToValidate="TboxLine2" CssClass="alert-danger">
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipAddrLine2" runat="server" ErrorMessage="Enter Address" ControlToValidate="TboxLine2" CssClass="alert-danger">
                                                         </asp:RequiredFieldValidator>
                                                     </div>
                                                 </div>
@@ -287,8 +294,9 @@
                                                 </asp:Panel>
                                             </div>
                                             <p>
-                                                <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" OnClick="ButtonUserAddrSave_Click" Text="save" />
-                                                <asp:Button ID="ButtonUserAddrCancel" CssClass="btn delt--btn text-uppercase" runat="server" Text="cancel" />
+                                                <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server"  UseSubmitBehavior="false" OnClick="ButtonUserAddrSave_Click" Text="save" />
+
+                                                <asp:Button ID="ButtonUserAddrCancel" CausesValidation="false" CssClass="btn delt--btn text-uppercase" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" runat="server" Text="cancel" />
                                             </p>
                                         </div>
 
