@@ -147,13 +147,12 @@
 
                             <asp:View ID="ViewUserAddrSaved" runat="server">
                                 <!--To open Manage Address Tab-->
-                                <asp:Repeater ID="RptUserAddr" runat="server">
-                                    <ItemTemplate>
-                                        <div class="col-md-9 col-sm-12 col-xs-12">
-                                            <div class="row">
 
-                                                <asp:Panel ID="PanelShowEditAddr" CssClass="col-md-12 col-sm-12 col-xs-12" runat="server">
-                                                    <h3 class="tab-title text-uppercase">shipping address
+                                <div class="col-md-9 col-sm-12 col-xs-12">
+                                    <div class="row">
+
+                                        <asp:Panel ID="PanelShowEditAddr" CssClass="col-md-12 col-sm-12 col-xs-12" runat="server">
+                                            <h3 class="tab-title text-uppercase">shipping address
                                    
                                                 <asp:LinkButton ID="LkBtnAddMoreShipAddr" data-toggle="popover" data-trigger="hover" data-content="Add new address" data-placement="left" CssClass=" tab-title pull-right" OnClick="LkBtnAddMoreShipAddr_Click" runat="server">
                                                     <span>
@@ -162,38 +161,41 @@
                                                     </span> 
                                                 </asp:LinkButton>
 
-                                                    </h3>
-                                                </asp:Panel>
-                                            </div>
-                                        </div>
-
+                                            </h3>
+                                        </asp:Panel>
+                                    </div>
+                                </div>
+                                <asp:Repeater ID="RptUserAddr" OnItemDataBound="RptUserAddr_ItemDataBound" runat="server">
+                                    <ItemTemplate>
                                         <asp:Panel ID="PanelUserAddrSaved" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
 
                                             <div class="manage-addrs custom-checkbox">
                                                 <p class="usrdtl-info">
-                                                   <%-- <asp:Label ID="LblUserAddrFullName" CssClass="usr-name text-capitalize" runat="server"><%# DataBinder.Eval(Container.DataItem, "CustFullName") %></asp:Label>--%>
+                                                    <asp:Label ID="LblUserFirstName" CssClass="usr-name text-capitalize" runat="server"></asp:Label>
+                                                    &nbsp;
 
-
+                                                      <asp:Label ID="LblUserLastName" CssClass="usr-name text-capitalize" runat="server"></asp:Label>
                                                     <br>
-                                                    <asp:Label ID="LblUserAddrEmail" Text='<%#DataBinder.Eval((KeyValuePair<int,Customer>)Container.DataItem, "EmailId")%>' runat="server"></asp:Label>
- <%-- 
-                                                    <asp:Label  runat="server"> <%#DataBinder.Eval(Container,"DataItem.EmailId")%></asp:Label>
+
+                                                                  <asp:Label ID="LblUserAddrEmail" runat="server"></asp:Label>
+                                                    
                                                 </p>
-                                              <address class="usrdtl-info">
-                                                    <asp:Label ID="LblUserShipAddr" CssClass="text-capitalize" runat="server"><%# DataBinder.Eval(Container.DataItem, "CustShipAddr") %></asp:Label>
+                                                <address class="usrdtl-info">
+                                                    <asp:Label ID="LblUserShipAddr" CssClass="text-capitalize" runat="server"></asp:Label>
 
-                                                    <asp:Label ID="LblUserShipCity" CssClass="text-capitalize city" runat="server"><%# DataBinder.Eval(Container.DataItem, "CustShipCity") %></asp:Label>
+                                                    <asp:Label ID="LblUserShipCity" CssClass="text-capitalize city" runat="server"></asp:Label>
 
-                                                    <asp:Label ID="LblUserShipPinCode" runat="server" Text="Label"><%# DataBinder.Eval(Container.DataItem, "CustShipPinCode") %> </asp:Label>
+                                                    <asp:Label ID="LblUserShipPinCode" runat="server" Text="Label"></asp:Label>
                                                     <br>
-                                                    <asp:Label ID="LblUserShipContry" runat="server" Text="Label"><%# DataBinder.Eval(Container.DataItem, "CustShipCountry") %> </asp:Label>--%>
+                                                    <asp:Label ID="LblUserShipContry" runat="server" Text="Label"> </asp:Label>
 
                                                 </address>
                                                 <div class="checkbox usrdtl-info">
                                                     <asp:CheckBox ID="CheckBoxUserAddrDef" Text="Use this as default shipping address" runat="server" />
                                                 </div>
                                                 <p>
-                                                    <asp:Button ID="ButtonUserAddrEdit"  OnCommand="ButtonUserAddrEdit_Command" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Key") %>' UseSubmitBehavior="false" CssClass="btn address-edit-btn" runat="server" Text="Edit" />
+                                                    <asp:Button ID="ButtonUserAddrEdit" OnCommand="ButtonUserAddrEdit_Command" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Key") %>' UseSubmitBehavior="false" CssClass="btn address-edit-btn" runat="server" Text="Edit" />
+
                                                     <asp:Button ID="ButtonUserAddrDelete" CssClass="btn address-delt-btn" runat="server" Text="Delete" />
                                                 </p>
                                             </div>
@@ -294,7 +296,7 @@
                                                 </asp:Panel>
                                             </div>
                                             <p>
-                                                <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server"  UseSubmitBehavior="false" OnClick="ButtonUserAddrSave_Click" Text="save" />
+                                                <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" UseSubmitBehavior="false" OnClick="ButtonUserAddrSave_Click" Text="save" />
 
                                                 <asp:Button ID="ButtonUserAddrCancel" CausesValidation="false" CssClass="btn delt--btn text-uppercase" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" runat="server" Text="cancel" />
                                             </p>
@@ -307,59 +309,61 @@
                             </asp:View>
 
                             <asp:View ID="ViewUserAddrPresence" runat="server">
-                                <div class="edit-addrs">
-                                    <div class="customized-form">
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <h3 class="tab-title text-uppercase">shipping address</h3>
-                                            </div>
-                                            <div class="col-md-4 col-sm-6 col-xs-12">
-                                                <div class="form-group">
-                                                    <asp:TextBox ID="TBoxNewAddrLine1" CssClass="form-control" placeholder="Line 1*" runat="server"></asp:TextBox>
+                                <div class="col-md-9 col-sm-12 col-xs-12">
+                                    <div class="edit-addrs">
+                                        <div class="customized-form">
 
-                                                    <<asp:RequiredFieldValidator ID="ValidatorShipNewAddrL1" runat="server" ErrorMessage="Enter Address" ControlToValidate="TBoxNewAddrLine1" CssClass="alert-danger">
-                                                    </asp:RequiredFieldValidator>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <h3 class="tab-title text-uppercase">shipping address</h3>
+                                                </div>
+                                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                                    <div class="form-group">
+                                                        <asp:TextBox ID="TBoxNewAddrLine1" CssClass="form-control" placeholder="Line 1*" runat="server"></asp:TextBox>
 
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipNewAddrL1" runat="server" ErrorMessage="Enter Address" ControlToValidate="TBoxNewAddrLine1" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                                    <div class="form-group">
+                                                        <asp:TextBox ID="TBoxNewAddrLine2" CssClass="form-control" placeholder="Line 2*" runat="server"></asp:TextBox>
+
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipNewAddrL2" runat="server" ErrorMessage="Enter Address" ControlToValidate="TBoxNewAddrLine2" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 col-sm-6 col-xs-12">
-                                                <div class="form-group">
-                                                    <asp:TextBox ID="TBoxNewAddrLine2" CssClass="form-control" placeholder="Line 2*" runat="server"></asp:TextBox>
 
-                                                    <<asp:RequiredFieldValidator ID="ValidatorShipNewAddrL2" runat="server" ErrorMessage="Enter Address" ControlToValidate="TBoxNewAddrLine2" CssClass="alert-danger">
-                                                    </asp:RequiredFieldValidator>
+                                            <div class="row">
+                                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                                    <div class="form-group">
+                                                        <asp:TextBox ID="TBoxNewAddrCity" placeholder="City" CssClass="form-control" runat="server"></asp:TextBox>
+
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipNewAddrCity" runat="server" ErrorMessage="Enter City" ControlToValidate="TBoxNewAddrCity" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                                    <div class="form-group">
+                                                        <asp:TextBox ID="TBoxNewAddrPinCode" TextMode="Number" placeholder="Pincode" CssClass="form-control" runat="server"></asp:TextBox>
+
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipNewAddrPinCode" runat="server" ErrorMessage="Enter City" ControlToValidate="TBoxNewAddrPinCode" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div class="row">
+                                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                                    <div class="form-group country-dropdown">
+                                                        <asp:DropDownList ID="ListShipNewCountry" runat="server" AutoPostBack="true"  OnSelectedIndexChanged="ListShipNewCountry_SelectedIndexChanged">
+                                                            <asp:ListItem Text="Select Country" />
+                                                        </asp:DropDownList>
 
-                                        <div class="row">
-                                            <div class="col-md-4 col-sm-6 col-xs-12">
-                                                <div class="form-group">
-                                                    <asp:TextBox ID="TBoxNewAddrCity" placeholder="City" CssClass="form-control" runat="server"></asp:TextBox>
-
-                                                    <asp:RequiredFieldValidator ID="ValidatorShipNewAddrCity" runat="server" ErrorMessage="Enter City" ControlToValidate="TBoxNewAddrCity" CssClass="alert-danger">
-                                                    </asp:RequiredFieldValidator>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 col-sm-6 col-xs-12">
-                                                <div class="form-group">
-                                                    <asp:TextBox ID="TBoxNewAddrPinCode" TextMode="Number" placeholder="Pincode" CssClass="form-control" runat="server"></asp:TextBox>
-
-                                                    <asp:RequiredFieldValidator ID="ValidatorShipNewAddrPinCode" runat="server" ErrorMessage="Enter City" ControlToValidate="TBoxNewAddrPinCode" CssClass="alert-danger">
-                                                    </asp:RequiredFieldValidator>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4 col-sm-6 col-xs-12">
-                                                <div class="form-group country-dropdown">
-                                                    <asp:DropDownList ID="ListShipNewCountry" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DropDownListUserCountry_SelectedIndexChanged">
-                                                        <asp:ListItem Text="Select Country" />
-                                                    </asp:DropDownList>
-
-                                                    <asp:RequiredFieldValidator ID="ValidatorShipNewAddrCont" runat="server" ErrorMessage="Select Country" ControlToValidate="ListShipNewCountry" CssClass="alert-danger">
-                                                    </asp:RequiredFieldValidator>
-                                                    <%--<button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.country"type="button" >
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipNewAddrCont" runat="server" ErrorMessage="Select Country" ControlToValidate="ListShipNewCountry" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
+                                                        <%--<button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.country"type="button" >
                                                             {{countryButton}} <span class="caret"></span>
                                                         </button>
 
@@ -368,19 +372,19 @@
                                                             <li role="menuitem" ng-repeat="country in selectCounteries"
                                                                 ng-click="changeCountry(country.name)"><a>{{country.name}}</a></li>
                                                         </ul>--%>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <asp:Panel ID="Panel1" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
-                                                <div class="form-group country-dropdown">
-                                                    <asp:DropDownList ID="ListShipNewState" runat="server">
-                                                        <asp:ListItem Text="Select State" />
+                                                <asp:Panel ID="Panel1" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
+                                                    <div class="form-group country-dropdown">
+                                                        <asp:DropDownList ID="ListShipNewState" runat="server">
+                                                            <asp:ListItem Text="Select State" />
 
-                                                    </asp:DropDownList>
+                                                        </asp:DropDownList>
 
-                                                    <asp:RequiredFieldValidator ID="ValidatorShipNewAddrState" runat="server" ErrorMessage="Select State" ControlToValidate="ListShipNewState" CssClass="alert-danger">
-                                                    </asp:RequiredFieldValidator>
-                                                    <%-- <button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.state"
+                                                        <asp:RequiredFieldValidator ID="ValidatorShipNewAddrState" runat="server" ErrorMessage="Select State" ControlToValidate="ListShipNewState" CssClass="alert-danger">
+                                                        </asp:RequiredFieldValidator>
+                                                        <%-- <button class="btn country-dropdown--btn text-capitalize" ng-model="editAddress.state"
                                                             type="button" uib-dropdown-toggle>
                                                             {{stateButton}} <span class="caret"></span>
                                                         </button>
@@ -388,21 +392,21 @@
                                                             uib-dropdown-menu role="menu">
                                                             <li role="menuitem" ng-repeat="state in selectedState" ng-click="changeState(state)"><a>{{state}}</a></li>
                                                         </ul>--%>
-                                                </div>
+                                                    </div>
 
-                                            </asp:Panel>
+                                                </asp:Panel>
 
-                                            <asp:Panel ID="Panel2" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
-                                            </asp:Panel>
+                                                <asp:Panel ID="Panel2" CssClass="col-md-4 col-sm-6 col-xs-12" runat="server">
+                                                </asp:Panel>
+                                            </div>
+                                            <p>
+                                                <asp:Button ID="BtnShipNewAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" OnClick="BtnShipNewAddrSave_Click" Text="save" />
+                                                <%--<asp:Button ID="Button3" CssClass="btn delt--btn text-uppercase" runat="server" Text="cancel" />--%>
+                                            </p>
                                         </div>
-                                        <p>
-                                            <asp:Button ID="BtnShipNewAddrSave" CssClass="btn save--btn text-uppercase" runat="server" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" UseSubmitBehavior="false" OnClick="BtnShipNewAddrSave_Click" Text="save" />
-                                            <%--<asp:Button ID="Button3" CssClass="btn delt--btn text-uppercase" runat="server" Text="cancel" />--%>
-                                        </p>
+
                                     </div>
-
                                 </div>
-
                             </asp:View>
                         </asp:MultiView>
                     </asp:Panel>

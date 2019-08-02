@@ -5,10 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-
 public partial class UserAccount_UserAccount : System.Web.UI.Page
 {
-
     protected Customer cust;
 
     protected ManipulateCustomerData custMpData;
@@ -37,7 +35,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
     {
         //Display user info
         cust = new Customer();
-        
+
         if (!this.IsPostBack)
         {
             //To set the Multiview property 
@@ -45,7 +43,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
             if (cust.CheckCookie())
             {
-               
+
                 ViewState["CustId"] = cust.MyId;
 
                 cust.DisplayCustomerData();
@@ -60,25 +58,9 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
             else Response.Redirect("~/UserAccount/Login.aspx");
 
-
-
-            //Add Country list
-
-            if (ContStateCollection == null)
-            {
-                ContStateCollection = new Dictionary<string, string[]>();
-
-                ContStateCollection.Add("India", new string[] { "Maharashtra", "Kerala", "Punjab" });
-
-                ContStateCollection.Add("USA", new string[] { "California ", "Hawaii", "New York" });
-
-            }
-          
-            //Set Dictionary key of country  into Dropdownlist
-            foreach (string key in ContStateCollection.Keys)
-            {
-                DropDownListUserCountry.Items.Add(new ListItem(key));
-            }
+            //This function will add the Country and state
+            //In the dropdown List 
+            AddCountryList();
         }
 
         if (this.IsPostBack)
@@ -90,26 +72,47 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
             custMpData = (ManipulateCustomerData)ViewState["CustManupData"];
         }
 
- 
+
+    }
+
+    private void AddCountryList()
+    {
+        //Add Country list
+
+        if (ContStateCollection == null)
+        {
+            ContStateCollection = new Dictionary<string, string[]>();
+
+            ContStateCollection.Add("India", new string[] { "Maharashtra", "Kerala", "Punjab" });
+
+            ContStateCollection.Add("USA", new string[] { "California ", "Hawaii", "New York" });
+
+        }
+
+        //Set Dictionary key of country  into Dropdownlist
+        foreach (string key in ContStateCollection.Keys)
+        {
+            DropDownListUserCountry.Items.Add(new ListItem(key));
+
+            ListShipNewCountry.Items.Add(new ListItem(key));
+        }
     }
 
     protected void Page_PreRender(object sender, EventArgs e)
     {
         //Persist Variable
-        //if (ContStateCollection == null)
-        //{
-        //    ContStateCollection = new Dictionary<string, string[]>();
-        //}
 
         ContStateCollection = ContStateCollection;
 
-        //To store  CustManupulated Obj 
+        //Persist  CustManupulated Obj / Update the ViewState 
         ViewState["CustManupData"] = custMpData;
-        
+
     }
 
+    //For User profile Tab
     private void ShowDisplayedData()
     {
+
         LblUserProfEmail.Text = cust.EmailId;
 
         LblUserProfMob.Text = cust.CustMobNo.ToString();
@@ -397,13 +400,13 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         cust.DisplayCustomerData();
 
-        if (cust.CustShippAddr == null && cust.CustShipCountry == null && cust.CustShipState == null && cust.CustShipCity == null)
+        if (custMpData.ShowCustIdentity() == null)
 
             MultiViewUserAddr.ActiveViewIndex = 2;
 
         else
         {
-          
+
             RptUserAddr.DataSource = custMpData.ShowCustIdentity();
 
             RptUserAddr.DataBind();
@@ -421,11 +424,12 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         MultiViewUserAddr.ActiveViewIndex = -1;
     }
 
+    //If Customer has already addresses
     protected void ButtonUserAddrSave_Click(object sender, EventArgs e)
     {
         //If all controls aren't valid 
         if (!Page.IsValid) return;
-        
+
         //If all controls are valid, proceed the underneath code
 
         string fullAddr = String.Concat(TboxLine1.Text, " ", TboxLine2.Text).Trim();
@@ -443,11 +447,23 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         cust.MyId = id;
 
-        // save info into Database
-        cust.SaveShipAddr( Convert.ToInt32(ButtonUserAddrSave.CommandArgument) );
-      
+        // save info into Database at the paricular AddressId
+        //Of the customer 
+        cust.SaveShipAddr(Convert.ToInt32(ButtonUserAddrSave.CommandArgument));
+
         //Fetch from database
         cust.DisplayCustomerData();
+
+        //Update the ManipulateCustom obj
+        custMpData = cust.ShowCustManupulatedData();
+
+        //Sore updated Manupulated Obj in ViewState
+        ViewState["CustManupData"] = custMpData;
+
+        //Fect the Dicitionary Obj & Update the Repeater  
+        RptUserAddr.DataSource = custMpData.ShowCustIdentity();
+
+        RptUserAddr.DataBind();
 
         //Switch to 1st tab
         MultiViewUserAddr.ActiveViewIndex = 0;
@@ -485,7 +501,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         cust.CustLastName = TBoxLastName.Text.Trim();
 
-        cust.CustMobNo = Convert.ToInt32( TBoxMobNo.Text.Trim() ) ;
+        cust.CustMobNo = Convert.ToInt32(TBoxMobNo.Text.Trim());
 
         cust.EmailId = TBoxEmail.Text;
 
@@ -528,6 +544,20 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //Fetch from database
         cust.DisplayCustomerData();
 
+        //Update the ManipulateCustom obj
+        custMpData = cust.ShowCustManupulatedData();
+
+        //Sore updated Manupulated Obj in ViewState
+        ViewState["CustManupData"] = custMpData;
+
+        //Fect the Dicitionary Obj & Update the Repeater  
+        RptUserAddr.DataSource = custMpData.ShowCustIdentity();
+
+        RptUserAddr.DataBind();
+
+        //Switch to 1st tab
+        MultiViewUserAddr.ActiveViewIndex = 0;
+
         //Update UI 
         ShowDisplayedData();
     }
@@ -542,7 +572,58 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //Open edit tab
         MultiViewUserAddr.ActiveViewIndex = 1;
 
-       ButtonUserAddrSave.CommandArgument = e.CommandArgument.ToString();
+        ButtonUserAddrSave.CommandArgument = e.CommandArgument.ToString();
 
+    }
+
+    protected void RptUserAddr_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        Label lblUserFirstName = e.Item.FindControl("LblUserFirstName") as Label;
+
+        Label lblUserLasttName = e.Item.FindControl("LblUserLastName") as Label;
+
+        Label LblUserAddrEmail = e.Item.FindControl("LblUserAddrEmail") as Label;
+
+        Label LblUseShipAddr = e.Item.FindControl("LblUserShipAddr") as Label;
+
+        Label LblUserShipCity = e.Item.FindControl("LblUserShipCity") as Label;
+
+        Label LblUserShipPinCode = e.Item.FindControl("LblUserShipPinCode") as Label;
+
+        Label LblUserShipCountry = e.Item.FindControl("LblUserShipContry") as Label;
+
+        KeyValuePair<int, Customer> kp = (KeyValuePair<int, Customer>)e.Item.DataItem;
+
+        //   Dictionary<int,MyClass> kp1 = kp.Value.;
+
+        lblUserFirstName.Text = kp.Value.CustFirstName;
+
+        lblUserLasttName.Text = kp.Value.CustLastName;
+
+        LblUserAddrEmail.Text = kp.Value.EmailId;
+
+        LblUseShipAddr.Text = kp.Value.CustShippAddr;
+
+        LblUserShipCity.Text = kp.Value.CustShipCity;
+
+        LblUserShipPinCode.Text = kp.Value.CustShipPinCode.ToString();
+
+        LblUserShipCountry.Text = kp.Value.CustShipCountry;
+
+
+    }
+
+    protected void ListShipNewCountry_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        //Find the Page control through master page     
+
+        ContentPlaceHolder mainContent = Page.Master.FindControl("MainContent") as ContentPlaceHolder;
+
+        DropDownList dlUserNewState = (DropDownList)mainContent.FindControl("ListShipNewState");
+
+        dlUserNewState.DataSource = ContStateCollection[ListShipNewCountry.SelectedItem.Text];
+
+        //Activate Binding
+        dlUserNewState.DataBind();
     }
 }
