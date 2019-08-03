@@ -31,28 +31,49 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
     private int id;
 
+    //For selecting the tabs based on Clicked links
+    private string userSelectionTab;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         //Display user info
         cust = new Customer();
-
         if (!this.IsPostBack)
         {
-            //To set the Multiview property 
-            LinkButtonUserProf_Click(LinkButtonUserProf, null);
-
+            userSelectionTab = Request.QueryString["TabSelection"];
+            
             if (cust.CheckCookie())
             {
+                //Store customer in view state 
 
                 ViewState["CustId"] = cust.MyId;
 
                 cust.DisplayCustomerData();
-
+    
                 custMpData = cust.ShowCustManupulatedData();
 
                 custMpData.ShowCustIdentity();
 
                 ShowDisplayedData();
+
+                //Check for clicked links i.e User Profile or User Address tab
+
+                switch (userSelectionTab)
+                {
+                    case "Profile":
+                        //To set the Multiview property 
+                        LinkButtonUserProf_Click(LinkButtonUserProf, null);
+                        break;
+
+                    case "Addr":
+                        LinkButtonUserAddr_Click(LinkButtonUserAddr, null);
+                        break;
+
+                    case "Order":
+                        LinkButtonuserOrdered_Click(LinkButtonuserOrdered, null);
+                        break;
+
+                }
 
             }
 
@@ -67,11 +88,27 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         {
             //Retreive CustId 
             id = (int)ViewState["CustId"];
+        //    cust = (Customer)ViewState["Customer"];
 
             //Retreive CustManupulated Obj 
             custMpData = (ManipulateCustomerData)ViewState["CustManupData"];
         }
 
+
+    }
+
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+        //Persist Variable
+
+        ContStateCollection = ContStateCollection;
+
+        //Persist  Customer Obj / Update the ViewState 
+        ViewState["Customer"] = cust;
+
+        //Persist  CustManupulated Obj / Update the ViewState 
+        ViewState["CustManupData"] = custMpData;
 
     }
 
@@ -97,18 +134,6 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
             ListShipNewCountry.Items.Add(new ListItem(key));
         }
     }
-
-    protected void Page_PreRender(object sender, EventArgs e)
-    {
-        //Persist Variable
-
-        ContStateCollection = ContStateCollection;
-
-        //Persist  CustManupulated Obj / Update the ViewState 
-        ViewState["CustManupData"] = custMpData;
-
-    }
-
     //For User profile Tab
     private void ShowDisplayedData()
     {
@@ -123,251 +148,14 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
     protected void ButtonUserReturn_Click(object sender, EventArgs e)
     {
         //MultiViewUserOrdered.ActiveViewIndex = 1;
-
-        //List<Table> returnedProductList = new List<Table>();
-        //int productCatCount = 5;
-
-        //Panel pannelUserOrderedProductInfo0; // which will create panel in td
-        //Panel pannelUserOrderedProductInfo1;  // which will create panel in td
-        //Panel pannelUserOrderedProductInfo2; // which will create panel in td
-        //Image productImage;
-
-        //Button userProductChoiceOrderdtl;
-        //Button userProductChoiceOrderdInvoice;
-
-        //Label labelUserOrderedProductName;
-
-        //for (int i = 0; i < 2; i++)
-        //{
-        //    Table table = new Table();
-        //    table.ID = "TableUserOrder" + i.ToString();
-        //    table.CssClass = "table";
-
-        //    TableHeaderRow tr = new TableHeaderRow();
-        //    tr.CssClass = "relate";
-        //    table.Controls.Add(tr);
-
-
-        //    for (int thead = 0; thead < productCatCount; thead++)
-        //    {
-        //        /*<thead> <tr><th></th> </tr></thead>*/
-
-        //        tr.TableSection = TableRowSection.TableHeader;
-        //        TableHeaderCell th = new TableHeaderCell();
-        //        th.Text = "Product (" + thead.ToString() + ")";
-        //        th.CssClass = "align-top";
-        //        tr.Cells.Add(th);
-        //        table.Rows.Add(tr);
-        //    }
-
-        //    tr = new TableHeaderRow();
-        //    table.Controls.Add(tr);
-
-        //    tr.TableSection = TableRowSection.TableBody;
-        //    TableCell td = new TableCell();
-
-        //    pannelUserOrderedProductInfo0 = new Panel();
-        //    pannelUserOrderedProductInfo0.ID = "PannelUserOrderedProductInfo";
-        //    pannelUserOrderedProductInfo0.CssClass = "item-img display-cell align-top";
-        //    productImage = new Image();
-        //    productImage.ImageUrl = "../Images/Home/10.jpg";
-        //    productImage.CssClass = "img-responsive";
-        //    // 1st add image in td
-
-        //    // add image to 1st pannel 
-        //    pannelUserOrderedProductInfo0.Controls.Add(productImage);
-        //    td.Controls.Add(pannelUserOrderedProductInfo0);
-
-        //    TableCell td1 = new TableCell();
-        //    pannelUserOrderedProductInfo1 = new Panel();
-        //    pannelUserOrderedProductInfo1.CssClass = " item - desc display - cell align - top";
-
-        //    labelUserOrderedProductName = new Label();
-        //    labelUserOrderedProductName.Text = "Linen Full sleeve shirt" + "<br/>";
-
-        //    Label labelUserOrderedProductCode = new Label();
-        //    labelUserOrderedProductCode.CssClass = "item-code";
-        //    labelUserOrderedProductCode.Text = "Product Code:" + 565666666.ToString() + "<br />";
-
-        //    Label labelUserProductPrice = new Label();
-        //    labelUserProductPrice.CssClass = "cost";
-        //    labelUserProductPrice.Text = "&#8377; " + 4500.ToString();
-
-        //    //add label to another pannel
-        //    pannelUserOrderedProductInfo1.Controls.Add(labelUserOrderedProductName);
-        //    pannelUserOrderedProductInfo1.Controls.Add(labelUserOrderedProductCode);
-        //    pannelUserOrderedProductInfo1.Controls.Add(labelUserProductPrice);
-
-        //    td1.Controls.Add(pannelUserOrderedProductInfo1);
-
-        //    TableCell td2 = new TableCell();
-
-        //    userProductChoiceOrderdtl = new Button();
-        //    userProductChoiceOrderdtl.ID = "ButtonUserProductChoiceOrderDtl";
-        //    userProductChoiceOrderdtl.CssClass = "btn order-action--btn text-uppercase";
-        //    userProductChoiceOrderdtl.Text = "order detail";
-
-        //    userProductChoiceOrderdInvoice = new Button();
-        //    userProductChoiceOrderdInvoice.ID = "ButtonUserProductChoiceOrderInvoi";
-        //    userProductChoiceOrderdInvoice.CssClass = "btn order-action--btn text-uppercase";
-        //    userProductChoiceOrderdInvoice.Text = "Buy it again";
-        //    userProductChoiceOrderdInvoice.OnClientClick = "UserProductByAgain_Click";
-
-        //    pannelUserOrderedProductInfo2 = new Panel();
-        //    pannelUserOrderedProductInfo2.Controls.Add(userProductChoiceOrderdtl);
-        //    pannelUserOrderedProductInfo2.Controls.Add(userProductChoiceOrderdInvoice);
-        //    td2.Controls.Add(pannelUserOrderedProductInfo2);
-
-        //    //add all td to TableRow obj
-        //    tr.Controls.Add(td);
-        //    tr.Controls.Add(td1);
-        //    tr.Controls.Add(td2);
-
-        //    //for (int tbody = 0; tbody < 3; tbody++)
-        //    //{
-        //    //    /*<tbody><tr><td></tr>*/
-
-        //    //    tr.TableSection = TableRowSection.TableBody;
-        //    //    TableCell td = new TableCell();
-
-
-        //    //    //tr.Cells.Add(td);
-        //    //    // Put table cell in the TableRow
-        //    //    tr.Controls.Add(td);
-
-        //    //    // table.Rows.Add(tr);
-        //    //}
-
-        //    returnedProductList.Add(table);
-
-        //}
-
-        //foreach (Table item in returnedProductList)
-        //{
-        //    PanelUserOrderReturnTable.Controls.Add(item);
-        //}
+        
 
     }
 
     protected void ButtonUserCancelled_Click(object sender, EventArgs e)
     {
 
-        MultiViewUserOrdered.ActiveViewIndex = 2;
-        List<Table> cancelledProductList = new List<Table>();
-        int productCatCount = 5;
-
-        Panel pannelUserOrderedProductInfo0; // which will create panel in td
-        Panel pannelUserOrderedProductInfo1;  // which will create panel in td
-        Panel pannelUserOrderedProductInfo2; // which will create panel in td
-        Image productImage;
-
-        Button userProductChoiceOrderdInvoice;
-
-        Label labelUserOrderedProductName;
-
-        for (int i = 0; i < 2; i++)
-        {
-            Table table = new Table();
-            table.ID = "TableUserOrder" + i.ToString();
-            table.CssClass = "table";
-
-            TableHeaderRow tr = new TableHeaderRow();
-            tr.CssClass = "relate";
-            table.Controls.Add(tr);
-
-
-            for (int thead = 0; thead < productCatCount; thead++)
-            {
-                /*<thead> <tr><th></th> </tr></thead>*/
-
-                tr.TableSection = TableRowSection.TableHeader;
-                TableHeaderCell th = new TableHeaderCell();
-                th.Text = "Product (" + thead.ToString() + ")";
-                th.CssClass = "align-top";
-                tr.Cells.Add(th);
-                table.Rows.Add(tr);
-            }
-
-            tr = new TableHeaderRow();
-            table.Controls.Add(tr);
-
-            tr.TableSection = TableRowSection.TableBody;
-            TableCell td = new TableCell();
-
-            pannelUserOrderedProductInfo0 = new Panel();
-            pannelUserOrderedProductInfo0.ID = "PannelUserOrderedProductInfo";
-            pannelUserOrderedProductInfo0.CssClass = "item-img display-cell align-top";
-            productImage = new Image();
-            productImage.ImageUrl = "../Images/Home/10.jpg";
-            productImage.CssClass = "img-responsive";
-            // 1st add image in td
-
-            // add image to 1st pannel 
-            pannelUserOrderedProductInfo0.Controls.Add(productImage);
-            td.Controls.Add(pannelUserOrderedProductInfo0);
-
-            TableCell td1 = new TableCell();
-            pannelUserOrderedProductInfo1 = new Panel();
-            pannelUserOrderedProductInfo1.CssClass = " item - desc display - cell align - top";
-
-            labelUserOrderedProductName = new Label();
-            labelUserOrderedProductName.Text = "Linen Full sleeve shirt" + "<br/>";
-
-            Label labelUserOrderedProductCode = new Label();
-            labelUserOrderedProductCode.CssClass = "item-code";
-            labelUserOrderedProductCode.Text = "Product Code:" + 565666666.ToString() + "<br />";
-
-            Label labelUserProductPrice = new Label();
-            labelUserProductPrice.CssClass = "cost";
-            labelUserProductPrice.Text = "&#8377; " + 4500.ToString();
-
-            //add label to another pannel
-            pannelUserOrderedProductInfo1.Controls.Add(labelUserOrderedProductName);
-            pannelUserOrderedProductInfo1.Controls.Add(labelUserOrderedProductCode);
-            pannelUserOrderedProductInfo1.Controls.Add(labelUserProductPrice);
-
-            td1.Controls.Add(pannelUserOrderedProductInfo1);
-
-            TableCell td2 = new TableCell();
-
-            userProductChoiceOrderdInvoice = new Button();
-            userProductChoiceOrderdInvoice.ID = "ButtonUserProductChoiceOrderInvoi";
-            userProductChoiceOrderdInvoice.CssClass = "btn order-action--btn text-uppercase";
-            userProductChoiceOrderdInvoice.Text = "Buy it again";
-            userProductChoiceOrderdInvoice.OnClientClick = "UserProductByAgain_Click";
-
-            pannelUserOrderedProductInfo2 = new Panel();
-            pannelUserOrderedProductInfo2.Controls.Add(userProductChoiceOrderdInvoice);
-            td2.Controls.Add(pannelUserOrderedProductInfo2);
-
-            //add all td to TableRow obj
-            tr.Controls.Add(td);
-            tr.Controls.Add(td1);
-            tr.Controls.Add(td2);
-
-            //for (int tbody = 0; tbody < 3; tbody++)
-            //{
-            //    /*<tbody><tr><td></tr>*/
-
-            //    tr.TableSection = TableRowSection.TableBody;
-            //    TableCell td = new TableCell();
-
-
-            //    //tr.Cells.Add(td);
-            //    // Put table cell in the TableRow
-            //    tr.Controls.Add(td);
-
-            //    // table.Rows.Add(tr);
-            //}
-
-            cancelledProductList.Add(table);
-
-        }
-
-        foreach (Table item in cancelledProductList)
-        {
-            PanelUserOrderCancelTable.Controls.Add(item);
-        }
+       
     }
 
     protected void ButtonUserOrders_Click(object sender, EventArgs e)
@@ -396,7 +184,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         MultiViewUserChoice.ActiveViewIndex = -1;
 
         //To check customer has already a Shipping address or not 
-        cust.MyId = id;
+            cust.MyId = id;
 
         cust.DisplayCustomerData();
 
@@ -457,6 +245,9 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //Update the ManipulateCustom obj
         custMpData = cust.ShowCustManupulatedData();
 
+        //Store updated Customer Obj in ViewState 
+       // ViewState["Customer"] = cust;
+
         //Sore updated Manupulated Obj in ViewState
         ViewState["CustManupData"] = custMpData;
 
@@ -513,6 +304,10 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //Fetch from database
         cust.DisplayCustomerData();
 
+        //Store updated Customer Obj in ViewState 
+     
+        custMpData = cust.ShowCustManupulatedData();
+
         //Update UI 
         ShowDisplayedData();
 
@@ -537,7 +332,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         cust.CustShipPinCode = Convert.ToInt32(TBoxNewAddrPinCode.Text);
 
-        cust.MyId = id;
+         cust.MyId = id;
         // save info into Database
         cust.SaveShipNewAddr();
 
@@ -573,7 +368,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         MultiViewUserAddr.ActiveViewIndex = 1;
 
         ButtonUserAddrSave.CommandArgument = e.CommandArgument.ToString();
-
+    
     }
 
     protected void RptUserAddr_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -625,5 +420,20 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         //Activate Binding
         dlUserNewState.DataBind();
+    }
+
+    protected void ButtonUserAddrDelete_Command(object sender, CommandEventArgs e)
+    {
+        cust.MyId = id;
+
+        // save info into Database at the paricular AddressId
+        //Of the customer 
+        cust.DeleteShipAddr(Convert.ToInt32(e.CommandArgument));
+
+        //Fetch from database
+        cust.DisplayCustomerData();
+
+        //Store updated Customer Obj in ViewState 
+        custMpData = cust.ShowCustManupulatedData();
     }
 }

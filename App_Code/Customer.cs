@@ -25,7 +25,7 @@ public class Customer : Shopping
 
     public string CustImg { get; set; }
 
-    public string CustShippAddr { get; set; }
+     public string CustShippAddr { get; set; }
 
     public string CustShipCountry { get; set; }
 
@@ -408,10 +408,59 @@ public class Customer : Shopping
     }
     
     
+    //This will delete saved Address
+    public void DeleteShipAddr(int theCustAddrId)
+    {
+        string deleteSqlQury = "DELETE FROM customer_address ";
+
+        deleteSqlQury += "INNER JOIN customer ON ";
+
+        deleteSqlQury += "customer.CustId = customer_address.CustAddrId ";
+
+        deleteSqlQury += " WHERE CustId=@CustId AND CustAddrId=@CustAddrId";
+
+        custMpData = new ManipulateCustomerData();
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        MySqlCommand cmd = new MySqlCommand(deleteSqlQury, connection);
+
+
+        //Add parameters for Selct 
+
+        cmd.Parameters.AddWithValue("@CustId", MyId);
+
+        cmd.Parameters.AddWithValue("@CustAddrId", theCustAddrId);
+
+        //Will give 1 if record successfully updated
+        int deleted = 0;
+
+        try
+        {
+            using (connection)
+            {
+                // Open database connection 
+                connection.Open();
+
+                deleted = cmd.ExecuteNonQuery();
+            }
+        }
+        catch (Exception err)
+        {
+            System.Diagnostics.Debug.WriteLine("Update Query Error" + err);
+        }
+
+        //If deleted successfully 
+        //if (deleted > 0)
+        //{
+        //  custMpData.AddCustIdentity(theCustAddrId,)
+        //}
+    }
     /* Note: If customer Signs up or logins  successfully 
      * Retrive all customer data with associated customer Id  
       i.e Troughout their name to what they ardered 
      */
+    
     public void DisplayCustomerData()
     {
         string selectSqlQueryCust = "SELECT CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg, CustAddrId, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode FROM customer ";
@@ -423,6 +472,8 @@ public class Customer : Shopping
         selectSqlQueryCust += " WHERE customer.CustId = @CustId";
 
         int custAddrId;
+
+        custMpData = new ManipulateCustomerData();
 
         MySqlConnection connection = new MySqlConnection(connectionString);
 
@@ -477,13 +528,10 @@ public class Customer : Shopping
 
                     if (custAddrId != 0)
                         //To store the entire obj
-                        //Intialize the Obj to manipulate data 
 
-                       custMpData = new ManipulateCustomerData(custAddrId, CustFirstName, CustLastName, CustFullName, CustMobNo, EmailId,  CustShippAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode);
+                       custMpData.AddCustIdentity(custAddrId, CustFirstName, CustLastName, CustFullName, CustMobNo, EmailId,  CustShippAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode);
                    
                 }
-                
-
             }
         }
 
@@ -494,7 +542,7 @@ public class Customer : Shopping
             errorLbl.Text = error.ToString();
         }
     }
-
+    
     public ManipulateCustomerData ShowCustManupulatedData()
     {
         return custMpData;

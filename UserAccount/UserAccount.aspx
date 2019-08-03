@@ -196,7 +196,7 @@
                                                 <p>
                                                     <asp:Button ID="ButtonUserAddrEdit" OnCommand="ButtonUserAddrEdit_Command" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Key") %>' UseSubmitBehavior="false" CssClass="btn address-edit-btn" runat="server" Text="Edit" />
 
-                                                    <asp:Button ID="ButtonUserAddrDelete" CssClass="btn address-delt-btn" runat="server" Text="Delete" />
+                                                    <asp:Button ID="ButtonUserAddrDelete"   OnCommand="ButtonUserAddrDelete_Command" UseSubmitBehavior="false" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Key") %>' CssClass="btn address-delt-btn" runat="server" Text="Delete" />
                                                 </p>
                                             </div>
                                         </asp:Panel>
@@ -298,7 +298,7 @@
                                             <p>
                                                 <asp:Button ID="ButtonUserAddrSave" CssClass="btn save--btn text-uppercase" runat="server" UseSubmitBehavior="false" OnClick="ButtonUserAddrSave_Click" Text="save" />
 
-                                                <asp:Button ID="ButtonUserAddrCancel" CausesValidation="false" CssClass="btn delt--btn text-uppercase" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" runat="server" Text="cancel" />
+                                                <asp:Button ID="ButtonUserAddrCancel" CausesValidation="false" CssClass="btn delt--btn text-uppercase" UseSubmitBehavior="false" CommandName="SwitchViewByID" CommandArgument="ViewUserAddrSaved" runat="server" Text="cancel" />
                                             </p>
                                         </div>
 

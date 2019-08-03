@@ -100,13 +100,13 @@
                         <ul class="header-top-right-dropdown list-unstyled">
 
                             <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkProfile"  NavigateUrl="~/UserAccount/UserAccount.aspx" runat="server">profile</asp:HyperLink>
+                                <asp:HyperLink ID="HyperLinkProfile"  NavigateUrl="~/UserAccount/UserAccount.aspx?tabSelection=Profile" runat="server">profile</asp:HyperLink>
                             </li>
                             <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkManageAddress"  NavigateUrl="~/UserAccount/UserAccount.aspx" runat="server">manage address</asp:HyperLink>
+                                <asp:HyperLink ID="HyperLinkManageAddress"  NavigateUrl="~/UserAccount/UserAccount.aspx?tabSelection=Addr" runat="server">manage address</asp:HyperLink>
                             </li>
                             <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkOrder" NavigateUrl="~/UserOrderDetails/OrderDetails.aspx" runat="server">order</asp:HyperLink>
+                                <asp:HyperLink ID="HyperLinkOrder" NavigateUrl="~/UserOrderDetails/OrderDetails.aspx?tabSelection=Order" runat="server">order</asp:HyperLink>
                             </li>
                             <li class="text-uppercase">
                                 <asp:HyperLink ID="HyperLinkWishlist" NavigateUrl="#" runat="server">Wishlist</asp:HyperLink>
