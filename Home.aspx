@@ -11,14 +11,14 @@
                     <asp:Repeater ID="RepeatHomeBannerData" runat="server" OnItemDataBound="RepeatHomeBannerData_ItemDataBound">
                         <ItemTemplate>
                             <li class="relate">
-                                <asp:HyperLink ID="HyperLinkHomeBanner" NavigateUrl="~/Products.aspx" Target="_self" runat="server">
+                                <asp:HyperLink ID="HyperLinkHomeBanner"  NavigateUrl="~/Products/Products.aspx" Target="_self" runat="server">
                                     <asp:Image ID="SliderHomeBannerImg" CssClass="img-responsive" runat="server" />
                                 </asp:HyperLink>
                                 <div class="get-center text-uppercase">
                                     <h1><%# Eval("HomeBannerName") %></h1>
                                     <h3><%# Eval("HomeBannerDesc") %></h3>
                                     <p>
-                                        <asp:HyperLink ID="HyperLinkHomeBanShop" NavigateUrl="~/Products.aspx" Target="_self" runat="server">
+                                        <asp:HyperLink ID="HyperLinkHomeBanShop"  NavigateUrl="" Target="_self" runat="server">
                                             <asp:Button ID="ButtonHomeShopNow" UseSubmitBehavior="false" PostBackUrl="~/Products.aspx" CssClass="btn shop--now" runat="server" Text="Shop Now" />
                                         </asp:HyperLink>
                                     </p>

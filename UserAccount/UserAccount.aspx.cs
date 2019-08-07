@@ -49,7 +49,9 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
                 ViewState["CustId"] = cust.MyId;
 
                 cust.DisplayCustomerData();
-    
+
+                cust.CheckShipAddr();
+
                 custMpData = cust.ShowCustManupulatedData();
 
                 custMpData.ShowCustIdentity();
@@ -105,7 +107,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         ContStateCollection = ContStateCollection;
 
         //Persist  Customer Obj / Update the ViewState 
-        ViewState["Customer"] = cust;
+       // ViewState["CustId"] = cust.MyId;
 
         //Persist  CustManupulated Obj / Update the ViewState 
         ViewState["CustManupData"] = custMpData;
@@ -188,7 +190,9 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         cust.DisplayCustomerData();
 
-        if (custMpData.ShowCustIdentity() == null)
+        cust.CheckShipAddr();
+
+        if (custMpData.ShowCustIdentity().Count == 0)
 
             MultiViewUserAddr.ActiveViewIndex = 2;
 
@@ -204,7 +208,7 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
     protected void LinkButtonuserOrdered_Click(object sender, EventArgs e)
     {
-        PanelUserOrder.Visible = true;
+         PanelUserOrder.Visible = true;
 
         //Disable Both tab profile & manage address tab 
         MultiViewUserChoice.ActiveViewIndex = -1;
@@ -241,6 +245,8 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         //Fetch from database
         cust.DisplayCustomerData();
+
+        cust.CheckShipAddr();
 
         //Update the ManipulateCustom obj
         custMpData = cust.ShowCustManupulatedData();
@@ -304,6 +310,8 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //Fetch from database
         cust.DisplayCustomerData();
 
+        cust.CheckShipAddr();
+
         //Store updated Customer Obj in ViewState 
      
         custMpData = cust.ShowCustManupulatedData();
@@ -338,6 +346,8 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
 
         //Fetch from database
         cust.DisplayCustomerData();
+
+        cust.CheckShipAddr();
 
         //Update the ManipulateCustom obj
         custMpData = cust.ShowCustManupulatedData();
@@ -433,7 +443,13 @@ public partial class UserAccount_UserAccount : System.Web.UI.Page
         //Fetch from database
         cust.DisplayCustomerData();
 
+        //Check ship Address
+        cust.CheckShipAddr();
+
         //Store updated Customer Obj in ViewState 
         custMpData = cust.ShowCustManupulatedData();
+
+        Response.Redirect(Request.RawUrl);
+
     }
 }

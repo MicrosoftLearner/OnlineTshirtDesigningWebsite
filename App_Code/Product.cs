@@ -4,18 +4,11 @@ using System.Linq;
 using System.Web;
 
 /// <summary>
-/// Summary description for Class1
+/// Summary description for Product
 /// </summary>
- public class Class1:Shopping
+public class Product
 {
-    
-    Customer cs;
-    
-    public void Display()
-    {
-        
-    }
-    public Class1()
+    public Product()
     {
         //
         // TODO: Add constructor logic here

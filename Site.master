@@ -23,7 +23,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.1/flexslider.min.css.map" rel="stylesheet" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="stylesheet" href="Content/font-awesome.css">
-
+    <link rel="stylesheet" href="Content/PreetyCheckbox.min.css" />
     <script type="text/javascript">
         //Set API for Country Dropdownlist
     </script>

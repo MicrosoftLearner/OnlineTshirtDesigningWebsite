@@ -25,7 +25,7 @@ public class Customer : Shopping
 
     public string CustImg { get; set; }
 
-     public string CustShippAddr { get; set; }
+    public string CustShippAddr { get; set; }
 
     public string CustShipCountry { get; set; }
 
@@ -43,7 +43,7 @@ public class Customer : Shopping
         {
             return CustFirstName + CustLastName;
         }
-       
+
     }
 
     ManipulateCustomerData custMpData;
@@ -61,7 +61,7 @@ public class Customer : Shopping
     {
         CustFirstName = theCustFirstName;
         CustLastName = theCustLastName;
-     
+
         CustMobNo = theCustMobNo;
         EmailId = theEmailId;
         CustShippAddr = theCustShipAddr;
@@ -356,19 +356,20 @@ public class Customer : Shopping
     /*Note: If user hasn't got any saved address 
      * This function will  cteate a new address in their record
      */
-    public void SaveShipNewAddr() {
-        
+    public void SaveShipNewAddr()
+    {
+
         string insertSqlQuery = "INSERT INTO customer_address (";
 
         insertSqlQuery += "CustAddrId, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode , CustId ) ";
 
         insertSqlQuery += "VALUES (";
         insertSqlQuery += "@CustAddrId, @CustShipAddr, @CustShipCountry, @CustShipState, @CustShipCity, @CustShipPinCode, @CustId ) ";
-        
+
         MySqlConnection connection = new MySqlConnection(connectionString);
 
         MySqlCommand cmd = new MySqlCommand(insertSqlQuery, connection);
-        
+
         //Add parameters for Selct 
         cmd.Parameters.AddWithValue("@CustAddrId", null);
 
@@ -406,18 +407,16 @@ public class Customer : Shopping
             System.Diagnostics.Debug.WriteLine("Update Query Error" + err);
         }
     }
-    
-    
+
+
     //This will delete saved Address
     public void DeleteShipAddr(int theCustAddrId)
     {
         string deleteSqlQury = "DELETE FROM customer_address ";
 
-        deleteSqlQury += "INNER JOIN customer ON ";
+        deleteSqlQury += " WHERE CustAddrId IN (";
 
-        deleteSqlQury += "customer.CustId = customer_address.CustAddrId ";
-
-        deleteSqlQury += " WHERE CustId=@CustId AND CustAddrId=@CustAddrId";
+        deleteSqlQury += "@CustAddrId)";
 
         custMpData = new ManipulateCustomerData();
 
@@ -456,22 +455,29 @@ public class Customer : Shopping
         //  custMpData.AddCustIdentity(theCustAddrId,)
         //}
     }
+   
     /* Note: If customer Signs up or logins  successfully 
      * Retrive all customer data with associated customer Id  
       i.e Troughout their name to what they ardered 
      */
-    
+
     public void DisplayCustomerData()
     {
-        string selectSqlQueryCust = "SELECT CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg, CustAddrId, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode FROM customer ";
+        string selectSqlQueryCust = "SELECT CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg  FROM customer";
 
-        selectSqlQueryCust += "INNER JOIN customer_address ";
 
-        selectSqlQueryCust += " ON customer.CustId = customer_address.CustId ";
+        //string selectSqlQueryCust = "SELECT CustFirstName, CustLastName, CustMobNo,  CustEmailAddr, CustImg, CustAddrId, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode FROM customer ";
 
-        selectSqlQueryCust += " WHERE customer.CustId = @CustId";
+        //selectSqlQueryCust += "INNER JOIN customer_address ";
 
-        int custAddrId;
+        //selectSqlQueryCust += " ON customer.CustId = customer_address.CustId ";
+
+        //selectSqlQueryCust += " WHERE customer.CustId = @CustId";
+
+        selectSqlQueryCust += " WHERE CustId=@CustId";
+
+
+     //   int custAddrId;
 
         custMpData = new ManipulateCustomerData();
 
@@ -500,7 +506,7 @@ public class Customer : Shopping
                 //and Set the Customer's Object fields  
                 while (reader.Read())
                 {
-                   
+
                     CustFirstName = reader["CustFirstName"].ToString();
 
                     CustLastName = reader["CustLastName"].ToString();
@@ -511,38 +517,89 @@ public class Customer : Shopping
 
                     CustImg = reader["CustImg"].ToString();
 
-                    custAddrId = Convert.ToInt32( reader["CustAddrId"]);
-
-                    CustShippAddr = reader["CustShipAddr"].ToString();
-
-                    CustShipCountry = reader["CustShipCountry"].ToString();
-
-                    CustShipState = reader["CustShipState"].ToString();
-
-                    CustShipCity = reader["CustShipCity"].ToString();
-
-                    CustShipPinCode = Convert.ToInt32(reader["CustShipPinCode"]);
-
                     //if data present in CustAddress table i.e(not null)
                     //Convert.To method will give null as O/P if null is there
 
-                    if (custAddrId != 0)
-                        //To store the entire obj
-
-                       custMpData.AddCustIdentity(custAddrId, CustFirstName, CustLastName, CustFullName, CustMobNo, EmailId,  CustShippAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode);
-                   
                 }
             }
         }
 
-        
+
         catch (Exception error)
         {
             Label errorLbl = new Label();
             errorLbl.Text = error.ToString();
         }
     }
-    
+
+    public void CheckShipAddr()
+    {
+
+        string selectSqlQueryCust = "SELECT CustAddrId, CustShipAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode FROM customer_address";
+        
+        selectSqlQueryCust += " WHERE CustId = @CustId";
+
+        int custAddrId;
+
+        custMpData = new ManipulateCustomerData();
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        MySqlCommand cmd;
+
+        MySqlDataReader readerShipAddr;
+
+        cmd = new MySqlCommand(selectSqlQueryCust, connection);
+
+        //Add the paramaters 
+        cmd.Parameters.AddWithValue("@CustId", MyId);
+
+
+        try
+        {
+            //To automatically dispose the connction Obj
+            using (connection)
+            {
+                // Open the database connection
+                connection.Open();
+                readerShipAddr = cmd.ExecuteReader();
+
+                //Read the data from Customer table 
+                //and Set the Customer's Object fields  
+                while (readerShipAddr.Read())
+                {
+                    custAddrId = Convert.ToInt32(readerShipAddr["CustAddrId"]);
+
+                    //if data present in CustAddress table i.e(not null)
+                    //Convert.To method will give null as O/P if null is there
+
+                    if (custAddrId != 0)
+                    {
+                        CustShippAddr = readerShipAddr["CustShipAddr"].ToString();
+
+                        CustShipCountry = readerShipAddr["CustShipCountry"].ToString();
+
+                        CustShipState = readerShipAddr["CustShipState"].ToString();
+
+                        CustShipCity = readerShipAddr["CustShipCity"].ToString();
+
+                        CustShipPinCode = Convert.ToInt32(readerShipAddr["CustShipPinCode"]);
+
+                        //To store the entire obj
+
+                        custMpData.AddCustIdentity(custAddrId, CustFirstName, CustLastName, CustFullName, CustMobNo, EmailId, CustShippAddr, CustShipCountry, CustShipState, CustShipCity, CustShipPinCode);
+                    }
+                }
+            }
+        }
+
+
+        catch (Exception error)
+        {
+            System.Diagnostics.Debug.WriteLine(error);
+        }
+    }
+
     public ManipulateCustomerData ShowCustManupulatedData()
     {
         return custMpData;

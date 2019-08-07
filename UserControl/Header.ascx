@@ -106,7 +106,7 @@
                                 <asp:HyperLink ID="HyperLinkManageAddress"  NavigateUrl="~/UserAccount/UserAccount.aspx?tabSelection=Addr" runat="server">manage address</asp:HyperLink>
                             </li>
                             <li class="text-uppercase">
-                                <asp:HyperLink ID="HyperLinkOrder" NavigateUrl="~/UserOrderDetails/OrderDetails.aspx?tabSelection=Order" runat="server">order</asp:HyperLink>
+                                <asp:HyperLink ID="HyperLinkOrder" NavigateUrl="~/UserAccount/UserAccount.aspx?tabSelection=Order" runat="server">order</asp:HyperLink>
                             </li>
                             <li class="text-uppercase">
                                 <asp:HyperLink ID="HyperLinkWishlist" NavigateUrl="#" runat="server">Wishlist</asp:HyperLink>
