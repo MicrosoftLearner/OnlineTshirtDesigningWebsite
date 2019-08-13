@@ -8,7 +8,7 @@ using System.Web;
 /// </summary>
 
 [Serializable]
-public class  ManipulateCustomerData
+public class ManipulateCustomerData
 {
     private Dictionary<int, Customer> custIdentity = new Dictionary<int, Customer>();
 
@@ -23,11 +23,6 @@ public class  ManipulateCustomerData
     {
         return custIdentity;
     }
-
-    //public void AddCustIdentity(int theCustAddrId)
-    //{
-        
-    //}
 
     public ManipulateCustomerData()
     {
