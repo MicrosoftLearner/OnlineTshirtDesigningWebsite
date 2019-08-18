@@ -1,16 +1,25 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls;
+using MySql.Data.MySqlClient;
+using System.Text;
+using System.Configuration;
 
 /// <summary>
 /// Product is the class in which all Product related info is present
 /// Such as buying product , canceling ordered Product , and all ther things 
 /// Which a Customer can do 
 /// </summary>
+/// 
+[Serializable]
 public class Product: Shopping
 {
-    public int ProductCode { get; set; }
+    public string ProductCode { get; set; }
+
+    public string ProductCat { get; set; }
 
     public string ProductName { get; set; }
 
@@ -22,11 +31,7 @@ public class Product: Shopping
 
     public string ProductDesc { get; set; }
 
-    public double ProductPrice { get; set; }
-
-    public string ProductSizeName { get; set; }
-
-    public string ProductSizeQuant { get; set; }
+    public int ProductPrice { get; set; }
 
     public string ProductNewArrival { get; set; }
 
@@ -37,7 +42,7 @@ public class Product: Shopping
     public string ProductPaymentMethd { get; set; }
 
     public string CustComment { get; set; }
-
+    
     public Product()
     {
           
@@ -45,6 +50,5 @@ public class Product: Shopping
         // TODO: Add constructor logic here
         //
     }
-
-
+    
 }

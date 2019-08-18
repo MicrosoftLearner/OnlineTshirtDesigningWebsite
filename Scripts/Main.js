@@ -10,7 +10,7 @@ $(document).ready(function () {
     });
     $('#NewArrivalSlider').flexslider({
         animation: "slide",
-        itemWidth: 220,
+        itemWidth: 250,
         itemMargin: 20,
         controlNav: false
     });

@@ -31,7 +31,7 @@ public class Shopping
 
     private string pwd;
 
-    public string Name { get;  set; }
+    public string Name { get; set; }
 
     public double Price { get; set; }
 
@@ -41,9 +41,9 @@ public class Shopping
 
     public const ushort productInialCountl = 1; // to set the oroduct intial count 
 
-    public ushort SizeQuantity { get; set; }
+    public ushort[] SizeQuantity; //for M , XL, XXL , Quantity 
 
-   
+
 
     // Member methods 
     public string GetPwd
@@ -84,7 +84,7 @@ public class Shopping
 
             //Add the paramaters 
             cmd.Parameters.AddWithValue("@CustEmailAddr", EmailId);
-          //  adaptor = new MySqlDataAdapter(cmd);
+            //  adaptor = new MySqlDataAdapter(cmd);
         }
         else
         {
@@ -93,7 +93,7 @@ public class Shopping
             //Add the parameters
             cmd.Parameters.AddWithValue("@AdminEmailAddr", EmailId);
 
-          //  adaptor = new MySqlDataAdapter(cmd);
+            //  adaptor = new MySqlDataAdapter(cmd);
         }
 
         try
@@ -113,7 +113,7 @@ public class Shopping
                         //If matches the given EmailId and password return true 
                         while (reader.Read())
                         {
-                            if ( EmailId == reader["CustEmailAddr"].ToString() && GetPwd == reader["CustPwd"].ToString() )
+                            if (EmailId == reader["CustEmailAddr"].ToString() && GetPwd == reader["CustPwd"].ToString())
                             {
                                 MyId = Convert.ToInt32(reader["CustId"].ToString());
 
@@ -140,7 +140,7 @@ public class Shopping
 
                         while (reader.Read())
                         {
-                            if ( EmailId == reader["AdminEmailAddr"].ToString() && GetPwd == reader["AdminPwd"].ToString() )
+                            if (EmailId == reader["AdminEmailAddr"].ToString() && GetPwd == reader["AdminPwd"].ToString())
                             {
                                 MyId = Convert.ToInt32(reader["AdminId"]);
 
@@ -205,4 +205,9 @@ public class Shopping
         // TODO: Add constructor logic here
         //
     }
+
+    //private decimal CalulateDiscountCost()
+    //{
+
+    //}
 }

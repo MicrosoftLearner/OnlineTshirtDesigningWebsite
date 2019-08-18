@@ -3085,7 +3085,7 @@ p.item-cost {
                         } // we have kept this class out because it is used in individual page design. so to use this class, write @extend to extend this class in your own class.
                         .buy-para__sizes {
                             margin-top: 5px;
-                            p {
+                           p  {
                                 font-size: 14px;
                                 box-sizing: border-box;
                                 border: 1px solid;
@@ -3102,7 +3102,19 @@ p.item-cost {
                             .linking {
                                 color: $darkBrown1;
                             }
-                        } //SCSS FOR INDIVIDUAL PAGE
+                        } 
+                        
+                        .buy-para-lbl-sizes{
+                              font-size: 14px;
+                                box-sizing: border-box;
+                                border: 1px solid;
+                                padding: 2px;
+                                display: inline-block;
+                                margin-right: 5px;
+                                margin-bottom: 5px;
+                                cursor: pointer;
+                        }
+                        //SCSS FOR INDIVIDUAL PAGE
                         .customer-choice {
                             margin:  45px 20px 0 20px ;
                             .customer-choice__title {

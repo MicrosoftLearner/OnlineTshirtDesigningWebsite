@@ -12,6 +12,8 @@ public class ManipulateCustomerData
 {
     private Dictionary<int, Customer> custIdentity = new Dictionary<int, Customer>();
 
+    private List<Product> prod;
+
     private Customer CustomerToDeal;
 
     public void AddCustIdentity(int theId, string theCustFirstName, string theCustLastName, string theCustFullName, int theCustMobNo, string theEmailId, string theCustShipAddr, string theCustShipCountry, string theCustShipState, string theCustShipCity, int theCustShipPinCode)
@@ -23,6 +25,7 @@ public class ManipulateCustomerData
     {
         return custIdentity;
     }
+
 
     public ManipulateCustomerData()
     {

@@ -2,8 +2,8 @@
 
 <%@ MasterType VirtualPath="~/Site.Master" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" Runat="Server">
-     <!--Section home banner -->
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
+    <!--Section home banner -->
     <section>
         <div class="cloth-cat">
             <div id="HomeBannersSlider" class="flexslider flexslider-home-banner">
@@ -11,14 +11,14 @@
                     <asp:Repeater ID="RepeatHomeBannerData" runat="server" OnItemDataBound="RepeatHomeBannerData_ItemDataBound">
                         <ItemTemplate>
                             <li class="relate">
-                                <asp:HyperLink ID="HyperLinkHomeBanner"  NavigateUrl="~/Products/Products.aspx" Target="_self" runat="server">
+                                <asp:HyperLink ID="HyperLinkHomeBanner" NavigateUrl="~/Products/Products.aspx" Target="_self" runat="server">
                                     <asp:Image ID="SliderHomeBannerImg" CssClass="img-responsive" runat="server" />
                                 </asp:HyperLink>
                                 <div class="get-center text-uppercase">
                                     <h1><%# Eval("HomeBannerName") %></h1>
                                     <h3><%# Eval("HomeBannerDesc") %></h3>
                                     <p>
-                                        <asp:HyperLink ID="HyperLinkHomeBanShop"  NavigateUrl="" Target="_self" runat="server">
+                                        <asp:HyperLink ID="HyperLinkHomeBanShop" NavigateUrl="" Target="_self" runat="server">
                                             <asp:Button ID="ButtonHomeShopNow" UseSubmitBehavior="false" PostBackUrl="~/Products.aspx" CssClass="btn shop--now" runat="server" Text="Shop Now" />
                                         </asp:HyperLink>
                                     </p>
@@ -58,56 +58,49 @@
                             <asp:Panel ID="SliderNew1" runat="server">
 
                                 <ul class="slides">
-                                    <%--<flex-slider flex-slide="newArrival in newArrivals track by $index" prev-text="" next-text="" animation="slide" item-width="220"
+                                    <asp:Repeater ID="RepeatNewArrivalData" runat="server">
+                                        <ItemTemplate>
+
+                                            <%--<flex-slider flex-slide="newArrival in newArrivals track by $index" prev-text="" next-text="" animation="slide" item-width="220"
                             item-margin="20" min-items="3">--%>
-                                    <li>
-                                        <div class=" new-arrival__banner-detail  relate">
-                                            <div class="relate">
-                                                <asp:Image ID="ImageNewArrival" ImageUrl="~/Images/Home/9.jpg" AlternateText="" CssClass="img-responsive" runat="server" />
-                                                <asp:Panel ID="PanelFeaturedIconCart" CssClass="featured__icon-cart" runat="server">
-                                                    <i class="fa fa-shopping-cart"></i>
-                                                </asp:Panel>
-                                                <asp:Panel ID="PanelFeaturedIconHeart" CssClass="featured__icon-heart" runat="server">
-                                                    <i>s</i>
-                                                </asp:Panel>
-                                            </div>
+                                            <li>
+                                                <div class=" new-arrival__banner-detail  relate">
+                                                    <div class="relate">
+                                                        <asp:HyperLink ID="LnkIndividualProd" Target="_blank" NavigateUrl='<%# String.Format("~/Products/IndividualProduct.aspx?prodId={0}&prodCode={1}&prodCat={2}&prodName={3}&prodStyle={4}&prodColor={5}&prodImg={6}&prodDesc={7}&prodPrice={8}&prodSizeM={9}&prodSizeXL={10}&prodSizeXXL={11}",Eval("ProductId"),Eval("ProductCode"),Eval("ProductCat"),Eval("ProductName"),Eval("ProductStyle"),Eval("ProductColor"),Eval("ProductImg"),Eval("ProductDesc"),Eval("ProductPrice"),((Product) Container.DataItem).SizeQuantity[0], ((Product) Container.DataItem).SizeQuantity[1], ((Product) Container.DataItem).SizeQuantity[2] ) %>' runat="server">
+                                                            <asp:Image ID="ImageNewArrival" ImageUrl='<%# DataBinder.Eval(Container.DataItem, "ProductImg") %>' CssClass="img-responsive" runat="server" />
 
-                                            <div class="get-left">
-                                                <h3 class="homepg-slider-product-cost"><i class="fa fa-inr" aria-hidden="true"></i>
-                                                    <asp:Label ID="Label1" runat="server" Text="0"></asp:Label>0</h3>
-                                                <h4 class="homepg-slider-product-name text-uppercase">
-                                                    <asp:Label ID="LabelNewArrivalProductname" runat="server" Text="{{productName}}"></asp:Label></h4>
-                                                <div class="abslt-buynow-btn">
-                                                    <asp:Button ID="ButtonFeaturedBuyNow" CssClass="btn buynow--btn btn--mob-modal text-uppercase" runat="server" Text="Buy" />
+                                                        </asp:HyperLink>
+                                                        <div>
+                                                            <asp:HyperLink ID="LnkAddToCart" runat="server" CssClass="featured__icon-cart"> <i class="fa fa-shopping-cart"></i></asp:HyperLink>
+                                                        </div>
+
+                                                        <asp:Panel ID="PanelFeaturedIconHeart" CssClass="featured__icon-heart" runat="server">
+                                                            <i>s</i>
+                                                        </asp:Panel>
+                                                    </div>
+
+                                                    <div class="get-left">
+                                                        <h3 class="homepg-slider-product-cost"><i class="fa fa-inr" aria-hidden="true"></i>
+                                                            <asp:Label ID="LblProdCost" runat="server" Text='<%#  DataBinder.Eval(Container.DataItem, "ProductPrice") %>'></asp:Label></h3>
+                                                        <h4 class="homepg-slider-product-name text-uppercase">
+                                                            <asp:Label ID="LblProdName" runat="server" Text='<%#  DataBinder.Eval(Container.DataItem, "ProductName") %>'></asp:Label></h4>
+
+                                                        <%--<asp:Label ID="Label1" runat="server" Text='<%# ((Product) Container.DataItem).SizeQuantity[0] %>' ForeColor="White"></asp:Label> &nbsp;
+
+                                                <asp:Label ID="Label2" runat="server" Text='<%# ((Product) Container.DataItem).SizeQuantity[1]  %>' ForeColor="White"></asp:Label>&nbsp;
+
+                                                <asp:Label ID="Label3" runat="server" Text='<%#  ((Product) Container.DataItem).SizeQuantity[2] %>' ForeColor="White"></asp:Label>&nbsp;--%>
+
+                                                        <div class="abslt-buynow-btn">
+                                                            <asp:Button ID="ButtonFeaturedBuyNow" OnCommand="ButtonFeaturedBuyNow_Command" CssClass="btn buynow--btn btn--mob-modal text-uppercase" runat="server" Text="Buy" UseSubmitBehavior="false" CommandArgument='<%#  DataBinder.Eval(Container.DataItem, "ProductId") %>' />
+                                                        </div>
+                                                    </div>
+
                                                 </div>
-                                            </div>
+                                            </li>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
 
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class=" new-arrival__banner-detail  relate">
-                                            <div class="relate">
-                                                <asp:Image ID="Image2" ImageUrl="~/Images/Home/9.jpg" AlternateText="" CssClass="img-responsive" runat="server" />
-                                                <asp:Panel ID="Panel1" CssClass="featured__icon-cart" runat="server">
-                                                    <i class="fa fa-shopping-cart"></i>
-                                                </asp:Panel>
-                                                <asp:Panel ID="Panel2" CssClass="featured__icon-heart" runat="server">
-                                                    <i>s</i>
-                                                </asp:Panel>
-                                            </div>
-
-                                            <div class="get-left">
-                                                <h3 class="homepg-slider-product-cost"><i class="fa fa-inr" aria-hidden="true"></i>
-                                                    <asp:Label ID="Label2" runat="server" Text="0"></asp:Label>0</h3>
-                                                <h4 class="homepg-slider-product-name text-uppercase">
-                                                    <asp:Label ID="Label3" runat="server" Text="{{productName}}"></asp:Label></h4>
-                                                <div class="abslt-buynow-btn">
-                                                    <asp:Button ID="Button1" CssClass="btn buynow--btn btn--mob-modal text-uppercase" runat="server" Text="Buy" />
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </li>
                                 </ul>
                             </asp:Panel>
                         </div>
@@ -131,22 +124,22 @@
                             <%-- <flex-slider flex-slide="blog in blogs track by $index" prev-text="" next-text="" animation="slide" item-width="400" min-items="3">--%>
                             <asp:Repeater ID="RepeatBlogData" runat="server">
                                 <ItemTemplate>
-                            <li class="relate">
-                                <article class="blog__banner-detail relate">
-                                    <asp:HyperLink ID="HyperLinkInnerBlog" NavigateUrl="#" runat="server">
-                                        <asp:Image ID="ImageInnerBlog" ImageUrl='<%# Eval("InnerBlogsImg") %>' CssClass="img-responsive" runat="server" />
-                                    </asp:HyperLink>
+                                    <li class="relate">
+                                        <article class="blog__banner-detail relate">
+                                            <asp:HyperLink ID="HyperLinkInnerBlog" NavigateUrl="#" runat="server">
+                                                <asp:Image ID="ImageInnerBlog" ImageUrl='<%# Eval("InnerBlogsImg") %>' CssClass="img-responsive" runat="server" />
+                                            </asp:HyperLink>
 
-                                    <div class="blog__desc">
-                                        <h3 class="text-uppercase">'<%# Eval("InnerBlogsName") %>'</h3>
-                                        <p class="typedin-desc">'<%# Eval("InnerBlogsDesc") %>'</p>
-                                        <p class="relate extra-content">
-                                          
-                                            <asp:HyperLink ID="HyperLinkReadMore" NavigateUrl='<%# Eval("InnerBlogsId" , "~/Blogs/{0}") %>' runat="server"  Target="_self">Read more</asp:HyperLink>
-                                        </p>
-                                    </div>
-                                </article>
-                            </li>
+                                            <div class="blog__desc">
+                                                <h3 class="text-uppercase">'<%# Eval("InnerBlogsName") %>'</h3>
+                                                <p class="typedin-desc">'<%# Eval("InnerBlogsDesc") %>'</p>
+                                                <p class="relate extra-content">
+
+                                                    <asp:HyperLink ID="HyperLinkReadMore" NavigateUrl='<%# Eval("InnerBlogsId" , "~/Blogs/{0}") %>' runat="server" Target="_self">Read more</asp:HyperLink>
+                                                </p>
+                                            </div>
+                                        </article>
+                                    </li>
                                 </ItemTemplate>
                             </asp:Repeater>
                         </ul>

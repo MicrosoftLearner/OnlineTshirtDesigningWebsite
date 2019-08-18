@@ -4,16 +4,16 @@
     <div class="container">
         <div class="individual-container relate">
             <div class="row">
-                <div class="col-md-4 col-xs-12 padd-rt0">
+                <div class="col-md-5 col-xs-12 padd-rt0">
                     <div class="individual-first relate visible-lg">
                         <div class="product-img">
-                            <asp:Image ID="ImgIndividProd" runat="server" />
+                            <asp:Image ID="ImgIndividProd" CssClass="img-responsive" runat="server" />
 
                         </div>
 
                     </div>
                 </div>
-                <div class="col-md-8 col-xs-12 padd-lt3">
+                <div class="col-md-7 col-xs-12 padd-lt3">
                     <div class="prod-code">
                         <div class="pull-left">
                             <p class="prod-code__left">
@@ -54,7 +54,12 @@
                                 <h5>SIZE </h5>
 
                                 <div class="inline-block buy-para__sizes ">
-                                    <p ng-repeat="size in sizes " ng-click="selectSize(size) " ng-class="{'active':activeButton==size.name} ">{{size.name}}</p>
+                                    <asp:Label ID="LblProdSizeM"  CssClass="buy-para-lbl-sizes" runat="server" Text="M"></asp:Label>
+
+                                    <asp:Label ID="LblProdSizeXL" CssClass="buy-para-lbl-sizes" runat="server" Text="XL"></asp:Label>
+
+                                    <asp:Label ID="LblProdSizeXXL" CssClass="buy-para-lbl-sizes" runat="server" Text="XXL"></asp:Label>
+
                                     <div>
                                         <a class="linking" ng-click="openSizeChart()">Size Chart</a>
                                         <!--{{product.category.image}}-->
@@ -118,7 +123,7 @@
                                     <div class="pd-bottom panel-collapse collapse in" id="collapse1">
                                         <div class="panel-body">
                                             <p>
-                                                {{product.description}}
+                                                <asp:Label ID="LblProdDisc" runat="server" Text="Label"></asp:Label>
                                    
                                             </p>
 
@@ -137,7 +142,7 @@
                                     <div id="collapse2" class="panel-collapse collapse in">
                                         <div class="panel-body">
                                             <div class="row">
-                                                <div class="col-md-5 col-sm-5 col-xs-6">
+                                                <div class="col-md-6 col-sm-5 col-xs-6">
                                                     <div class="leftContent">
                                                         <ul class="list-unstyled">
                                                             <li class="flex-item-container spec" ng-if="product.brand">
@@ -146,7 +151,7 @@
                                                                 </div>
                                                                 <div>
                                                                     <ul class="list-unstyled">
-                                                                        <li>{{product.brand.name}}
+                                                                        <li>Burnt Umber
                                                             </li>
                                                                     </ul>
                                                                 </div>
@@ -157,12 +162,7 @@
                                                                         <p class="mb-0">Collection</p>
                                                                     </div>
                                                                 </div>
-                                                                <div>
-                                                                    <ul class="list-unstyled">
-                                                                        <li>{{product.prodCollection.name}}
-                                                            </li>
-                                                                    </ul>
-                                                                </div>
+                                                              
                                                             </li>
                                                             <li class=" flex-item-container spec" ng-if="product.style">
                                                                 <div class=" leftContent__specHead">
@@ -172,12 +172,12 @@
                                                                 </div>
                                                                 <div>
                                                                     <ul class="list-unstyled">
-                                                                        <li>{{product.style}}
+                                                                        <li> <asp:Label ID="LblProdCat" runat="server"></asp:Label>
                                                             </li>
                                                                     </ul>
                                                                 </div>
                                                             </li>
-                                                            <li class="flex-item-container spec" ng-if="product.fabric">
+                                                          <%--  <li class="flex-item-container spec" ng-if="product.fabric">
                                                                 <div class=" leftContent__specHead">
                                                                     <p class="mb-0">Fabric</p>
                                                                 </div>
@@ -187,7 +187,7 @@
                                                             </li>
                                                                     </ul>
                                                                 </div>
-                                                            </li>
+                                                            </li>--%>
                                                             <li class=" flex-item-container spec" ng-if="product.color">
                                                                 <div class=" leftContent__specHead">
                                                                     <div>
@@ -196,7 +196,8 @@
                                                                 </div>
                                                                 <div>
                                                                     <ul class="list-unstyled">
-                                                                        <li>{{product.color.name}}
+                                                                        <li>
+                                                                            <asp:Label ID="LblProdColorName" runat="server" ></asp:Label>
                                                             </li>
                                                                     </ul>
                                                                 </div>
@@ -205,11 +206,11 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-7 col-sm-7 col-xs-6">
+                                                <div class="col-md-5 col-sm-7 col-xs-6">
                                                     <div class="right-content" ng-if="product.washcare">
                                                         <p class="marg0 weight-600">Washcare</p>
                                                         <p class="washcare">
-                                                            {{product.washcare}}
+                                                           Washable
                                            
                                                         </p>
                                                     </div>
