@@ -2,9 +2,11 @@
 
 <%@ MasterType VirtualPath="~/Site.Master" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent"  ng-controller="homeCtrl" runat="Server">
     <!--Section home banner -->
     <section>
+      
+        <p> </p>
         <div class="cloth-cat">
             <div id="HomeBannersSlider" class="flexslider flexslider-home-banner">
                 <ul class="slides cloth-cat__banner-detail relate">
@@ -48,7 +50,7 @@
     <%--Section new arriaval--%>
     <section class="new-arrival">
         <div class="new-arrival__title text-center ">
-            <h1 class="text-uppercase new-arrival--border--line homepg-title">new arrivals</h1>
+            <h1 class="text-uppercase new-arrival--border--line homepg-title">new arrivals {{studentInfo}}</h1>
         </div>
         <div class="new-arrival__img">
             <div class="container-fluid">

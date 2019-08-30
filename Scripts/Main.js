@@ -1,7 +1,4 @@
-﻿/// <reference path="jquery-1.9.1.intellisense.js" />
-/// <reference path="jquery-1.9.1.js" />
-/// <reference path="jquery-1.9.1.intellisense.min.js" />
-
+﻿
 $(document).ready(function () {
     
     $('[data-toggle="popover"]').popover();
@@ -26,7 +23,7 @@ $(document).ready(function () {
         itemWidth: 400,
         controlNav: false
     });
-
+    
     $('.innerblog-other').flexslider({
         animation: "slide",
         itemWidth: 300,
@@ -53,8 +50,6 @@ $(document).ready(function () {
         slideshow: false,
         sync: "#thumbnailChoiced"
     });
-
-
 
     // This function will show your client chat up and down on basis of user action 
     $("#userClientChat, #userClientChatMin").click(function (event) {

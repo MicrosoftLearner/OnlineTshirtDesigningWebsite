@@ -7,7 +7,7 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" ng-app="myApp">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,6 +39,7 @@
                 <asp:ScriptReference Name="jquery" />
                 <asp:ScriptReference Name="bootstrap" />
                 <asp:ScriptReference Name="respond" />
+
                 <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
                 <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
                 <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
@@ -49,11 +50,26 @@
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
 
-                <asp:ScriptReference Path="~/Scripts/Main.js" />
-                <asp:ScriptReference Path="https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.1/jquery.flexslider.js" />
+                <%--Angular.js--%>
 
-                <asp:ScriptReference Path="https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.1/jquery.flexslider.min.js.map" />
+                <%--<asp:ScriptReference  Name="angular" />--%>
+
+                <%--flexSlider's--%>
+
                 <asp:ScriptReference Path="~/Scripts/toastr.js" />
+
+                <%--site-angulars--%>
+                <%--Add controller files in BundleConfig.cs to get reflected here--%>
+                <%--<asp:ScriptReference  Name="siteAngular" />--%>
+                 <asp:ScriptReference Path="~/Scripts/angular.js" />
+                <asp:ScriptReference Path="~/Scripts/angular-resource.min.js" />
+                <%--<asp:ScriptReference Path="~/Scripts/angular-flexslider.js" />--%>
+                <asp:ScriptReference Path="~/Scripts/app.js" />
+                <asp:ScriptReference Path="~/Scripts/homeController.js" />
+                <asp:ScriptReference Name="flexSlider" />
+
+                <asp:ScriptReference Path="~/Scripts/Main.js" />
+               
 
                 <%--Site Scripts--%>
             </Scripts>

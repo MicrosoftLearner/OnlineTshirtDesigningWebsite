@@ -54,12 +54,11 @@
                                 <h5>SIZE </h5>
 
                                 <div class="inline-block buy-para__sizes ">
-                                    <asp:Label ID="LblProdSizeM"  CssClass="buy-para-lbl-sizes" runat="server" Text="M"></asp:Label>
+                                    <asp:HyperLink ID="LnkProdSizeM" CssClass="buy-para-lbl-sizes"  runat="server">M</asp:HyperLink>
 
-                                    <asp:Label ID="LblProdSizeXL" CssClass="buy-para-lbl-sizes" runat="server" Text="XL"></asp:Label>
+                                    <asp:HyperLink ID="HyperLink1" CssClass="buy-para-lbl-sizes"  runat="server">XL</asp:HyperLink>
 
-                                    <asp:Label ID="LblProdSizeXXL" CssClass="buy-para-lbl-sizes" runat="server" Text="XXL"></asp:Label>
-
+                                    <asp:HyperLink ID="HyperLink2" CssClass="buy-para-lbl-sizes"   runat="server">XXL</asp:HyperLink>
                                     <div>
                                         <a class="linking" ng-click="openSizeChart()">Size Chart</a>
                                         <!--{{product.category.image}}-->

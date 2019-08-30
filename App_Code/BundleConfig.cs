@@ -28,7 +28,15 @@ namespace OnlineTshirtDesigningWebsite
                     "~/Scripts/WebForms/MsAjax/MicrosoftAjaxApplicationServices.js",
                     "~/Scripts/WebForms/MsAjax/MicrosoftAjaxTimer.js",
                     "~/Scripts/WebForms/MsAjax/MicrosoftAjaxWebForms.js"));
+            
+            //FlexSlider's js
 
+            bundles.Add(new ScriptBundle("~/bundles/flexSlider").Include(
+                "~/Scripts/flexslider/jquery-flexslider.js",
+                "~/Scripts/flexslider/angular-flexslider.js"
+
+                ));
+            
             // Use the Development version of Modernizr to develop with and learn from. Then, when you’re
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -40,6 +48,17 @@ namespace OnlineTshirtDesigningWebsite
                 {
                     Path = "~/Scripts/respond.min.js",
                     DebugPath = "~/Scripts/respond.js",
+                });
+            
+            //flexSlider's 
+            ScriptManager.ScriptResourceMapping.AddDefinition(
+                "flexSlider",
+                new ScriptResourceDefinition
+                {
+                    Path = "~/bundles/flexSlider",
+                    ////CdnPath = "https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.1/jquery.flexslider.min.js.map",
+
+                    DebugPath = "~/bundles/flexSlider",
                 });
         }
     }

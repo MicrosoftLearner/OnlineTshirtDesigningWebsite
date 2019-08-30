@@ -2,6 +2,9 @@
 <%@ Import Namespace="OnlineTshirtDesigningWebsite" %>
 <%@ Import Namespace="System.Web.Optimization" %>
 <%@ Import Namespace="System.Web.Routing" %>
+<%@ Import Namespace=" System.Web.Security" %>
+<%@ Import Namespace=" System.Web.Http" %>
+
 
 <script RunAt="server">
 
@@ -11,6 +14,13 @@
         BundleConfig.RegisterBundles(BundleTable.Bundles);
         // For inner blogs
         RouteTable.Routes.MapPageRoute("InnerBlogsDtls", "Blogs/{BlogsId}", "~/Blogs/InnerBlogs.aspx");
+
+        //For Api's routes
+        RouteTable.Routes.MapHttpRoute(
+            name: "ProductApi",
+            routeTemplate: "api/{controller}/{id}",
+            defaults: new { id = System.Web.Http.RouteParameter.Optional }
+            );
     }
 
 </script>
