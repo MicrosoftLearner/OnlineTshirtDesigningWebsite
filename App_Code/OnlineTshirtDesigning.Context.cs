@@ -11,10 +11,10 @@ using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
-public partial class online_tshirt_designingEntities1 : DbContext
+public partial class online_tshirt_designingEntities : DbContext
 {
-    public online_tshirt_designingEntities1()
-        : base("name=online_tshirt_designingEntities1")
+    public online_tshirt_designingEntities()
+        : base("name=online_tshirt_designingEntities")
     {
     }
 
@@ -25,11 +25,11 @@ public partial class online_tshirt_designingEntities1 : DbContext
 
     public virtual DbSet<customer> customers { get; set; }
     public virtual DbSet<customer_address> customer_address { get; set; }
+    public virtual DbSet<customer_product_cart> customer_product_cart { get; set; }
     public virtual DbSet<home_banner> home_banner { get; set; }
     public virtual DbSet<inner_blogs> inner_blogs { get; set; }
     public virtual DbSet<product> products { get; set; }
     public virtual DbSet<product_cart> product_cart { get; set; }
-    public virtual DbSet<product_invoice> product_invoice { get; set; }
     public virtual DbSet<product_order> product_order { get; set; }
     public virtual DbSet<admin> admins { get; set; }
 }

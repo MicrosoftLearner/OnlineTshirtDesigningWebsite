@@ -24,12 +24,11 @@ public partial class customer
     public customer()
     {
         this.customer_address = new HashSet<customer_address>();
-        this.product_cart = new HashSet<product_cart>();
-        this.product_invoice = new HashSet<product_invoice>();
+        this.customer_product_cart = new HashSet<customer_product_cart>();
         this.product_order = new HashSet<product_order>();
     }
 
-    public short CustId { get; set; }
+    public string CustId { get; set; }
     public string CustFirstName { get; set; }
     public string CustLastName { get; set; }
     public string CustPwd { get; set; }
@@ -40,24 +39,34 @@ public partial class customer
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     public virtual ICollection<customer_address> customer_address { get; set; }
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<product_cart> product_cart { get; set; }
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<product_invoice> product_invoice { get; set; }
+    public virtual ICollection<customer_product_cart> customer_product_cart { get; set; }
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     public virtual ICollection<product_order> product_order { get; set; }
 }
 
 public partial class customer_address
 {
-    public short CustAddrId { get; set; }
+    public string CustAddrId { get; set; }
     public string CustShipAddr { get; set; }
     public string CustShipCountry { get; set; }
     public string CustShipState { get; set; }
     public string CustShipCity { get; set; }
     public Nullable<int> CustShipPinCode { get; set; }
-    public short CustId { get; set; }
+    public string CustId { get; set; }
 
     public virtual customer customer { get; set; }
+}
+
+public partial class customer_product_cart
+{
+    public string CustCartId { get; set; }
+    public short ProductId { get; set; }
+    public string ProductCartId { get; set; }
+    public string CustId { get; set; }
+
+    public virtual customer customer { get; set; }
+    public virtual product product { get; set; }
+    public virtual product_cart product_cart { get; set; }
 }
 
 public partial class home_banner
@@ -83,8 +92,8 @@ public partial class product
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
     public product()
     {
+        this.customer_product_cart = new HashSet<customer_product_cart>();
         this.product_cart = new HashSet<product_cart>();
-        this.product_invoice = new HashSet<product_invoice>();
         this.product_order = new HashSet<product_order>();
     }
 
@@ -103,32 +112,27 @@ public partial class product
     public Nullable<short> ProductSizeQuantXXL { get; set; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<product_cart> product_cart { get; set; }
+    public virtual ICollection<customer_product_cart> customer_product_cart { get; set; }
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<product_invoice> product_invoice { get; set; }
+    public virtual ICollection<product_cart> product_cart { get; set; }
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     public virtual ICollection<product_order> product_order { get; set; }
 }
 
 public partial class product_cart
 {
-    public short ProductCartId { get; set; }
-    public System.DateTime ProductOrderTime { get; set; }
-    public short CustId { get; set; }
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    public product_cart()
+    {
+        this.customer_product_cart = new HashSet<customer_product_cart>();
+    }
+
+    public string ProductCartId { get; set; }
     public short ProductId { get; set; }
+    public string SessionId { get; set; }
 
-    public virtual customer customer { get; set; }
-    public virtual product product { get; set; }
-}
-
-public partial class product_invoice
-{
-    public short ProductInvoiceId { get; set; }
-    public System.DateTime ProductOrderTime { get; set; }
-    public short CustId { get; set; }
-    public short ProductId { get; set; }
-
-    public virtual customer customer { get; set; }
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+    public virtual ICollection<customer_product_cart> customer_product_cart { get; set; }
     public virtual product product { get; set; }
 }
 
@@ -138,7 +142,7 @@ public partial class product_order
     public System.DateTime ProductOrderTime { get; set; }
     public string ProductPaymentMthd { get; set; }
     public string CustComment { get; set; }
-    public short CustId { get; set; }
+    public string CustId { get; set; }
     public short ProductId { get; set; }
 
     public virtual customer customer { get; set; }

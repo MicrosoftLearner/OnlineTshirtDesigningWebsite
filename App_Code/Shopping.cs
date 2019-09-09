@@ -39,12 +39,10 @@ public class Shopping
 
     public string OrderTime { get; set; }
 
-    public const ushort productInialCountl = 1; // to set the oroduct intial count 
+    public DateTime DTime = DateTime.Now;
 
     public ushort[] SizeQuantity; //for M , XL, XXL , Quantity 
-
-
-
+    
     // Member methods 
     public string GetPwd
     {
@@ -180,10 +178,10 @@ public class Shopping
         return readerResult;
     }
 
+ 
     //if it implements in Admin, needs to override it
     //For other cookie
 
-   
     virtual public void Logout()
     {
         HttpCookie cookie;

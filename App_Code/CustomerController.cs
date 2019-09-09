@@ -10,14 +10,14 @@ using System.Data.Linq.Mapping;
 
 public class CustomerController : ApiController
 {
-    online_tshirt_designingEntities1 designEntity;
+    online_tshirt_designingEntities designEntity;
 
     //GET api/<controller/id
     // [Route("api/customer/GetCustomerEntireData/{Id}")]
     [HttpGet]
-    public IHttpActionResult GetCustomer(int id)
+    public IHttpActionResult GetCustomer(string id)
     {
-        designEntity = new online_tshirt_designingEntities1();
+        designEntity = new online_tshirt_designingEntities();
         
         //If A customer has got details along with Shipping details
         //Return this customerEntireData
@@ -65,12 +65,34 @@ public class CustomerController : ApiController
         return Ok(customerEntireData);
     }
 
+    [HttpPost]
+    public IHttpActionResult Login([FromBody] Tuple<string, string> tupleCustomer)
+    {
+        //Instantiate the object
+        designEntity = new online_tshirt_designingEntities();
+
+        //var matchesLogin = from log  in designEntity.customers
+        //                   where log.CustEmailAddr == tupleCustomer.Item1 && log.CustPwd == tupleCustomer.Item2
+        //                   select new {
+
+        //                       Id = log.CustId
+        //                   };
+
+        var matchesLogin = designEntity.customers.Where((log) => log.CustEmailAddr == tupleCustomer.Item1 && log.CustPwd == tupleCustomer.Item2).Select(log => log.CustId.ToString()).FirstOrDefault();
+
+        //IF the Customer is not Registred, return the Message 
+        if (matchesLogin == null) return Ok<string>("Login info is incorrect, Please click on Signup");
+
+        //If the customer is registred, return Customer Id 
+        return Ok(matchesLogin);
+       
+    }
     // POST api/<controller>
     [HttpPost]
     public IHttpActionResult SignUp([FromBody] customer theCustomer)
     {
         //Instantiate the obj 1st
-        designEntity = new online_tshirt_designingEntities1();
+        designEntity = new online_tshirt_designingEntities();
 
         //To generate random numbers for HomeBaneerImgId column
         DateTime dTime = DateTime.Now;
@@ -92,7 +114,7 @@ public class CustomerController : ApiController
         {
 
             //Add properties to Class
-            CustId = Convert.ToSByte(id),
+            CustId = id,
 
             CustFirstName = theCustomer.CustFirstName,
 
@@ -133,7 +155,7 @@ public class CustomerController : ApiController
             customer email = new customer();
 
             //Call the method from CustomerExtension.cs along with the parameters
-            email.SendSignUpMail( new Tuple<string, string>(theCustomer.CustFirstName + " " _+ theCustomer.CustLastName, theCustomer.CustEmailAddr) );
+            email.SendSignUpMail( new Tuple<string, string>(theCustomer.CustFirstName + " "+ theCustomer.CustLastName, theCustomer.CustEmailAddr) );
         }
 
         return Ok(newCustomer.CustId);
@@ -155,7 +177,7 @@ public class CustomerController : ApiController
         var newCustomerAddrr = new customer_address {
 
             //Add properties to the class
-            CustAddrId = Convert.ToSByte(id),
+            CustAddrId = id,
 
             CustShipAddr = customerAddrr.CustShipAddr,
 
@@ -194,9 +216,9 @@ public class CustomerController : ApiController
     }
     
     [HttpPost]
-    public IHttpActionResult UpdateCustomerInfo([FromBody] int id, customer theCustomer){
+    public IHttpActionResult UpdateCustomerInfo([FromBody] string id, customer theCustomer){
         //Instantiate the object
-        designEntity = new online_tshirt_designingEntities1();
+        designEntity = new online_tshirt_designingEntities();
 
         int updatedRecord = 0;
 
@@ -235,10 +257,10 @@ public class CustomerController : ApiController
     }
 
     [HttpPost]
-    public IHttpActionResult UpdateCustomerAddress([FromBody] int id, customer_address customerAddrr)
+    public IHttpActionResult UpdateCustomerAddress([FromBody] string id, customer_address customerAddrr)
     {
         //Instantiate the object
-        designEntity = new online_tshirt_designingEntities1();
+        designEntity = new online_tshirt_designingEntities();
 
         int updatedRecord = 0;
 
@@ -282,8 +304,25 @@ public class CustomerController : ApiController
     }
 
     // DELETE api/<controller>/5
-    public void Delete(int id)
+    public void DeleteCustomerAddress(string id)
     {
+        //Instantiate the obj
+        designEntity = new online_tshirt_designingEntities();
+
+        //Find an appropriate Customer Address
+        var matches = from c in designEntity.customer_address
+                      where c.CustAddrId == id
+                      orderby c.CustAddrId
+                      select c;
+
+        //Excute the query and return the Object
+        customer_address customerAddrr = matches.Single();
+
+        //Delete the record from the Database
+        designEntity.customer_address.Remove(customerAddrr);
+
+        designEntity.SaveChanges();
+                      
     }
 
 

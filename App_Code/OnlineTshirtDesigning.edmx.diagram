@@ -4,22 +4,22 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5db8db96899a4ec999ed22d29add8c4a" Name="Diagram1" ZoomLevel="18">
-        <EntityTypeShape EntityType="online_tshirt_designingModel.customer" Width="1.5" PointX="0.75" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.customer_address" Width="1.5" PointX="3" PointY="6.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.home_banner" Width="1.5" PointX="8.75" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.inner_blogs" Width="1.5" PointX="8.75" PointY="4.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.product" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.product_cart" Width="1.5" PointX="6" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.product_invoice" Width="1.5" PointX="6" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.product_order" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.admin" Width="1.5" PointX="8.75" PointY="7.25" IsExpanded="true" />
+      <Diagram DiagramId="ef3b70c4bc67453091dd0514c74acc70" Name="Diagram1">
+        <EntityTypeShape EntityType="online_tshirt_designingModel.customer" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.customer_address" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.customer_product_cart" Width="1.5" PointX="5.25" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.home_banner" Width="1.5" PointX="5.75" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.inner_blogs" Width="1.5" PointX="7.75" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.product" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.product_cart" Width="1.5" PointX="3" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.product_order" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.admin" Width="1.5" PointX="7.75" PointY="5.625" IsExpanded="true" />
         <AssociationConnector Association="online_tshirt_designingModel.customer_address_ibfk_1" ManuallyRouted="false" />
-        <AssociationConnector Association="online_tshirt_designingModel.product_cart_ibfk_1" ManuallyRouted="false" />
-        <AssociationConnector Association="online_tshirt_designingModel.product_invoice_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="online_tshirt_designingModel.customer_product_cart_ibfk_3" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.product_order_ibfk_1" ManuallyRouted="false" />
-        <AssociationConnector Association="online_tshirt_designingModel.product_cart_ibfk_2" ManuallyRouted="false" />
-        <AssociationConnector Association="online_tshirt_designingModel.product_invoice_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="online_tshirt_designingModel.customer_product_cart_ibfk_1" ManuallyRouted="false" />
+        <AssociationConnector Association="online_tshirt_designingModel.customer_product_cart_ibfk_2" ManuallyRouted="false" />
+        <AssociationConnector Association="online_tshirt_designingModel.fk_productId" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.product_order_ibfk_2" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>

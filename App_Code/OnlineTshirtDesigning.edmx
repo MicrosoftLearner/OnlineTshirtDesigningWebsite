@@ -20,7 +20,7 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
           <Key>
             <PropertyRef Name="CustId" />
           </Key>
-          <Property Name="CustId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustId" Type="varchar" MaxLength="155" Nullable="false" />
           <Property Name="CustFirstName" Type="char" MaxLength="35" />
           <Property Name="CustLastName" Type="char" MaxLength="35" />
           <Property Name="CustPwd" Type="char" MaxLength="30" />
@@ -32,13 +32,22 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
           <Key>
             <PropertyRef Name="CustAddrId" />
           </Key>
-          <Property Name="CustAddrId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CustShipAddr" Type="varchar" MaxLength="155" />
+          <Property Name="CustAddrId" Type="varchar" MaxLength="155" Nullable="false" />
+          <Property Name="CustShipAddr" Type="varchar" MaxLength="255" />
           <Property Name="CustShipCountry" Type="char" MaxLength="80" />
           <Property Name="CustShipState" Type="char" MaxLength="80" />
           <Property Name="CustShipCity" Type="char" MaxLength="80" />
           <Property Name="CustShipPinCode" Type="int" />
-          <Property Name="CustId" Type="smallint" Nullable="false" />
+          <Property Name="CustId" Type="varchar" MaxLength="155" Nullable="false" />
+        </EntityType>
+        <EntityType Name="customer_product_cart">
+          <Key>
+            <PropertyRef Name="CustCartId" />
+          </Key>
+          <Property Name="CustCartId" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ProductId" Type="smallint" Nullable="false" />
+          <Property Name="ProductCartId" Type="varchar" MaxLength="255" />
+          <Property Name="CustId" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="home_banner">
           <Key>
@@ -82,19 +91,9 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
           <Key>
             <PropertyRef Name="ProductCartId" />
           </Key>
-          <Property Name="ProductCartId" Type="smallint" Nullable="false" />
-          <Property Name="ProductOrderTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CustId" Type="smallint" Nullable="false" />
+          <Property Name="ProductCartId" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="ProductId" Type="smallint" Nullable="false" />
-        </EntityType>
-        <EntityType Name="product_invoice">
-          <Key>
-            <PropertyRef Name="ProductInvoiceId" />
-          </Key>
-          <Property Name="ProductInvoiceId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ProductOrderTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CustId" Type="smallint" Nullable="false" />
-          <Property Name="ProductId" Type="smallint" Nullable="false" />
+          <Property Name="SessionId" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="product_order">
           <Key>
@@ -104,7 +103,7 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
           <Property Name="ProductOrderTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductPaymentMthd" Type="char" MaxLength="50" Nullable="false" />
           <Property Name="CustComment" Type="varchar" MaxLength="255" />
-          <Property Name="CustId" Type="smallint" Nullable="false" />
+          <Property Name="CustId" Type="varchar" MaxLength="155" Nullable="false" />
           <Property Name="ProductId" Type="smallint" Nullable="false" />
         </EntityType>
         <Association Name="customer_address_ibfk_1">
@@ -121,21 +120,49 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="product_cart_ibfk_1">
+        <Association Name="customer_product_cart_ibfk_1">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="customer_product_cart" Type="Self.customer_product_cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="customer_product_cart">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="customer_product_cart_ibfk_2">
+          <End Role="product_cart" Type="Self.product_cart" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="customer_product_cart" Type="Self.customer_product_cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product_cart">
+              <PropertyRef Name="ProductCartId" />
+            </Principal>
+            <Dependent Role="customer_product_cart">
+              <PropertyRef Name="ProductCartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="customer_product_cart_ibfk_3">
           <End Role="customer" Type="Self.customer" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="product_cart" Type="Self.product_cart" Multiplicity="*" />
+          <End Role="customer_product_cart" Type="Self.customer_product_cart" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="customer">
               <PropertyRef Name="CustId" />
             </Principal>
-            <Dependent Role="product_cart">
+            <Dependent Role="customer_product_cart">
               <PropertyRef Name="CustId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="product_cart_ibfk_2">
+        <Association Name="fk_productId">
           <End Role="product" Type="Self.product" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -145,34 +172,6 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
               <PropertyRef Name="ProductId" />
             </Principal>
             <Dependent Role="product_cart">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="product_invoice_ibfk_1">
-          <End Role="customer" Type="Self.customer" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="product_invoice" Type="Self.product_invoice" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="customer">
-              <PropertyRef Name="CustId" />
-            </Principal>
-            <Dependent Role="product_invoice">
-              <PropertyRef Name="CustId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="product_invoice_ibfk_2">
-          <End Role="product" Type="Self.product" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="product_invoice" Type="Self.product_invoice" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="product">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="product_invoice">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -208,11 +207,11 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
         <EntityContainer Name="online_tshirt_designingModelStoreContainer">
           <EntitySet Name="customer" EntityType="Self.customer" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="customer_address" EntityType="Self.customer_address" Schema="online_tshirt_designing" store:Type="Tables" />
+          <EntitySet Name="customer_product_cart" EntityType="Self.customer_product_cart" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="home_banner" EntityType="Self.home_banner" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="inner_blogs" EntityType="Self.inner_blogs" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="product" EntityType="Self.product" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="product_cart" EntityType="Self.product_cart" Schema="online_tshirt_designing" store:Type="Tables" />
-          <EntitySet Name="product_invoice" EntityType="Self.product_invoice" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="product_order" EntityType="Self.product_order" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="admin" EntityType="Self.admin" store:Type="Tables" store:Schema="online_tshirt_designing">
             <DefiningQuery>SELECT
@@ -226,21 +225,21 @@ FROM `admin` AS `admin`</DefiningQuery>
             <End Role="customer" EntitySet="customer" />
             <End Role="customer_address" EntitySet="customer_address" />
           </AssociationSet>
-          <AssociationSet Name="product_cart_ibfk_1" Association="Self.product_cart_ibfk_1">
-            <End Role="customer" EntitySet="customer" />
-            <End Role="product_cart" EntitySet="product_cart" />
+          <AssociationSet Name="customer_product_cart_ibfk_1" Association="Self.customer_product_cart_ibfk_1">
+            <End Role="product" EntitySet="product" />
+            <End Role="customer_product_cart" EntitySet="customer_product_cart" />
           </AssociationSet>
-          <AssociationSet Name="product_cart_ibfk_2" Association="Self.product_cart_ibfk_2">
+          <AssociationSet Name="customer_product_cart_ibfk_2" Association="Self.customer_product_cart_ibfk_2">
+            <End Role="product_cart" EntitySet="product_cart" />
+            <End Role="customer_product_cart" EntitySet="customer_product_cart" />
+          </AssociationSet>
+          <AssociationSet Name="customer_product_cart_ibfk_3" Association="Self.customer_product_cart_ibfk_3">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="customer_product_cart" EntitySet="customer_product_cart" />
+          </AssociationSet>
+          <AssociationSet Name="fk_productId" Association="Self.fk_productId">
             <End Role="product" EntitySet="product" />
             <End Role="product_cart" EntitySet="product_cart" />
-          </AssociationSet>
-          <AssociationSet Name="product_invoice_ibfk_1" Association="Self.product_invoice_ibfk_1">
-            <End Role="customer" EntitySet="customer" />
-            <End Role="product_invoice" EntitySet="product_invoice" />
-          </AssociationSet>
-          <AssociationSet Name="product_invoice_ibfk_2" Association="Self.product_invoice_ibfk_2">
-            <End Role="product" EntitySet="product" />
-            <End Role="product_invoice" EntitySet="product_invoice" />
           </AssociationSet>
           <AssociationSet Name="product_order_ibfk_1" Association="Self.product_order_ibfk_1">
             <End Role="customer" EntitySet="customer" />
@@ -259,7 +258,7 @@ FROM `admin` AS `admin`</DefiningQuery>
           <Key>
             <PropertyRef Name="CustId" />
           </Key>
-          <Property Name="CustId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustId" Type="String" MaxLength="155" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="CustFirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
           <Property Name="CustLastName" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
           <Property Name="CustPwd" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
@@ -267,22 +266,33 @@ FROM `admin` AS `admin`</DefiningQuery>
           <Property Name="CustEmailAddr" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
           <Property Name="CustImg" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="customer_address" Relationship="Self.customer_address_ibfk_1" FromRole="customer" ToRole="customer_address" />
-          <NavigationProperty Name="product_cart" Relationship="Self.product_cart_ibfk_1" FromRole="customer" ToRole="product_cart" />
-          <NavigationProperty Name="product_invoice" Relationship="Self.product_invoice_ibfk_1" FromRole="customer" ToRole="product_invoice" />
+          <NavigationProperty Name="customer_product_cart" Relationship="Self.customer_product_cart_ibfk_3" FromRole="customer" ToRole="customer_product_cart" />
           <NavigationProperty Name="product_order" Relationship="Self.product_order_ibfk_1" FromRole="customer" ToRole="product_order" />
         </EntityType>
         <EntityType Name="customer_address">
           <Key>
             <PropertyRef Name="CustAddrId" />
           </Key>
-          <Property Name="CustAddrId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustShipAddr" Type="String" MaxLength="155" FixedLength="false" Unicode="false" />
+          <Property Name="CustAddrId" Type="String" MaxLength="155" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CustShipAddr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="CustShipCountry" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="CustShipState" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="CustShipCity" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="CustShipPinCode" Type="Int32" />
-          <Property Name="CustId" Type="Int16" Nullable="false" />
+          <Property Name="CustId" Type="String" MaxLength="155" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="customer" Relationship="Self.customer_address_ibfk_1" FromRole="customer_address" ToRole="customer" />
+        </EntityType>
+        <EntityType Name="customer_product_cart">
+          <Key>
+            <PropertyRef Name="CustCartId" />
+          </Key>
+          <Property Name="CustCartId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProductId" Type="Int16" Nullable="false" />
+          <Property Name="ProductCartId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CustId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="customer" Relationship="Self.customer_product_cart_ibfk_3" FromRole="customer_product_cart" ToRole="customer" />
+          <NavigationProperty Name="product" Relationship="Self.customer_product_cart_ibfk_1" FromRole="customer_product_cart" ToRole="product" />
+          <NavigationProperty Name="product_cart" Relationship="Self.customer_product_cart_ibfk_2" FromRole="customer_product_cart" ToRole="product_cart" />
         </EntityType>
         <EntityType Name="home_banner">
           <Key>
@@ -321,31 +331,19 @@ FROM `admin` AS `admin`</DefiningQuery>
           <Property Name="ProductSizeQuantM" Type="Int16" />
           <Property Name="ProductSizeQuantXL" Type="Int16" />
           <Property Name="ProductSizeQuantXXL" Type="Int16" />
-          <NavigationProperty Name="product_cart" Relationship="Self.product_cart_ibfk_2" FromRole="product" ToRole="product_cart" />
-          <NavigationProperty Name="product_invoice" Relationship="Self.product_invoice_ibfk_2" FromRole="product" ToRole="product_invoice" />
+          <NavigationProperty Name="customer_product_cart" Relationship="Self.customer_product_cart_ibfk_1" FromRole="product" ToRole="customer_product_cart" />
+          <NavigationProperty Name="product_cart" Relationship="Self.fk_productId" FromRole="product" ToRole="product_cart" />
           <NavigationProperty Name="product_order" Relationship="Self.product_order_ibfk_2" FromRole="product" ToRole="product_order" />
         </EntityType>
         <EntityType Name="product_cart">
           <Key>
             <PropertyRef Name="ProductCartId" />
           </Key>
-          <Property Name="ProductCartId" Type="Int16" Nullable="false" />
-          <Property Name="ProductOrderTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustId" Type="Int16" Nullable="false" />
+          <Property Name="ProductCartId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ProductId" Type="Int16" Nullable="false" />
-          <NavigationProperty Name="customer" Relationship="Self.product_cart_ibfk_1" FromRole="product_cart" ToRole="customer" />
-          <NavigationProperty Name="product" Relationship="Self.product_cart_ibfk_2" FromRole="product_cart" ToRole="product" />
-        </EntityType>
-        <EntityType Name="product_invoice">
-          <Key>
-            <PropertyRef Name="ProductInvoiceId" />
-          </Key>
-          <Property Name="ProductInvoiceId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductOrderTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustId" Type="Int16" Nullable="false" />
-          <Property Name="ProductId" Type="Int16" Nullable="false" />
-          <NavigationProperty Name="customer" Relationship="Self.product_invoice_ibfk_1" FromRole="product_invoice" ToRole="customer" />
-          <NavigationProperty Name="product" Relationship="Self.product_invoice_ibfk_2" FromRole="product_invoice" ToRole="product" />
+          <NavigationProperty Name="customer_product_cart" Relationship="Self.customer_product_cart_ibfk_2" FromRole="product_cart" ToRole="customer_product_cart" />
+          <NavigationProperty Name="product" Relationship="Self.fk_productId" FromRole="product_cart" ToRole="product" />
+          <Property Name="SessionId" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="product_order">
           <Key>
@@ -355,7 +353,7 @@ FROM `admin` AS `admin`</DefiningQuery>
           <Property Name="ProductOrderTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProductPaymentMthd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="CustComment" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="CustId" Type="Int16" Nullable="false" />
+          <Property Name="CustId" Type="String" MaxLength="155" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ProductId" Type="Int16" Nullable="false" />
           <NavigationProperty Name="customer" Relationship="Self.product_order_ibfk_1" FromRole="product_order" ToRole="customer" />
           <NavigationProperty Name="product" Relationship="Self.product_order_ibfk_2" FromRole="product_order" ToRole="product" />
@@ -383,30 +381,16 @@ FROM `admin` AS `admin`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="product_cart_ibfk_1">
+        <Association Name="customer_product_cart_ibfk_3">
           <End Role="customer" Type="Self.customer" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="product_cart" Type="Self.product_cart" Multiplicity="*" />
+          <End Role="customer_product_cart" Type="Self.customer_product_cart" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="customer">
               <PropertyRef Name="CustId" />
             </Principal>
-            <Dependent Role="product_cart">
-              <PropertyRef Name="CustId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="product_invoice_ibfk_1">
-          <End Role="customer" Type="Self.customer" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="product_invoice" Type="Self.product_invoice" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="customer">
-              <PropertyRef Name="CustId" />
-            </Principal>
-            <Dependent Role="product_invoice">
+            <Dependent Role="customer_product_cart">
               <PropertyRef Name="CustId" />
             </Dependent>
           </ReferentialConstraint>
@@ -425,7 +409,35 @@ FROM `admin` AS `admin`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="product_cart_ibfk_2">
+        <Association Name="customer_product_cart_ibfk_1">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="customer_product_cart" Type="Self.customer_product_cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="customer_product_cart">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="customer_product_cart_ibfk_2">
+          <End Role="product_cart" Type="Self.product_cart" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="customer_product_cart" Type="Self.customer_product_cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product_cart">
+              <PropertyRef Name="ProductCartId" />
+            </Principal>
+            <Dependent Role="customer_product_cart">
+              <PropertyRef Name="ProductCartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_productId">
           <End Role="product" Type="Self.product" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -435,20 +447,6 @@ FROM `admin` AS `admin`</DefiningQuery>
               <PropertyRef Name="ProductId" />
             </Principal>
             <Dependent Role="product_cart">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="product_invoice_ibfk_2">
-          <End Role="product" Type="Self.product" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="product_invoice" Type="Self.product_invoice" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="product">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="product_invoice">
               <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
@@ -467,39 +465,39 @@ FROM `admin` AS `admin`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="online_tshirt_designingEntities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="online_tshirt_designingEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="customers" EntityType="Self.customer" />
           <EntitySet Name="customer_address" EntityType="Self.customer_address" />
+          <EntitySet Name="customer_product_cart" EntityType="Self.customer_product_cart" />
           <EntitySet Name="home_banner" EntityType="Self.home_banner" />
           <EntitySet Name="inner_blogs" EntityType="Self.inner_blogs" />
           <EntitySet Name="products" EntityType="Self.product" />
           <EntitySet Name="product_cart" EntityType="Self.product_cart" />
-          <EntitySet Name="product_invoice" EntityType="Self.product_invoice" />
           <EntitySet Name="product_order" EntityType="Self.product_order" />
           <EntitySet Name="admins" EntityType="Self.admin" />
           <AssociationSet Name="customer_address_ibfk_1" Association="Self.customer_address_ibfk_1">
             <End Role="customer" EntitySet="customers" />
             <End Role="customer_address" EntitySet="customer_address" />
           </AssociationSet>
-          <AssociationSet Name="product_cart_ibfk_1" Association="Self.product_cart_ibfk_1">
+          <AssociationSet Name="customer_product_cart_ibfk_3" Association="Self.customer_product_cart_ibfk_3">
             <End Role="customer" EntitySet="customers" />
-            <End Role="product_cart" EntitySet="product_cart" />
-          </AssociationSet>
-          <AssociationSet Name="product_invoice_ibfk_1" Association="Self.product_invoice_ibfk_1">
-            <End Role="customer" EntitySet="customers" />
-            <End Role="product_invoice" EntitySet="product_invoice" />
+            <End Role="customer_product_cart" EntitySet="customer_product_cart" />
           </AssociationSet>
           <AssociationSet Name="product_order_ibfk_1" Association="Self.product_order_ibfk_1">
             <End Role="customer" EntitySet="customers" />
             <End Role="product_order" EntitySet="product_order" />
           </AssociationSet>
-          <AssociationSet Name="product_cart_ibfk_2" Association="Self.product_cart_ibfk_2">
+          <AssociationSet Name="customer_product_cart_ibfk_1" Association="Self.customer_product_cart_ibfk_1">
+            <End Role="product" EntitySet="products" />
+            <End Role="customer_product_cart" EntitySet="customer_product_cart" />
+          </AssociationSet>
+          <AssociationSet Name="customer_product_cart_ibfk_2" Association="Self.customer_product_cart_ibfk_2">
+            <End Role="product_cart" EntitySet="product_cart" />
+            <End Role="customer_product_cart" EntitySet="customer_product_cart" />
+          </AssociationSet>
+          <AssociationSet Name="fk_productId" Association="Self.fk_productId">
             <End Role="product" EntitySet="products" />
             <End Role="product_cart" EntitySet="product_cart" />
-          </AssociationSet>
-          <AssociationSet Name="product_invoice_ibfk_2" Association="Self.product_invoice_ibfk_2">
-            <End Role="product" EntitySet="products" />
-            <End Role="product_invoice" EntitySet="product_invoice" />
           </AssociationSet>
           <AssociationSet Name="product_order_ibfk_2" Association="Self.product_order_ibfk_2">
             <End Role="product" EntitySet="products" />
@@ -511,7 +509,7 @@ FROM `admin` AS `admin`</DefiningQuery>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="online_tshirt_designingModelStoreContainer" CdmEntityContainer="online_tshirt_designingEntities1">
+        <EntityContainerMapping StorageEntityContainer="online_tshirt_designingModelStoreContainer" CdmEntityContainer="online_tshirt_designingEntities">
           <EntitySetMapping Name="customers">
             <EntityTypeMapping TypeName="online_tshirt_designingModel.customer">
               <MappingFragment StoreEntitySet="customer">
@@ -534,6 +532,16 @@ FROM `admin` AS `admin`</DefiningQuery>
                 <ScalarProperty Name="CustShipState" ColumnName="CustShipState" />
                 <ScalarProperty Name="CustShipCity" ColumnName="CustShipCity" />
                 <ScalarProperty Name="CustShipPinCode" ColumnName="CustShipPinCode" />
+                <ScalarProperty Name="CustId" ColumnName="CustId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customer_product_cart">
+            <EntityTypeMapping TypeName="online_tshirt_designingModel.customer_product_cart">
+              <MappingFragment StoreEntitySet="customer_product_cart">
+                <ScalarProperty Name="CustCartId" ColumnName="CustCartId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCartId" ColumnName="ProductCartId" />
                 <ScalarProperty Name="CustId" ColumnName="CustId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -582,19 +590,8 @@ FROM `admin` AS `admin`</DefiningQuery>
           <EntitySetMapping Name="product_cart">
             <EntityTypeMapping TypeName="online_tshirt_designingModel.product_cart">
               <MappingFragment StoreEntitySet="product_cart">
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
                 <ScalarProperty Name="ProductCartId" ColumnName="ProductCartId" />
-                <ScalarProperty Name="ProductOrderTime" ColumnName="ProductOrderTime" />
-                <ScalarProperty Name="CustId" ColumnName="CustId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="product_invoice">
-            <EntityTypeMapping TypeName="online_tshirt_designingModel.product_invoice">
-              <MappingFragment StoreEntitySet="product_invoice">
-                <ScalarProperty Name="ProductInvoiceId" ColumnName="ProductInvoiceId" />
-                <ScalarProperty Name="ProductOrderTime" ColumnName="ProductOrderTime" />
-                <ScalarProperty Name="CustId" ColumnName="CustId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
               </MappingFragment>
             </EntityTypeMapping>

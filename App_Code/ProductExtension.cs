@@ -7,7 +7,8 @@ using System.Web;
 /// Summary description for ProductExtension
 /// </summary>
 
-public partial class product
+public partial class product: Shopping
 {
+  
 }
 

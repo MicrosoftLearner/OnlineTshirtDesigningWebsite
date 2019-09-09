@@ -21,6 +21,9 @@
             routeTemplate: "api/{controller}/{id}",
             defaults: new { id = System.Web.Http.RouteParameter.Optional }
             );
-    }
+
+      //  RouteTable.Routes.MapHttpRoute( "AddToCart","api/{controller}/{action}/{id}", new { id = System.Web.Http.RouteParameter.Optional }
+            );
+        }
 
 </script>
