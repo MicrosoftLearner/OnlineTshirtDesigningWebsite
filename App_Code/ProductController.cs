@@ -148,13 +148,7 @@ public class ProductController : ApiController
 
         return Ok(Tuple.Create(cart, false));
     }
-
-
-    // PUT api/<controller>/5
-    public void Put(int id, [FromBody]string value)
-    {
-    }
-
+    
     [Route("api/product/DeleteFromCart/{id}")]
     [HttpGet]
     public void DeleteFromCart(sbyte id)
@@ -175,9 +169,74 @@ public class ProductController : ApiController
 
     }
 
+    [Route("api/product/SwipeCart/{sessionID}/{custID}")]
+    [HttpGet]
+    public IHttpActionResult SwipeCart(string sessionID, string custID)
+    {
+        product prod = new product();
+
+        //For Unique Id
+        sbyte counter = 0;
+
+        //Check the product 1st
+        string pCartMatch = designEntity.product_cart.Where((p) => p.SessionId == sessionID).Select((p) => p.ProductCartId).SingleOrDefault();
+
+        //If pCartMatch hasn't got any products
+        if (String.IsNullOrEmpty(pCartMatch)) return Ok<bool>(true);
+
+        //Save the product added in the ProductCart to CustomerProductCart 
+        //if pCartMatch has got any products
+
+        IEnumerable<product_cart> prodAddedCart = from p in designEntity.product_cart
+                                          where p.SessionId == sessionID
+                                          orderby p.ProductId
+                                          select p;
+
+        //Creat List of CustomerProductCart to insert data 
+        //from ProductCart to CustomerProductCart
+        List<customer_product_cart> custProdCartList = designEntity.customer_product_cart.ToList();
+
+        foreach (product_cart item in prodAddedCart)
+        {
+            custProdCartList.Add(new customer_product_cart()
+            {
+                CustCartId = (prod.DTime.Millisecond + counter++).ToString(),
+
+                ProductId = item.ProductId,
+
+                ProductCartId = item.ProductCartId,
+
+                CustId = custID
+            });
+        }
+
+        foreach (customer_product_cart item in custProdCartList)
+        {
+            designEntity.customer_product_cart.Add(item);
+        }
+
+        //Commit the changes back to the database
+        try
+        {
+            designEntity.SaveChanges();
+        }
+        catch (Exception error)
+        {
+            System.Diagnostics.Debug.WriteLine(error);
+
+        }
+
+        //var prodAddedToCustProdCart = from p in designEntity.products
+        //                              join cp in designEntity.customer_product_cart
+        //                              on p.ProductId equals 
+                   
+        return Ok();
+    }
+
+
     [Route("api/product/AddToCustomerProductCart/{productID}/{sessionID}/{custID}")]
     [HttpPost]
-    public IHttpActionResult AddToCustomerProductCart([FromUri] sbyte productID, string sessionID, string custID)
+    public IHttpActionResult AddToCustomerProductCart([FromUri] sbyte productID,string custID)
     {
         designEntity = new online_tshirt_designingEntities();
 
@@ -186,19 +245,17 @@ public class ProductController : ApiController
         customer_product_cart newCustomerProdCart;
 
         //1st check the product_cart table if it has got any added products
-        IEnumerable<product_cart> pCartMatch = from p in designEntity.product_cart
-                                               where p.ProductId == productID && p.SessionId == sessionID
-                                               select p;
 
-        var x = (from p in designEntity.product_cart
-                 where p.ProductId == productID && p.SessionId == sessionID
-                 select p.ProductCartId);
-        x.SingleOrDefault();
+        //var pCartMatch = (from p in designEntity.product_cart
+        //                  where p.ProductId == productID && p.SessionId == sessionID
+        //                  select p.ProductCartId);
 
+        //string x =  pCartMatch.SingleOrDefault();
 
+        string pCartMatch = designEntity.product_cart.Where((p) => p.ProductId == productID && p.SessionId == sessionID).Select((p) => p.ProductCartId).SingleOrDefault();
 
         //If pCart hasn't got any products
-        if (pCartMatch.Count() == 0)
+        if (String.IsNullOrEmpty(pCartMatch))
         {
 
             newCustomerProdCart = new customer_product_cart
@@ -253,14 +310,14 @@ public class ProductController : ApiController
             return Ok(cart);
         }
 
-     
+     //If pCart has got a product
            newCustomerProdCart = new customer_product_cart
             {
                 CustCartId = prod.DTime.Millisecond.ToString(),
 
                 ProductId = productID,
 
-                ProductCartId = x.SingleOrDefault(),
+                ProductCartId = pCartMatch,
 
                 CustId = custID
             };
@@ -278,5 +335,31 @@ public class ProductController : ApiController
 
         }
 
+        var cartProduct = from dbProd in designEntity.products
+                          join dbCustProdCart in designEntity.customer_product_cart
+                          on dbProd.ProductId equals dbCustProdCart.ProductId 
+                          where dbCustProdCart.CustId == custID && 
+                         
     }
+
+    [Route("api/product/ShowCustomerCart/{custID}")]
+    [HttpGet]
+    public IHttpActionResult ShowCustomerCart(string custID)
+    {
+
+    }
+
+    [Route("api/product/ShowProductCart/{sessionID}")]
+    [HttpGet]
+    public IHttpActionResult ShowProductCart(string sessionID)
+    {
+
+    }
+
+    // PUT api/<controller>/5
+    public void Put(int id, [FromBody]string value)
+    {
+    }
+
 }
+
