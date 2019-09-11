@@ -252,9 +252,9 @@ public class ProductController : ApiController
 
         //string x =  pCartMatch.SingleOrDefault();
 
-        string pCartMatch = designEntity.product_cart.Where((p) => p.ProductId == productID && p.SessionId == sessionID).Select((p) => p.ProductCartId).SingleOrDefault();
+        string pCartMatch = designEntity.customer_product_cart.Where((p) => p.ProductId == productID && p.CustId == custID).Select((p) => p.ProductId.ToString()).SingleOrDefault();
 
-        //If pCart hasn't got any products
+        //If pCartMatch hasn't got any products i.e string is empty or null
         if (String.IsNullOrEmpty(pCartMatch))
         {
 
@@ -282,7 +282,7 @@ public class ProductController : ApiController
             }
 
 
-            //Return the product added in the cart
+            //Return the products added in the cart
             var cart = from entProd in designEntity.products
                        join entCart in designEntity.customer_product_cart
                        on entProd.ProductId equals entCart.ProductId
@@ -310,51 +310,97 @@ public class ProductController : ApiController
             return Ok(cart);
         }
 
-     //If pCart has got a product
-           newCustomerProdCart = new customer_product_cart
-            {
-                CustCartId = prod.DTime.Millisecond.ToString(),
-
-                ProductId = productID,
-
-                ProductCartId = pCartMatch,
-
-                CustId = custID
-            };
-        
-
-        //Commit the changes back to the database
-        try
-        {
-            designEntity.customer_product_cart.Add(newCustomerProdCart);
-            designEntity.SaveChanges();
-        }
-        catch (Exception error)
-        {
-            System.Diagnostics.Debug.WriteLine(error);
-
-        }
-
-        var cartProduct = from dbProd in designEntity.products
-                          join dbCustProdCart in designEntity.customer_product_cart
-                          on dbProd.ProductId equals dbCustProdCart.ProductId 
-                          where dbCustProdCart.CustId == custID && 
+        //If pCart has got the product
+        return Ok<string>("The Product has already been added in the cart");
                          
+    }
+
+  
+    [Route("api/product/ShowProductCart/{sessionID}")]
+    [HttpGet]
+    public IHttpActionResult ShowProductCart(string sessionID)
+    {
+        //Return the products added in the cart
+        var productCart = from entProd in designEntity.products
+                   join entCart in designEntity.product_cart
+                   on entProd.ProductId equals entCart.ProductId
+                   where entCart.SessionId == sessionID
+
+                   select new
+                   {
+                       //Send entire product Obj
+                       entProd.ProductId,
+                       entProd.ProductCode,
+                       entProd.ProductCat,
+                       entProd.ProductName,
+                       entProd.ProductStyle,
+                       entProd.ProductColor,
+                       entProd.ProductImg,
+                       entProd.ProductDisc,
+                       entProd.ProductPrice,
+                       entProd.ProductSizeQuantM,
+                       entProd.ProductSizeQuantXL,
+                       entProd.ProductSizeQuantXXL,
+                       //Send product_cart's Objects properties
+                       ProductCartID = entCart.ProductCartId,
+                       ProductID = entCart.ProductId
+
+                   };
+        return Ok(productCart);
     }
 
     [Route("api/product/ShowCustomerCart/{custID}")]
     [HttpGet]
     public IHttpActionResult ShowCustomerCart(string custID)
     {
+        //Return the products added in the cart
+        var customerProductCart = from entProd in designEntity.products
+                          join entCart in designEntity.customer_product_cart
+                          on entProd.ProductId equals entCart.ProductId
+                          where entCart.CustId == custID
 
+                          select new
+                          {
+                              //Send entire product Obj
+                              entProd.ProductId,
+                              entProd.ProductCode,
+                              entProd.ProductCat,
+                              entProd.ProductName,
+                              entProd.ProductStyle,
+                              entProd.ProductColor,
+                              entProd.ProductImg,
+                              entProd.ProductDisc,
+                              entProd.ProductPrice,
+                              entProd.ProductSizeQuantM,
+                              entProd.ProductSizeQuantXL,
+                              entProd.ProductSizeQuantXXL,
+                              //Send product_cart's Objects properties
+                              ProductCartID = entCart.ProductCartId,
+                              ProductID = entCart.ProductId
+
+                          };
+        return Ok(customerProductCart);
     }
 
-    [Route("api/product/ShowProductCart/{sessionID}")]
+    [Route("api/product/DeleteFromCart/{productID}/{custID}")]
     [HttpGet]
-    public IHttpActionResult ShowProductCart(string sessionID)
-    {
+    public void DeleteFromCustomerCart(sbyte productID, string custID){
+
+        designEntity = new online_tshirt_designingEntities();
+
+        var matches = from p in designEntity.customer_product_cart
+                      where p.ProductId == productID && p.CustId == custID
+                      select p;
+
+        //Execute the Query & return the Obj
+        customer_product_cart pCart = matches.Single();
+
+        //Delete the Record from the Database
+        designEntity.customer_product_cart.Remove(pCart);
+        designEntity.SaveChanges();
 
     }
+
 
     // PUT api/<controller>/5
     public void Put(int id, [FromBody]string value)
