@@ -9,6 +9,7 @@ using System.Web;
 
 public partial class product: Shopping
 {
-  
+
+   // public Product Product { get; set; }
 }
 

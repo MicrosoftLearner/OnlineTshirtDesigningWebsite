@@ -4,7 +4,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent"  ng-controller="homeCtrl" runat="Server">
     <!--Section home banner -->
-    <section>
+    <%--<section>
       
         <p> </p>
         <div class="cloth-cat">
@@ -28,11 +28,7 @@
                             </li>
                         </ItemTemplate>
                     </asp:Repeater>
-                    <%--   <li>
-                        <asp:HyperLink ID="HyperLink1" NavigateUrl="~/Products.aspx"  Target="_self"  runat="server">
-                            <asp:Image ID="Image1" ImageUrl="~/Images/Home/2.jpg" CssClass="img-responsive" runat="server" />
-                        </asp:HyperLink>
-                    </li>--%>
+                  
                 </ul>
                 <div class="custom-flex-nav">
                     <ul class="flex-direction-nav">
@@ -45,10 +41,10 @@
                 <asp:Label ID="LblDatabaseError" runat="server"></asp:Label>
             </div>
         </div>
-    </section>
+    </section>--%>
 
     <%--Section new arriaval--%>
-    <section class="new-arrival">
+   <%-- <section class="new-arrival">
         <div class="new-arrival__title text-center ">
             <h1 class="text-uppercase new-arrival--border--line homepg-title">new arrivals {{studentInfo}}</h1>
         </div>
@@ -63,12 +59,11 @@
                                     <asp:Repeater ID="RepeatNewArrivalData" runat="server">
                                         <ItemTemplate>
 
-                                            <%--<flex-slider flex-slide="newArrival in newArrivals track by $index" prev-text="" next-text="" animation="slide" item-width="220"
-                            item-margin="20" min-items="3">--%>
+                                       
                                             <li>
                                                 <div class=" new-arrival__banner-detail  relate">
                                                     <div class="relate">
-                                                        <asp:HyperLink ID="LnkIndividualProd" Target="_blank" NavigateUrl='<%# String.Format("~/Products/IndividualProduct.aspx?prodId={0}&prodCode={1}&prodCat={2}&prodName={3}&prodStyle={4}&prodColor={5}&prodImg={6}&prodDesc={7}&prodPrice={8}&prodSizeM={9}&prodSizeXL={10}&prodSizeXXL={11}",Eval("ProductId"),Eval("ProductCode"),Eval("ProductCat"),Eval("ProductName"),Eval("ProductStyle"),Eval("ProductColor"),Eval("ProductImg"),Eval("ProductDesc"),Eval("ProductPrice"),((Product) Container.DataItem).SizeQuantity[0], ((Product) Container.DataItem).SizeQuantity[1], ((Product) Container.DataItem).SizeQuantity[2] ) %>' runat="server">
+                                                        <asp:HyperLink ID="LnkIndividualProd" Target="_blank" runat="server">
                                                             <asp:Image ID="ImageNewArrival" ImageUrl='<%# DataBinder.Eval(Container.DataItem, "ProductImg") %>' CssClass="img-responsive" runat="server" />
 
                                                         </asp:HyperLink>
@@ -91,7 +86,7 @@
 
                                                 <asp:Label ID="Label2" runat="server" Text='<%# ((Product) Container.DataItem).SizeQuantity[1]  %>' ForeColor="White"></asp:Label>&nbsp;
 
-                                                <asp:Label ID="Label3" runat="server" Text='<%#  ((Product) Container.DataItem).SizeQuantity[2] %>' ForeColor="White"></asp:Label>&nbsp;--%>
+                                                <asp:Label ID="Label3" runat="server" Text='<%#  ((Product) Container.DataItem).SizeQuantity[2] %>' ForeColor="White"></asp:Label>&nbsp;
 
                                                         <div class="abslt-buynow-btn">
                                                             <asp:Button ID="ButtonFeaturedBuyNow" OnCommand="ButtonFeaturedBuyNow_Command" CssClass="btn buynow--btn btn--mob-modal text-uppercase" runat="server" Text="Buy" UseSubmitBehavior="false" CommandArgument='<%#  DataBinder.Eval(Container.DataItem, "ProductId") %>' />
@@ -110,10 +105,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section>--%>
 
     <!--Start of Blog section-->
-    <article>
+    <%--<article>
         <div class="blog">
             <div class="container">
                 <div class="blog__title text-center">
@@ -123,7 +118,7 @@
                 <asp:Panel ID="BlogSlider" runat="server">
                     <div id="blog__slider" class="blog__slider flexslider">
                         <ul class="slides">
-                            <%-- <flex-slider flex-slide="blog in blogs track by $index" prev-text="" next-text="" animation="slide" item-width="400" min-items="3">--%>
+                            <%-- <flex-slider flex-slide="blog in blogs track by $index" prev-text="" next-text="" animation="slide" item-width="400" min-items="3">
                             <asp:Repeater ID="RepeatBlogData" runat="server">
                                 <ItemTemplate>
                                     <li class="relate">
@@ -149,7 +144,7 @@
                 </asp:Panel>
             </div>
         </div>
-    </article>
+    </article>--%>
     <!--End of Blog section-->
 </asp:Content>
 

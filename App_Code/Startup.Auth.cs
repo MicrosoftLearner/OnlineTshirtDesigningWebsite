@@ -2,7 +2,9 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Hosting;
 using Owin;
+
 
 namespace OnlineTshirtDesigningWebsite
 {
@@ -40,5 +42,9 @@ namespace OnlineTshirtDesigningWebsite
             //    ClientSecret = ""
             //});
         }
+
+        //Start OWIN host
+        string baseAddress = "http://localhost/9000/";
+
     }
 }

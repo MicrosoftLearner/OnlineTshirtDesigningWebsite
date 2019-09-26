@@ -14,41 +14,21 @@ using System.Configuration;
 /// Which a Customer can do 
 /// </summary>
 /// 
-[Serializable]
-public class Product: Shopping
+
+public class Product
 {
+    public short ProductId { get; set; }
     public string ProductCode { get; set; }
-
     public string ProductCat { get; set; }
-
     public string ProductName { get; set; }
-
     public string ProductStyle { get; set; }
-
     public string ProductColor { get; set; }
-
     public string ProductImg { get; set; }
-
-    public string ProductDesc { get; set; }
-
+    public string ProductDisc { get; set; }
     public int ProductPrice { get; set; }
-
     public string ProductNewArrival { get; set; }
+    public short ProductSizeQuantM { get; set; }
+    public short ProductSizeQuantXL { get; set; }
+    public short ProductSizeQuantXXL { get; set; }
 
-    public int ProductOrderId { get; set; }
-
-    public string ProductOrderTime { get; set; }
-
-    public string ProductPaymentMethd { get; set; }
-
-    public string CustComment { get; set; }
-    
-    public Product()
-    {
-          
-        //
-        // TODO: Add constructor logic here
-        //
-    }
-    
 }

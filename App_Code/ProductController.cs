@@ -1,26 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+
 using System.Data;
+using System.Linq;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Cors;
+
+[EnableCors(origins:"http://localhost:3000", headers:"*", methods:"*")]
 public class ProductController : ApiController
 {
 
     online_tshirt_designingEntities designEntity;
 
     // GET api/<controller>
+ 
+    [Route("api/product/GetProductDtls")]
     [HttpGet]
     public HttpResponseMessage GetProductDtls()
     {
         //Instansitiate Obj
         designEntity = new online_tshirt_designingEntities();
 
-        //Set the appropriate Objec's fields in 
+       // System.Web.HttpContext.Current.Session[""] = "";
+
+       //Set the appropriate Objec's fields in 
         var entireProd = from prod in designEntity.products
                          select new
                          {
@@ -36,43 +44,45 @@ public class ProductController : ApiController
                              prod.ProductSizeQuantM,
                              prod.ProductSizeQuantXL,
                              prod.ProductSizeQuantXXL,
-                             SessionID = System.Web.HttpContext.Current.Session.SessionID
+                           //  SessionID = System.Web.HttpContext.Current.Session.SessionID
                          };
 
         // Write the list to the response body.
-        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, entireProd);
+           HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, entireProd );
+     //  return Ok(new Tuple<object, string>(entireProd, "sidd"));
 
         return response;
     }
 
     // GET api/<controller>/5
+    [Route("api/product/GetIndividualProdcut/{id}")]
     [HttpGet]
     public HttpResponseMessage GetIndividualProdcut(int id)
     {
         //Instansitiate Obj
+      
         designEntity = new online_tshirt_designingEntities();
 
-        var indProd = from prod in designEntity.products
-                      where prod.ProductId == id
-                      select new
-                      {
-                          prod.ProductId,
-                          prod.ProductCode,
-                          prod.ProductCat,
-                          prod.ProductName,
-                          prod.ProductStyle,
-                          prod.ProductColor,
-                          prod.ProductImg,
-                          prod.ProductDisc,
-                          prod.ProductPrice,
-                          prod.ProductNewArrival,
-                          prod.ProductSizeQuantM,
-                          prod.ProductSizeQuantXL,
-                          prod.ProductSizeQuantXXL
-                      };
+        Product individualProdModel = designEntity.products.Where(find => find.ProductId == id).Select(x => new Product
+        {
+            ProductId = x.ProductId,
+            ProductCode = x.ProductCode,
+            ProductCat = x.ProductCat,
+            ProductName = x.ProductName,
+            ProductStyle = x.ProductStyle,
+            ProductColor = x.ProductColor,
+            ProductImg = x.ProductImg,
+            ProductDisc = x.ProductDisc,
+            ProductPrice = (int)x.ProductPrice,
+            ProductNewArrival = x.ProductNewArrival,
+            ProductSizeQuantM = (short)x.ProductSizeQuantM,
+            ProductSizeQuantXL = (short)x.ProductSizeQuantXL,
+            ProductSizeQuantXXL = (short)x.ProductSizeQuantXXL
+        }).FirstOrDefault();
 
+       
         // Write the list to the response body.
-        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, indProd);
+        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, individualProdModel);
 
         return response;
     }

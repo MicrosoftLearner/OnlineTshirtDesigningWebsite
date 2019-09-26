@@ -25,11 +25,11 @@ public partial class Home : System.Web.UI.Page
         // If this page is being viewed 1st time in the browser 
         if (!this.IsPostBack)
         {
-            FillHomeBanner();
+           // FillHomeBanner();
 
-            FillUserBlogs();
+           // FillUserBlogs();
 
-            GetProducts();
+           // GetProducts();
             //Check for cookie 
             //  CheckForCookie();
 
@@ -101,17 +101,17 @@ public partial class Home : System.Web.UI.Page
 
                         ProductImg = homeProdReader["ProductImg"].ToString().Trim(),
 
-                        ProductDesc = homeProdReader["ProductDisc"].ToString().Trim(),
+                        //ProductDesc = homeProdReader["ProductDisc"].ToString().Trim(),
 
                         ProductPrice = Convert.ToInt16(homeProdReader["ProductPrice"].ToString().Trim()),
 
                         ProductNewArrival = homeProdReader["ProductNewArrival"].ToString().Trim(),
 
-                        SizeQuantity = new ushort[3] {
-                            Convert.ToUInt16(homeProdReader["ProductSizeQuantM"].ToString().Trim()), //M
-                            Convert.ToUInt16(homeProdReader["ProductSizeQuantXL"].ToString().Trim()), //XL
-                            Convert.ToUInt16(homeProdReader["ProductSizeQuantXXL"].ToString().Trim()), //XXL
-                        }
+                        //SizeQuantity = new ushort[3] {
+                        //    Convert.ToUInt16(homeProdReader["ProductSizeQuantM"].ToString().Trim()), //M
+                        //    Convert.ToUInt16(homeProdReader["ProductSizeQuantXL"].ToString().Trim()), //XL
+                        //    Convert.ToUInt16(homeProdReader["ProductSizeQuantXXL"].ToString().Trim()), //XXL
+                        //}
 
                     });
 
@@ -124,14 +124,14 @@ public partial class Home : System.Web.UI.Page
         catch (Exception error)
         {
 
-            LblDatabaseError.Text = error.ToString();
+           
         }
         
         //Show Fetched Product data from database  to the Slider 
-        RepeatNewArrivalData.DataSource = homeProd;
+    //    RepeatNewArrivalData.DataSource = homeProd;
 
         //Bind data
-        RepeatNewArrivalData.DataBind();
+     //   RepeatNewArrivalData.DataBind();
     }
 
     private void FillUserBlogs()
@@ -155,15 +155,15 @@ public partial class Home : System.Web.UI.Page
 
                 if (dt.Rows.Count > 0)
                 {
-                    RepeatBlogData.DataSource = dt;
-                    RepeatBlogData.DataBind();
+                  //  RepeatBlogData.DataSource = dt;
+                   // RepeatBlogData.DataBind();
                 }
             }
         }
         catch (Exception error)
         {
 
-            LblDatabaseError.Text = error.ToString();
+           //LblDatabaseError.Text = error.ToString();
         }
     }
 
@@ -189,15 +189,15 @@ public partial class Home : System.Web.UI.Page
 
                 if (dt.Rows.Count > 0)
                 {
-                    RepeatHomeBannerData.DataSource = dt;
-                    RepeatHomeBannerData.DataBind();
+                    //RepeatHomeBannerData.DataSource = dt;
+                    //RepeatHomeBannerData.DataBind();
                 }
             }
         }
         catch (Exception error)
         {
 
-            LblDatabaseError.Text = error.ToString();
+           // LblDatabaseError.Text = error.ToString();
         }
     }
 
@@ -233,7 +233,7 @@ public partial class Home : System.Web.UI.Page
 
             url += "prodImg=" + Server.UrlEncode(item.ProductImg.ToString()) + "&";
 
-            url += "prodDesc=" + Server.UrlEncode(item.ProductDesc.ToString()) + "&";
+       //     url += "prodDesc=" + Server.UrlEncode(item.ProductDesc.ToString()) + "&";
 
             url += "prodPrice=" + Server.UrlEncode(item.ProductPrice.ToString()) + "&";
             
