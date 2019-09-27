@@ -9,9 +9,7 @@ using System.Text;
 using System.Configuration;
 
 /// <summary>
-/// Product is the class in which all Product related info is present
-/// Such as buying product , canceling ordered Product , and all ther things 
-/// Which a Customer can do 
+/// Product Model to show the data except an entire ProductEntity model
 /// </summary>
 /// 
 
