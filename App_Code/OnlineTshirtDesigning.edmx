@@ -5,8 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="online_tshirt_designingModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="admin">
           <Key>
             <PropertyRef Name="AdminId" />
@@ -15,6 +13,7 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
           <Property Name="AdminName" Type="char" MaxLength="50" />
           <Property Name="AdminEmailAddr" Type="char" MaxLength="50" />
           <Property Name="AdminPwd" Type="char" MaxLength="50" />
+          <Property Name="AdminRole" Type="char" MaxLength="30" />
         </EntityType>
         <EntityType Name="customer">
           <Key>
@@ -205,6 +204,7 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="online_tshirt_designingModelStoreContainer">
+          <EntitySet Name="admin" EntityType="Self.admin" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="customer" EntityType="Self.customer" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="customer_address" EntityType="Self.customer_address" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="customer_product_cart" EntityType="Self.customer_product_cart" Schema="online_tshirt_designing" store:Type="Tables" />
@@ -213,14 +213,6 @@ warning 6002: The table/view 'def.online_tshirt_designing.admin' does not have a
           <EntitySet Name="product" EntityType="Self.product" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="product_cart" EntityType="Self.product_cart" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="product_order" EntityType="Self.product_order" Schema="online_tshirt_designing" store:Type="Tables" />
-          <EntitySet Name="admin" EntityType="Self.admin" store:Type="Tables" store:Schema="online_tshirt_designing">
-            <DefiningQuery>SELECT
-`admin`.`AdminId`, 
-`admin`.`AdminName`, 
-`admin`.`AdminEmailAddr`, 
-`admin`.`AdminPwd`
-FROM `admin` AS `admin`</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="customer_address_ibfk_1" Association="Self.customer_address_ibfk_1">
             <End Role="customer" EntitySet="customer" />
             <End Role="customer_address" EntitySet="customer_address" />
@@ -366,6 +358,7 @@ FROM `admin` AS `admin`</DefiningQuery>
           <Property Name="AdminName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="AdminEmailAddr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="AdminPwd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AdminRole" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="customer_address_ibfk_1">
           <End Role="customer" Type="Self.customer" Multiplicity="1">
@@ -611,6 +604,7 @@ FROM `admin` AS `admin`</DefiningQuery>
           <EntitySetMapping Name="admins">
             <EntityTypeMapping TypeName="online_tshirt_designingModel.admin">
               <MappingFragment StoreEntitySet="admin">
+                <ScalarProperty Name="AdminRole" ColumnName="AdminRole" />
                 <ScalarProperty Name="AdminId" ColumnName="AdminId" />
                 <ScalarProperty Name="AdminName" ColumnName="AdminName" />
                 <ScalarProperty Name="AdminEmailAddr" ColumnName="AdminEmailAddr" />

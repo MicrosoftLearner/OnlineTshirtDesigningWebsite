@@ -15,15 +15,20 @@ public class WebApiConfig
         //Web Api routes
         config.MapHttpAttributeRoutes();
 
-        config.EnableCors();
+       // config.EnableCors();
 
         config.Routes.MapHttpRoute(
-        name: "ProductApi",
+        name: "DefaultApi",
         routeTemplate: "api/{controller}/{id}",
         defaults: new { id = System.Web.Http.RouteParameter.Optional }
         );
 
-        config.Routes.MapHttpRoute("AddToCart", "api/{controller}/{action}/{id}", new { id = System.Web.Http.RouteParameter.Optional }
-         );
+        //config.Routes.MapHttpRoute("ApiWithAction", "api/{controller}/{action}/{id}", new { id = System.Web.Http.RouteParameter.Optional }
+        // );
+
+        //config.Routes.MapHttpRoute("ApiWithMulipleParameters", "api/{controller}/{action}/{name}/{pwd}",
+        //       new { name = System.Web.Http.RouteParameter.Optional, pwd = System.Web.Http.RouteParameter.Optional }
+        //      );
+
     }
 }

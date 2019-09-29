@@ -16,6 +16,7 @@ public partial class admin
     public string AdminName { get; set; }
     public string AdminEmailAddr { get; set; }
     public string AdminPwd { get; set; }
+    public string AdminRole { get; set; }
 }
 
 public partial class customer

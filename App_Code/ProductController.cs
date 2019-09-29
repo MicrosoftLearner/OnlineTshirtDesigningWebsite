@@ -160,7 +160,7 @@ public class ProductController : ApiController
     }
     
     [Route("api/product/DeleteFromCart/{id}")]
-    [HttpGet]
+    [HttpDelete]
     public void DeleteFromCart(sbyte id)
     {
 

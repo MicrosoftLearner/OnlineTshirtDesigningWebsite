@@ -1,6 +1,8 @@
 ﻿<%@ Application Language="C#" %>
 <%@ Import Namespace="OnlineTshirtDesigningWebsite" %>
 <%@ Import Namespace="System.Net.Http" %>
+<%@ Import Namespace="System.Web.Http" %>
+
 <%@ Import Namespace="System.Web.Optimization" %>
 <%@ Import Namespace="System.Web.Routing" %>
 <%@ Import Namespace=" System.Web.Security" %>
@@ -17,20 +19,9 @@
         // For inner blogs
         RouteTable.Routes.MapPageRoute("InnerBlogsDtls", "Blogs/{BlogsId}", "~/Blogs/InnerBlogs.aspx");
 
-        //For Api's routes
 
-        // RouteTable.Routes.MapHttpRoute(
-        //name: "ProductApi",
-        //routeTemplate: "api/{controller}/{id}",
-        //defaults: new { id = System.Web.Http.RouteParameter.Optional }
-        //);
-
-        // RouteTable.Routes.MapHttpRoute("AddToCart", "api/{controller}/{action}/{id}", new { id = System.Web.Http.RouteParameter.Optional }
-        //  );
-
-        
-
-        // GlobalConfiguration.Configure(WebApiConfig.Register);
+       GlobalConfiguration.Configure(WebApiConfig.Register);
+     
 
     }
 
