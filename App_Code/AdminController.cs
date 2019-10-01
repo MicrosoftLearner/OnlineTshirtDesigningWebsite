@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Web.Http;
 
 using System.Security.Claims;
+using System.Web.Http.Cors;
 
 public class AdminController : ApiController
 {
@@ -18,35 +19,24 @@ public class AdminController : ApiController
     // GET api/<controller>
     [Authorize( Roles = "Admin")]
     [HttpGet]
-    [Route("api/admin/resource2")]  
+    [Route("api/admin/customerOrderedProduct")]  
     public IHttpActionResult GetCustomersOrderedProducts()
     {
-        var identity = (ClaimsIdentity)User.Identity;
-        return Ok("Hello: " + identity.Name);
+        ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
+     //   Ok< Tuple<string, int> >();
+        return Ok("Hello" + " " + identity.Name);
     }
-
-    [HttpGet]
-    [ActionName("CheckAdminSession")]
-    public IHttpActionResult CheckAdminSession(sbyte id)
-    {
-        //check Session value is there or not 
-
-     
-
-        //If Session has expired
-        //return false to show Message on Frontend
-        return Ok<bool>(false);
-    }
-
+    
     // POST api/<controller>
-    [Route("api/admin/CheckAdminLogin/{theAdminName}/{theAdminPwd}")]
+    //[Route("api/admin/CheckAdminLogin/{theAdminName}/{theAdminPwd}")]
+    [Authorize]
     [HttpPost]
-    public IHttpActionResult CheckAdminLogin([FromUri]string name, string pwd)
+    public IHttpActionResult CheckAdminLogin([FromUri]string theAdminName, string theAdminPwd)
     {
         designEntity = new online_tshirt_designingEntities();
 
         //Check the admin credientials 1st
-        string adminCredientialsMatch = designEntity.admins.Where((p) => p.AdminName == name && p.AdminPwd == pwd).Select((p) => p.AdminId.ToString()).SingleOrDefault();
+        string adminCredientialsMatch = designEntity.admins.Where((p) => p.AdminName == theAdminName && p.AdminPwd == theAdminPwd).Select((p) => p.AdminId.ToString()).SingleOrDefault();
 
         //If Admin hasn't got any credientials
         if (String.IsNullOrEmpty(adminCredientialsMatch)) return Ok<bool>(false);

@@ -10,9 +10,9 @@ public class AdminRepository:IDisposable
 {
     online_tshirt_designingEntities context = new online_tshirt_designingEntities();
 
-    public admin ValidateAdmin(string theAdminName, string theAdminPwd)
+    public admin ValidateAdmin(string theAdminEmailAddr, string theAdminPwd)
     {
-            return context.admins.FirstOrDefault(adm => adm.AdminName.Equals(theAdminName,StringComparison.OrdinalIgnoreCase) && adm.AdminPwd == theAdminPwd);
+            return context.admins.FirstOrDefault(adm => adm.AdminEmailAddr.Equals(theAdminEmailAddr, StringComparison.OrdinalIgnoreCase) && adm.AdminPwd == theAdminPwd);
 
     }
 
