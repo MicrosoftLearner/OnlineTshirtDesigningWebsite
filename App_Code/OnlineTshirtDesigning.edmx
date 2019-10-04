@@ -58,6 +58,16 @@
           <Property Name="HomeBannerDesc" Type="varchar" MaxLength="50" />
           <Property Name="HomeBannerImgName" Type="char" MaxLength="80" />
         </EntityType>
+        <EntityType Name="home_banner1">
+          <Key>
+            <PropertyRef Name="BannerImgId" />
+          </Key>
+          <Property Name="BannerImgId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BannerImg" Type="varchar" MaxLength="255" />
+          <Property Name="BannerName" Type="char" MaxLength="80" />
+          <Property Name="BannerDesc" Type="varchar" MaxLength="255" />
+          <Property Name="BannerImgName" Type="varchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="inner_blogs">
           <Key>
             <PropertyRef Name="InnerBlogsId" />
@@ -209,6 +219,7 @@
           <EntitySet Name="customer_address" EntityType="Self.customer_address" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="customer_product_cart" EntityType="Self.customer_product_cart" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="home_banner" EntityType="Self.home_banner" Schema="online_tshirt_designing" store:Type="Tables" />
+          <EntitySet Name="home_banner1" EntityType="Self.home_banner1" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="inner_blogs" EntityType="Self.inner_blogs" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="product" EntityType="Self.product" Schema="online_tshirt_designing" store:Type="Tables" />
           <EntitySet Name="product_cart" EntityType="Self.product_cart" Schema="online_tshirt_designing" store:Type="Tables" />
@@ -496,7 +507,18 @@
             <End Role="product" EntitySet="products" />
             <End Role="product_order" EntitySet="product_order" />
           </AssociationSet>
+          <EntitySet Name="home_banner1" EntityType="online_tshirt_designingModel.home_banner1" />
         </EntityContainer>
+        <EntityType Name="home_banner1">
+          <Key>
+            <PropertyRef Name="BannerImgId" />
+          </Key>
+          <Property Name="BannerImgId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BannerImg" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BannerName" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="BannerDesc" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BannerImgName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -609,6 +631,17 @@
                 <ScalarProperty Name="AdminName" ColumnName="AdminName" />
                 <ScalarProperty Name="AdminEmailAddr" ColumnName="AdminEmailAddr" />
                 <ScalarProperty Name="AdminPwd" ColumnName="AdminPwd" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="home_banner1">
+            <EntityTypeMapping TypeName="online_tshirt_designingModel.home_banner1">
+              <MappingFragment StoreEntitySet="home_banner1">
+                <ScalarProperty Name="BannerImgName" ColumnName="BannerImgName" />
+                <ScalarProperty Name="BannerDesc" ColumnName="BannerDesc" />
+                <ScalarProperty Name="BannerName" ColumnName="BannerName" />
+                <ScalarProperty Name="BannerImg" ColumnName="BannerImg" />
+                <ScalarProperty Name="BannerImgId" ColumnName="BannerImgId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

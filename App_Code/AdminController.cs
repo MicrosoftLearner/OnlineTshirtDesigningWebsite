@@ -12,6 +12,7 @@ using System.Web.Http;
 using System.Security.Claims;
 using System.Web.Http.Cors;
 
+[EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
 public class AdminController : ApiController
 {
     online_tshirt_designingEntities designEntity;
@@ -26,6 +27,16 @@ public class AdminController : ApiController
      //   Ok< Tuple<string, int> >();
         return Ok("Hello" + " " + identity.Name);
     }
+
+    [HttpPost]
+    [Route("api/admin/saveBannerDetails")]  
+    public IHttpActionResult SaveBannerData([FromBody] HomeBannerModel bannerData)
+    {
+     
+
+        return Ok("cool");
+    }
+
     
     // POST api/<controller>
     //[Route("api/admin/CheckAdminLogin/{theAdminName}/{theAdminPwd}")]

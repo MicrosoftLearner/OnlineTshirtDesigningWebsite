@@ -21,6 +21,7 @@
         <AssociationConnector Association="online_tshirt_designingModel.customer_product_cart_ibfk_2" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.fk_productId" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.product_order_ibfk_2" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.home_banner1" Width="1.5" PointX="7.375" PointY="8.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

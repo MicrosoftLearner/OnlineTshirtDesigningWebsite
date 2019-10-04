@@ -79,6 +79,15 @@ public partial class home_banner
     public string HomeBannerImgName { get; set; }
 }
 
+public partial class home_banner1
+{
+    public short BannerImgId { get; set; }
+    public string BannerImg { get; set; }
+    public string BannerName { get; set; }
+    public string BannerDesc { get; set; }
+    public string BannerImgName { get; set; }
+}
+
 public partial class inner_blogs
 {
     public short InnerBlogsId { get; set; }

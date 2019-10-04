@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 /// <summary>
 /// Summary description for WebApiConfig
@@ -13,15 +14,21 @@ public class WebApiConfig
     {
 
         //Web Api routes
+      //  var cors = new EnableCorsAttribute("http://localhost:3000", "*", "*");
+        config.EnableCors();
         config.MapHttpAttributeRoutes();
-
-       // config.EnableCors();
-
+     
         config.Routes.MapHttpRoute(
         name: "DefaultApi",
         routeTemplate: "api/{controller}/{id}",
         defaults: new { id = System.Web.Http.RouteParameter.Optional }
         );
+
+        //config.Routes.MapHttpRoute(
+        //name: "ApiWithAction",
+        //routeTemplate: "api/{controller}/{action}/{id}",
+        //defaults: new { id = System.Web.Http.RouteParameter.Optional }
+        //);
 
         //config.Routes.MapHttpRoute("ApiWithAction", "api/{controller}/{action}/{id}", new { id = System.Web.Http.RouteParameter.Optional }
         // );

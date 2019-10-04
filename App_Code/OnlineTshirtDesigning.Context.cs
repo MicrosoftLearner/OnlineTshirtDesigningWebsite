@@ -32,4 +32,5 @@ public partial class online_tshirt_designingEntities : DbContext
     public virtual DbSet<product_cart> product_cart { get; set; }
     public virtual DbSet<product_order> product_order { get; set; }
     public virtual DbSet<admin> admins { get; set; }
+    public virtual DbSet<home_banner1> home_banner1 { get; set; }
 }
