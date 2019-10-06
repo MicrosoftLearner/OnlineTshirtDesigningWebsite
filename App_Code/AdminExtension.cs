@@ -10,26 +10,26 @@ using System.IO;
 public partial class admin
 {
 
-    public string UploadBanner(HomeBannerModel bannerData)
+    public string UploadBannerFile(HttpPostedFileBase theBannerImageFile)
     {
         string uploadDirectory; // to save the file path where the folder has been created
 
-        string databaseFilePath;
+        string databaseFilePath = "";
 
         // Create a new folder in your current directory 
         // to store the uplaoded images 
-        string uploadedBlogs = "UploadedBlogsImages";
+        string uploadedBlogs = "HomeBannerImages";
 
         uploadDirectory = Path.Combine(HttpContext.Current.Request.PhysicalApplicationPath, uploadedBlogs);
 
-        if (bannerData.BannerImageFile.FileName == "")
+        if (theBannerImageFile.FileName == "")
         {
-            return "No file";
+            return "NoFileError";
         }
         else
         {
             // Check the extension of the file 
-            string fileExtension = Path.GetExtension(bannerData.BannerImageFile.FileName);
+            string fileExtension = Path.GetExtension(theBannerImageFile.FileName);
 
             switch (fileExtension.ToLower())
             {
@@ -38,27 +38,41 @@ public partial class admin
                 case ".gif":
                     break;
                 default:
-                    string.Format( "Invalid File Format");
+                   // string.Format( "Invalid File Format");
      
-                    return "Invalid File Format"; // instead of break we used return directly which wont execute the below code
+                    return "FormatError"; // instead of break we used return directly which wont execute the below code
             }
 
             // Using this code , the saved file will retain its original 
             // file name when it's placed on the server.
-            string serverFileName = Path.GetFileName(bannerData.BannerImageFile.FileName);
+            string serverFileName = Path.GetFileName(theBannerImageFile.FileName);
 
             //Content type like MIME such as .jpeg, .png
-            string contentType = bannerData.BannerImageFile.ContentType;
+            string contentType = theBannerImageFile.ContentType;
 
             //Full path of folder UploadedBlogs with saved file name
             //This we are to store in the database to fetch the images 
             string fullUploadPath = Path.Combine(uploadDirectory, serverFileName);
 
-            databaseFilePath = "~/UploadedBlogsImages/" + serverFileName;
+            databaseFilePath = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + HttpContext.Current.Request.ApplicationPath;
 
-            //remaining file save method
-          
+            databaseFilePath += "HomeBannerImages/" + serverFileName;
+
+
+            //We need to check that PostedFile objects's SaveAs method saves the file 
+            //correctly or not
+
+            try
+            {
+                theBannerImageFile.SaveAs(fullUploadPath);
+
+            }
+            catch (Exception e)
+            {
+                databaseFilePath = "SaveError";
+            }
         }
+
         return databaseFilePath;
     }
 }

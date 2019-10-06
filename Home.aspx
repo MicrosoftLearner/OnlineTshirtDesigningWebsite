@@ -3,9 +3,10 @@
 <%@ MasterType VirtualPath="~/Site.Master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent"  ng-controller="homeCtrl" runat="Server">
+    <asp:Label Text="text" ID="Path" runat="server" />
     <!--Section home banner -->
     <%--<section>
-      
+        
         <p> </p>
         <div class="cloth-cat">
             <div id="HomeBannersSlider" class="flexslider flexslider-home-banner">

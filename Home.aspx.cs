@@ -23,6 +23,14 @@ public partial class Home : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         // If this page is being viewed 1st time in the browser 
+        string path = Server.HtmlEncode( Request.PhysicalApplicationPath);
+        //  Server.pa
+
+        string path1 = Server.HtmlEncode(Request.ApplicationPath);
+        Path.Text = path1 + "<br/>";
+
+        Path.Text += Request.Url.GetLeftPart(UriPartial.Authority) + Request.ApplicationPath;
+
         if (!this.IsPostBack)
         {
            // FillHomeBanner();
