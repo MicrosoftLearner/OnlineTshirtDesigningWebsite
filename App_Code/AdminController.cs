@@ -31,7 +31,7 @@ public class AdminController : ApiController
     }
 
     // GET api/<controller>
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("api/admin/homeBannerDetails")]
     public IHttpActionResult GetHomeBannerDetails()
@@ -42,6 +42,47 @@ public class AdminController : ApiController
                                orderby ban.BannerImgId
                                select ban;
         return Ok<IQueryable<home_banner1>>(entireHomeBanner);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [Route("api/admin/changeBannerName")]
+    public IHttpActionResult ChangeBannerName([FromBody]home_banner1 theBanner)
+    {
+        designEntity = new online_tshirt_designingEntities();
+
+        //Matches the imageId and gives the matched row
+
+        IQueryable<home_banner1> matches = designEntity.home_banner1.Where(x => x.BannerImgId == theBanner.BannerImgId).Select((x) => x);
+
+        //Excutes the query and return the object
+
+        home_banner1 newBannerNameChanges = matches.Single();
+
+        //Updats the home banner obj
+        newBannerNameChanges.BannerName = theBanner.BannerName;
+
+        newBannerNameChanges.BannerDesc = theBanner.BannerDesc;
+       
+        //Commit the changes back to the database
+        try
+        {
+           // designEntity.home_banner1.Add(newBannerNameChanges);
+
+            designEntity.SaveChanges();
+
+        }
+        catch (Exception error)
+        {
+            System.Diagnostics.Debug.WriteLine(error);
+
+        }
+
+        var entireHomeBanner = from ban in designEntity.home_banner1
+                               orderby ban.BannerImgId
+                               select ban;
+        return Ok<IEnumerable<home_banner1>>(entireHomeBanner);
+        //  return Ok<string>("cool");
     }
 
     [HttpPost]
@@ -99,7 +140,7 @@ public class AdminController : ApiController
 
                string  databaseFilePath = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + HttpContext.Current.Request.ApplicationPath;
 
-                databaseFilePath += "HomeBannerImages/" + postedFiles.FileName;
+                databaseFilePath += "UploadedHomeBanner/" + postedFiles.FileName;
 
                 try
                 {
