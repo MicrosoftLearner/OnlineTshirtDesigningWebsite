@@ -97,6 +97,28 @@ public class ProductController : ApiController
         return Ok(entireBanner);
     }
 
+    [Route("api/product/getBlogs")]
+    [HttpGet]
+    public IHttpActionResult ShowBlogs()
+    {
+        designEntity = new online_tshirt_designingEntities();
+
+        IQueryable<inner_blogs> entireBlogs = designEntity.inner_blogs.Select((x) => x);
+
+        return Ok(entireBlogs);
+    }
+
+    [Route("api/product/getBlogs/id")]
+    [HttpGet]
+    public inner_blogs ShowBlogs(int id)
+    {
+        designEntity = new online_tshirt_designingEntities();
+
+        inner_blogs individualBlogs = designEntity.inner_blogs.Where(blog => blog.InnerBlogsId == id).Select((x) => x).First();
+
+        return individualBlogs;
+    }
+
     // PUT api/<controller>/5
     public void Put(int id, [FromBody]string value)
     {
