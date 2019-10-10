@@ -1,19 +1,33 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+
 using System.Web.Http;
+using System.Web.Http.Cors;
+using System.Security.Claims;
+
 using System.Data;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 
+using System.Net;
+using System.Net.Http;
+using System.Net.Mail;
+
+//To use configuration files 
+using System.Configuration;
+
+using System.IO;
+
+
+[EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
 public class CustomerController : ApiController
 {
     online_tshirt_designingEntities designEntity;
 
     //GET api/<controller/id
-    // [Route("api/customer/GetCustomerEntireData/{Id}")]
+    //[Route("api/customer/GetCustomerEntireData/{Id}")]
     [HttpGet]
     public IHttpActionResult GetCustomer(string id)
     {
@@ -65,31 +79,25 @@ public class CustomerController : ApiController
         return Ok(customerEntireData);
     }
 
+    [Route("api/customer/getName")]
     [HttpPost]
-    public IHttpActionResult Login([FromBody] Tuple<string, string> tupleCustomer)
+    [Authorize]
+    public IHttpActionResult GetCustomerName([FromUri] string emailId,  string pwd)
     {
         //Instantiate the object
         designEntity = new online_tshirt_designingEntities();
 
-        //var matchesLogin = from log  in designEntity.customers
-        //                   where log.CustEmailAddr == tupleCustomer.Item1 && log.CustPwd == tupleCustomer.Item2
-        //                   select new {
+        ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
 
-        //                       Id = log.CustId
-        //                   };
+        //var matchesLogin = designEntity.customers.Where((log) => log.CustEmailAddr == emailId && log.CustPwd == pwd).Select(log => log.CustId.ToString()).FirstOrDefault();
 
-        var matchesLogin = designEntity.customers.Where((log) => log.CustEmailAddr == tupleCustomer.Item1 && log.CustPwd == tupleCustomer.Item2).Select(log => log.CustId.ToString()).FirstOrDefault();
-
-        //IF the Customer is not Registred, return the Message 
-        if (matchesLogin == null) return Ok<string>("Login info is incorrect, Please click on Signup");
-
-        //If the customer is registred, return Customer Id 
-        return Ok(matchesLogin);
-       
+        return Ok("Hello" + " " + identity.Name);
+        
     }
     // POST api/<controller>
+    [Route("api/customer/signUp")]
     [HttpPost]
-    public IHttpActionResult SignUp([FromBody] customer theCustomer)
+    public IHttpActionResult SignUp([FromBody] CustomerModel theCustomer)
     {
         //Instantiate the obj 1st
         designEntity = new online_tshirt_designingEntities();
@@ -107,7 +115,7 @@ public class CustomerController : ApiController
         var customerPresent = designEntity.customers.FirstOrDefault((c) => c.CustEmailAddr == theCustomer.CustEmailAddr);
 
         //FirstOrDefault returns null if matching record is not found
-        if (customerPresent == null) return NotFound();
+          if (customerPresent != null) return NotFound();
 
         //If not, Insert the details into Database i.e(Entity Database) 
         var newCustomer = new customer()
@@ -122,11 +130,10 @@ public class CustomerController : ApiController
 
             CustPwd = theCustomer.CustPwd,
 
-            CustMobNo = Convert.ToSByte(theCustomer.CustMobNo),
+            CustMobNo = theCustomer.CustMobNo,
 
             CustEmailAddr = theCustomer.CustEmailAddr,
 
-            CustImg = theCustomer.CustImg
         };
         // customer x = customer.CreateProduct();
 
@@ -150,16 +157,52 @@ public class CustomerController : ApiController
         if (updatedRecord > 0)
         {
             //Mail info to client
-         
-            //Instantiate the customer obj i.e CustomerExtension
-            customer email = new customer();
 
-            //Call the method from CustomerExtension.cs along with the parameters
-            email.SendSignUpMail( new Tuple<string, string>(theCustomer.CustFirstName + " "+ theCustomer.CustLastName, theCustomer.CustEmailAddr) );
+            SendMail(new Tuple<string, string>(theCustomer.CustEmailAddr, theCustomer.CustFullName));
+            return Ok(true);
+
         }
 
-        return Ok(newCustomer.CustId);
+        return Ok(true);
+
     }
+
+   [NonAction]
+    private void SendMail(Tuple<string, string> tupleCustomer)
+    {
+
+        //Initialize this Obj for Email 
+        CustomerMail custMail = new CustomerMail();
+
+        //will take .html Email Template 
+        custMail.EmailSenderFileName = "WelcomeEmailer.html";
+
+        //will set the Email subject
+        custMail.EmailSubject = "Welcome To Burnt Umber";
+
+        //will replace the [CustFullName] word from Template 
+
+        //Use Srtring Bulder class to Replace multiple things 
+        StringBuilder emailContentReplaceText = new StringBuilder(custMail.EmailContentText);
+
+        emailContentReplaceText.Replace("[CustEmail]", tupleCustomer.Item1);
+
+        emailContentReplaceText.Replace("[CustFullName]", tupleCustomer.Item2);
+
+        //Set the replaced one text 
+        custMail.EmailContentText = emailContentReplaceText.ToString();
+
+        //Set to which customer Email id 
+        custMail.EmailRecieverId = tupleCustomer.Item1;
+
+        //Send mail to the recipant
+        custMail.SendingMail();
+
+    }
+
+
+
+    [Route("api/customer/saveAddr")]
 
     [HttpPost]
     public IHttpActionResult SaveCustomerAddress([FromBody] customer_address customerAddrr)
