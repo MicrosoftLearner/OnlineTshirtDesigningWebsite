@@ -18,7 +18,7 @@ public class CartController : ApiController
         designEntity = new online_tshirt_designingEntities();
 
         //1st check the Product is already in cart or not  
-        var matchesCart = designEntity.product_cart.Where((c) => c.ProductId == id && c.SessionId == sessionID).Select((c) => c.ProductCartId).FirstOrDefault();
+        var matchesCart = designEntity.product_cart.Where((c) => c.ProductId == id ).Select((c) => c.ProductCartId).FirstOrDefault();
 
         if (matchesCart != null) return Ok<string>("Product is already added in the cart");
 
@@ -34,7 +34,7 @@ public class CartController : ApiController
 
             ProductId = id,
 
-            SessionId = sessionID
+           
 
         };
 
@@ -74,7 +74,7 @@ public class CartController : ApiController
                        //Send product_cart's Objects properties
                        ProductCartID = entCart.ProductCartId,
                        ProductID = entCart.ProductId,
-                       SessionID = entCart.SessionId
+                     
 
                    };
 
@@ -111,7 +111,7 @@ public class CartController : ApiController
         sbyte counter = 0;
 
         //Check the product 1st
-        string pCartMatch = designEntity.product_cart.Where((p) => p.SessionId == sessionID).Select((p) => p.ProductCartId).SingleOrDefault();
+        string pCartMatch = designEntity.product_cart.Where((p) => p.ProductId.ToString() == sessionID).Select((p) => p.ProductCartId).SingleOrDefault();
 
         //If pCartMatch hasn't got any products
         if (String.IsNullOrEmpty(pCartMatch)) return Ok<bool>(true);
@@ -120,7 +120,7 @@ public class CartController : ApiController
         //if pCartMatch has got any products
 
         IEnumerable<product_cart> prodAddedCart = from p in designEntity.product_cart
-                                                  where p.SessionId == sessionID
+                                                
                                                   orderby p.ProductId
                                                   select p;
 
@@ -256,7 +256,7 @@ public class CartController : ApiController
         var productCart = from entProd in designEntity.products
                           join entCart in designEntity.product_cart
                           on entProd.ProductId equals entCart.ProductId
-                          where entCart.SessionId == sessionID
+                         // where entCart.SessionId == sessionID
 
                           select new
                           {

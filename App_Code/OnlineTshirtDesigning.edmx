@@ -102,7 +102,6 @@
           </Key>
           <Property Name="ProductCartId" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="ProductId" Type="smallint" Nullable="false" />
-          <Property Name="SessionId" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="product_order">
           <Key>
@@ -295,7 +294,7 @@
           <Property Name="CustId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="customer" Relationship="Self.customer_product_cart_ibfk_3" FromRole="customer_product_cart" ToRole="customer" />
           <NavigationProperty Name="product" Relationship="Self.customer_product_cart_ibfk_1" FromRole="customer_product_cart" ToRole="product" />
-          <NavigationProperty Name="product_cart" Relationship="Self.customer_product_cart_ibfk_2" FromRole="customer_product_cart" ToRole="product_cart" />
+          <NavigationProperty Name="product_cart" Relationship="online_tshirt_designingModel.customer_product_cart_ibfk_2" FromRole="customer_product_cart" ToRole="product_cart" />
         </EntityType>
         <EntityType Name="home_banner">
           <Key>
@@ -335,18 +334,8 @@
           <Property Name="ProductSizeQuantXL" Type="Int16" />
           <Property Name="ProductSizeQuantXXL" Type="Int16" />
           <NavigationProperty Name="customer_product_cart" Relationship="Self.customer_product_cart_ibfk_1" FromRole="product" ToRole="customer_product_cart" />
-          <NavigationProperty Name="product_cart" Relationship="Self.fk_productId" FromRole="product" ToRole="product_cart" />
           <NavigationProperty Name="product_order" Relationship="Self.product_order_ibfk_2" FromRole="product" ToRole="product_order" />
-        </EntityType>
-        <EntityType Name="product_cart">
-          <Key>
-            <PropertyRef Name="ProductCartId" />
-          </Key>
-          <Property Name="ProductCartId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ProductId" Type="Int16" Nullable="false" />
-          <NavigationProperty Name="customer_product_cart" Relationship="Self.customer_product_cart_ibfk_2" FromRole="product_cart" ToRole="customer_product_cart" />
-          <NavigationProperty Name="product" Relationship="Self.fk_productId" FromRole="product_cart" ToRole="product" />
-          <Property Name="SessionId" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="product_cart" Relationship="online_tshirt_designingModel.fk_productId" FromRole="product" ToRole="product_cart" />
         </EntityType>
         <EntityType Name="product_order">
           <Key>
@@ -427,34 +416,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="customer_product_cart_ibfk_2">
-          <End Role="product_cart" Type="Self.product_cart" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="customer_product_cart" Type="Self.customer_product_cart" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="product_cart">
-              <PropertyRef Name="ProductCartId" />
-            </Principal>
-            <Dependent Role="customer_product_cart">
-              <PropertyRef Name="ProductCartId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_productId">
-          <End Role="product" Type="Self.product" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="product_cart" Type="Self.product_cart" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="product">
-              <PropertyRef Name="ProductId" />
-            </Principal>
-            <Dependent Role="product_cart">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="product_order_ibfk_2">
           <End Role="product" Type="Self.product" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -476,7 +437,6 @@
           <EntitySet Name="home_banner" EntityType="Self.home_banner" />
           <EntitySet Name="inner_blogs" EntityType="Self.inner_blogs" />
           <EntitySet Name="products" EntityType="Self.product" />
-          <EntitySet Name="product_cart" EntityType="Self.product_cart" />
           <EntitySet Name="product_order" EntityType="Self.product_order" />
           <EntitySet Name="admins" EntityType="Self.admin" />
           <AssociationSet Name="customer_address_ibfk_1" Association="Self.customer_address_ibfk_1">
@@ -495,19 +455,20 @@
             <End Role="product" EntitySet="products" />
             <End Role="customer_product_cart" EntitySet="customer_product_cart" />
           </AssociationSet>
-          <AssociationSet Name="customer_product_cart_ibfk_2" Association="Self.customer_product_cart_ibfk_2">
-            <End Role="product_cart" EntitySet="product_cart" />
-            <End Role="customer_product_cart" EntitySet="customer_product_cart" />
-          </AssociationSet>
-          <AssociationSet Name="fk_productId" Association="Self.fk_productId">
-            <End Role="product" EntitySet="products" />
-            <End Role="product_cart" EntitySet="product_cart" />
-          </AssociationSet>
           <AssociationSet Name="product_order_ibfk_2" Association="Self.product_order_ibfk_2">
             <End Role="product" EntitySet="products" />
             <End Role="product_order" EntitySet="product_order" />
           </AssociationSet>
           <EntitySet Name="home_banner1" EntityType="online_tshirt_designingModel.home_banner1" />
+          <EntitySet Name="product_cart" EntityType="online_tshirt_designingModel.product_cart" />
+          <AssociationSet Name="customer_product_cart_ibfk_2" Association="online_tshirt_designingModel.customer_product_cart_ibfk_2">
+            <End Role="product_cart" EntitySet="product_cart" />
+            <End Role="customer_product_cart" EntitySet="customer_product_cart" />
+          </AssociationSet>
+          <AssociationSet Name="fk_productId" Association="online_tshirt_designingModel.fk_productId">
+            <End Role="product" EntitySet="products" />
+            <End Role="product_cart" EntitySet="product_cart" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="home_banner1">
           <Key>
@@ -519,6 +480,43 @@
           <Property Name="BannerDesc" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="BannerImgName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="product_cart">
+          <Key>
+            <PropertyRef Name="ProductCartId" />
+          </Key>
+          <Property Name="ProductCartId" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ProductId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="customer_product_cart" Relationship="online_tshirt_designingModel.customer_product_cart_ibfk_2" FromRole="product_cart" ToRole="customer_product_cart" />
+          <NavigationProperty Name="product" Relationship="online_tshirt_designingModel.fk_productId" FromRole="product_cart" ToRole="product" />
+        </EntityType>
+        <Association Name="customer_product_cart_ibfk_2">
+          <End Type="online_tshirt_designingModel.product_cart" Role="product_cart" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="online_tshirt_designingModel.customer_product_cart" Role="customer_product_cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product_cart">
+              <PropertyRef Name="ProductCartId" />
+            </Principal>
+            <Dependent Role="customer_product_cart">
+              <PropertyRef Name="ProductCartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_productId">
+          <End Type="online_tshirt_designingModel.product" Role="product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="online_tshirt_designingModel.product_cart" Role="product_cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="product_cart">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -602,15 +600,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="product_cart">
-            <EntityTypeMapping TypeName="online_tshirt_designingModel.product_cart">
-              <MappingFragment StoreEntitySet="product_cart">
-                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
-                <ScalarProperty Name="ProductCartId" ColumnName="ProductCartId" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="product_order">
             <EntityTypeMapping TypeName="online_tshirt_designingModel.product_order">
               <MappingFragment StoreEntitySet="product_order">
@@ -642,6 +631,14 @@
                 <ScalarProperty Name="BannerName" ColumnName="BannerName" />
                 <ScalarProperty Name="BannerImg" ColumnName="BannerImg" />
                 <ScalarProperty Name="BannerImgId" ColumnName="BannerImgId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="product_cart">
+            <EntityTypeMapping TypeName="online_tshirt_designingModel.product_cart">
+              <MappingFragment StoreEntitySet="product_cart">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductCartId" ColumnName="ProductCartId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

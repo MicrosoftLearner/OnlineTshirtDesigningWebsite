@@ -103,8 +103,8 @@ public partial class product
     public product()
     {
         this.customer_product_cart = new HashSet<customer_product_cart>();
-        this.product_cart = new HashSet<product_cart>();
         this.product_order = new HashSet<product_order>();
+        this.product_cart = new HashSet<product_cart>();
     }
 
     public short ProductId { get; set; }
@@ -124,9 +124,9 @@ public partial class product
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     public virtual ICollection<customer_product_cart> customer_product_cart { get; set; }
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public virtual ICollection<product_cart> product_cart { get; set; }
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     public virtual ICollection<product_order> product_order { get; set; }
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+    public virtual ICollection<product_cart> product_cart { get; set; }
 }
 
 public partial class product_cart
@@ -139,7 +139,6 @@ public partial class product_cart
 
     public string ProductCartId { get; set; }
     public short ProductId { get; set; }
-    public string SessionId { get; set; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     public virtual ICollection<customer_product_cart> customer_product_cart { get; set; }

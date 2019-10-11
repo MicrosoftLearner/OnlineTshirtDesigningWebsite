@@ -27,71 +27,44 @@ public class CustomerController : ApiController
     online_tshirt_designingEntities designEntity;
 
     //GET api/<controller/id
-    //[Route("api/customer/GetCustomerEntireData/{Id}")]
+    [Route("api/customer/getData/{id}")]
     [HttpGet]
     public IHttpActionResult GetCustomer(string id)
     {
         designEntity = new online_tshirt_designingEntities();
-        
-        //If A customer has got details along with Shipping details
-        //Return this customerEntireData
-        var customerEntireData = from cust in designEntity.customers
-                                 join custAddr in designEntity.customer_address
-                                 on cust.CustId equals custAddr.CustId
-                                 where cust.CustId == id
-                                 select new
-                                 {
-                                     cust.CustFirstName,
-                                     cust.CustLastName,
-                                     cust.CustMobNo,
-                                     cust.CustEmailAddr,
-                                     cust.CustImg,
 
-                                     custAddr.CustAddrId,
-                                     custAddr.CustShipAddr,
-                                     custAddr.CustShipCity,
-                                     custAddr.CustShipState,
-                                     custAddr.CustShipPinCode,
-                                     CustomerAddrrStatus = true
-                                 };
-
-        //If customer hasnt got any Shipping Details in 
-        //Return customerData 
-        if (customerEntireData.Count() == 0)
+        CustomerModel customerData = designEntity.customers.Where(c => c.CustId == id).Select(x => new CustomerModel
         {
-            var customerData = from cust in designEntity.customers
-                               where cust.CustId == id
-                               select new
-                               {
-                                   cust.CustId,
-                                   cust.CustFirstName,
-                                   cust.CustLastName,
-                                   cust.CustMobNo,
-                                   cust.CustEmailAddr,
-                                   cust.CustImg,
-                                   CustomerAddrrStatus = false
-                               };
+            CustFirstName = x.CustFirstName,
 
-            return Ok(customerData);
-        }
+            CustLastName = x.CustLastName,
+
+            CustEmailAddr = x.CustEmailAddr,
+
+            CustImg = x.CustImg
+
+        }).FirstOrDefault();
 
 
-        return Ok(customerEntireData);
+        return Ok(customerData);
+
     }
 
-    [Route("api/customer/getName")]
+    [Route("api/customer/login")]
     [HttpPost]
-    [Authorize]
-    public IHttpActionResult GetCustomerName([FromUri] string emailId,  string pwd)
+    public IHttpActionResult Login([FromBody]  CustomerModel theCustomer)
     {
         //Instantiate the object
         designEntity = new online_tshirt_designingEntities();
 
-        ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
 
-        //var matchesLogin = designEntity.customers.Where((log) => log.CustEmailAddr == emailId && log.CustPwd == pwd).Select(log => log.CustId.ToString()).FirstOrDefault();
+        string matchesLogin = designEntity.customers.Where((log) => log.CustEmailAddr == theCustomer.CustEmailAddr && log.CustPwd == theCustomer.CustPwd).Select(log => log.CustId.ToString()).FirstOrDefault();
 
-        return Ok("Hello" + " " + identity.Name);
+        //Checks for empty string i.e if no login info is found 
+        if (string.IsNullOrEmpty(matchesLogin)) return NotFound();
+     
+        //returns the custmer Id if login credential is found 
+        return Ok(matchesLogin);
         
     }
     // POST api/<controller>
@@ -200,10 +173,62 @@ public class CustomerController : ApiController
 
     }
 
+    [Route("api/customer/getAddresses/{id}")]
+    [HttpGet]
+    public IHttpActionResult GetAddresses(string id)
+    {
+        designEntity = new online_tshirt_designingEntities();
+
+        //If A customer has got details along with Shipping details
+        //Return this customerEntireData
+        var customerEntireData = from cust in designEntity.customers
+                                 join custAddr in designEntity.customer_address
+                                 on cust.CustId equals custAddr.CustId
+                                 where cust.CustId == id
+                                 select new
+                                 {
+                                     cust.CustFirstName,
+                                     cust.CustLastName,
+                                     cust.CustMobNo,
+                                     cust.CustEmailAddr,
+                                     cust.CustImg,
+
+                                     custAddr.CustAddrId,
+                                     custAddr.CustShipAddr,
+                                     custAddr.CustShipCity,
+                                     custAddr.CustShipState,
+                                     custAddr.CustShipPinCode
+
+                                 };
+
+        //Returns customerData If customer hasnt got any Shipping Details 
+        //Saved in 
+
+        if (customerEntireData.Count() == 0)
+        {
+
+            CustomerModel customerData = designEntity.customers.Where(c => c.CustId == id).Select(x => new CustomerModel
+            {
+                CustFirstName = x.CustFirstName,
+
+                CustLastName = x.CustLastName,
+
+                CustMobNo = (short)x.CustMobNo,
+
+                CustEmailAddr = x.CustEmailAddr,
+
+                CustImg = x.CustImg
+
+            }).FirstOrDefault();
+
+            return Ok(customerData);
+        }
+
+        return Ok(customerEntireData);
+    }
 
 
     [Route("api/customer/saveAddr")]
-
     [HttpPost]
     public IHttpActionResult SaveCustomerAddress([FromBody] customer_address customerAddrr)
     {

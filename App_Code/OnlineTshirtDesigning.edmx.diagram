@@ -11,17 +11,17 @@
         <EntityTypeShape EntityType="online_tshirt_designingModel.home_banner" Width="1.5" PointX="5.75" PointY="2.625" IsExpanded="true" />
         <EntityTypeShape EntityType="online_tshirt_designingModel.inner_blogs" Width="1.5" PointX="7.75" PointY="2.625" IsExpanded="true" />
         <EntityTypeShape EntityType="online_tshirt_designingModel.product" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.product_cart" Width="1.5" PointX="3" PointY="9.5" IsExpanded="true" />
         <EntityTypeShape EntityType="online_tshirt_designingModel.product_order" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="online_tshirt_designingModel.admin" Width="1.5" PointX="7.75" PointY="5.625" IsExpanded="true" />
         <AssociationConnector Association="online_tshirt_designingModel.customer_address_ibfk_1" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.customer_product_cart_ibfk_3" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.product_order_ibfk_1" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.customer_product_cart_ibfk_1" ManuallyRouted="false" />
-        <AssociationConnector Association="online_tshirt_designingModel.customer_product_cart_ibfk_2" ManuallyRouted="false" />
-        <AssociationConnector Association="online_tshirt_designingModel.fk_productId" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.product_order_ibfk_2" ManuallyRouted="false" />
         <EntityTypeShape EntityType="online_tshirt_designingModel.home_banner1" Width="1.5" PointX="7.375" PointY="8.75" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.product_cart" Width="1.5" PointX="3" PointY="10.25" />
+        <AssociationConnector Association="online_tshirt_designingModel.customer_product_cart_ibfk_2" />
+        <AssociationConnector Association="online_tshirt_designingModel.fk_productId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
