@@ -39,6 +39,8 @@ public class CustomerController : ApiController
 
             CustLastName = x.CustLastName,
 
+            CustMobNo = (short)x.CustMobNo,
+
             CustEmailAddr = x.CustEmailAddr,
 
             CustImg = x.CustImg
@@ -187,6 +189,7 @@ public class CustomerController : ApiController
                                  where cust.CustId == id
                                  select new
                                  {
+                                     cust.CustId,
                                      cust.CustFirstName,
                                      cust.CustLastName,
                                      cust.CustMobNo,
@@ -195,6 +198,7 @@ public class CustomerController : ApiController
 
                                      custAddr.CustAddrId,
                                      custAddr.CustShipAddr,
+                                     custAddr.CustShipCountry,
                                      custAddr.CustShipCity,
                                      custAddr.CustShipState,
                                      custAddr.CustShipPinCode
@@ -207,21 +211,21 @@ public class CustomerController : ApiController
         if (customerEntireData.Count() == 0)
         {
 
-            CustomerModel customerData = designEntity.customers.Where(c => c.CustId == id).Select(x => new CustomerModel
-            {
-                CustFirstName = x.CustFirstName,
+            //CustomerModel customerData = designEntity.customers.Where(c => c.CustId == id).Select(x => new CustomerModel
+            //{
+            //    CustFirstName = x.CustFirstName,
 
-                CustLastName = x.CustLastName,
+            //    CustLastName = x.CustLastName,
 
-                CustMobNo = (short)x.CustMobNo,
+            //    CustMobNo = (short)x.CustMobNo,
 
-                CustEmailAddr = x.CustEmailAddr,
+            //    CustEmailAddr = x.CustEmailAddr,
 
-                CustImg = x.CustImg
+            //    CustImg = x.CustImg
 
-            }).FirstOrDefault();
+            //}).FirstOrDefault();
 
-            return Ok(customerData);
+            return NotFound();
         }
 
         return Ok(customerEntireData);
@@ -282,16 +286,17 @@ public class CustomerController : ApiController
 
         return Ok();
     }
-    
+
+    [Route("api/customer/saveRewrittenInfo")]
     [HttpPost]
-    public IHttpActionResult UpdateCustomerInfo([FromBody] string id, customer theCustomer){
+    public IHttpActionResult UpdateCustomerInfo([FromBody]  CustomerModel theCustomer){
         //Instantiate the object
         designEntity = new online_tshirt_designingEntities();
 
         int updatedRecord = 0;
 
         var updateCustoemerAddrr = from cust in designEntity.customers
-                                   where cust.CustId == id
+                                   where cust.CustId == theCustomer.CustId
                                    select cust;
 
        
@@ -367,29 +372,39 @@ public class CustomerController : ApiController
     }
     
     // PUT api/<controller>/5
+    [HttpPut]
     public void Put(int id, [FromBody]string value)
     {
     }
 
     // DELETE api/<controller>/5
-    public void DeleteCustomerAddress(string id)
+    [Route("api/customer/deleteAddr")]
+    [HttpDelete]
+    public IHttpActionResult DeleteCustomerAddress(string theId , string theAddrId )
     {
+        //Sets the return result from SaveChanges()
+        int updated = 0;
+
         //Instantiate the obj
         designEntity = new online_tshirt_designingEntities();
 
         //Find an appropriate Customer Address
+     
         var matches = from c in designEntity.customer_address
-                      where c.CustAddrId == id
-                      orderby c.CustAddrId
+                      where c.CustAddrId == theAddrId && c.CustId ==  theId
                       select c;
 
         //Excute the query and return the Object
-        customer_address customerAddrr = matches.Single();
+        customer_address customerMatchedAddrr = matches.Single();
 
         //Delete the record from the Database
-        designEntity.customer_address.Remove(customerAddrr);
+        designEntity.customer_address.Remove(customerMatchedAddrr);
 
-        designEntity.SaveChanges();
+        updated = designEntity.SaveChanges();
+
+        if(updated > 0) return Ok(true);
+
+        return NotFound();
                       
     }
 
