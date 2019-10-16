@@ -64,10 +64,10 @@ public class CustomerController : ApiController
 
         //Checks for empty string i.e if no login info is found 
         if (string.IsNullOrEmpty(matchesLogin)) return NotFound();
-     
+
         //returns the custmer Id if login credential is found 
         return Ok(matchesLogin);
-        
+
     }
     // POST api/<controller>
     [Route("api/customer/signUp")]
@@ -90,7 +90,7 @@ public class CustomerController : ApiController
         var customerPresent = designEntity.customers.FirstOrDefault((c) => c.CustEmailAddr == theCustomer.CustEmailAddr);
 
         //FirstOrDefault returns null if matching record is not found
-          if (customerPresent != null) return NotFound();
+        if (customerPresent != null) return NotFound();
 
         //If not, Insert the details into Database i.e(Entity Database) 
         var newCustomer = new customer()
@@ -142,7 +142,7 @@ public class CustomerController : ApiController
 
     }
 
-   [NonAction]
+    [NonAction]
     private void SendMail(Tuple<string, string> tupleCustomer)
     {
 
@@ -232,7 +232,7 @@ public class CustomerController : ApiController
     }
 
 
-    [Route("api/customer/saveAddr")]
+    [Route("api/customer/saveNewAddr")]
     [HttpPost]
     public IHttpActionResult SaveCustomerAddress([FromBody] customer_address customerAddrr)
     {
@@ -246,7 +246,8 @@ public class CustomerController : ApiController
         int updatedRecord = 0;
 
         //Insert the details into database i.e(EntityDatabase)
-        var newCustomerAddrr = new customer_address {
+        var newCustomerAddrr = new customer_address
+        {
 
             //Add properties to the class
             CustAddrId = id,
@@ -289,86 +290,187 @@ public class CustomerController : ApiController
 
     [Route("api/customer/saveRewrittenInfo")]
     [HttpPost]
-    public IHttpActionResult UpdateCustomerInfo([FromBody]  CustomerModel theCustomer){
-        //Instantiate the object
-        designEntity = new online_tshirt_designingEntities();
-
-        int updatedRecord = 0;
-
-        var updateCustoemerAddrr = from cust in designEntity.customers
-                                   where cust.CustId == theCustomer.CustId
-                                   select cust;
-
-       
-        //Execute the Query and return the Object
-        customer custAddrrToUpdate = updateCustoemerAddrr.Single();
-
-        //Change the Entity object
-        custAddrrToUpdate.CustFirstName = theCustomer.CustFirstName;
-
-        custAddrrToUpdate.CustLastName = theCustomer.CustLastName;
-
-        custAddrrToUpdate.CustMobNo = theCustomer.CustMobNo;
-
-        custAddrrToUpdate.CustEmailAddr = theCustomer.CustEmailAddr;
-
-        //Commit the changes back to the database
-
-        try
-        {
-          updatedRecord =  designEntity.SaveChanges();
-
-        }
-        catch (Exception error)
-        {
-
-            System.Diagnostics.Debug.WriteLine(error);
-        }
-
-        return Ok<string>("User info has been successfully updated");
-
-    }
-
-    [HttpPost]
-    public IHttpActionResult UpdateCustomerAddress([FromBody] string id, customer_address customerAddrr)
+    public IHttpActionResult UpdateCustomerInfo([FromBody] CustomerModel theCustomer)
     {
         //Instantiate the object
         designEntity = new online_tshirt_designingEntities();
 
         int updatedRecord = 0;
 
-        var updateCustoemerAddrr = from cust in designEntity.customer_address
-                                   where cust.CustAddrId == id
-                                   orderby cust.CustShipAddr
-                                   select cust;
+        //Execute the query and return the entity object 
+        customer customerMatches = designEntity.customers.FirstOrDefault((c) => c.CustId == theCustomer.CustId);
 
-        //Execute the Query and return the Object
-        customer_address custAddrrToUpdate = updateCustoemerAddrr.Single();
-
-        //Change the Entity object
-        custAddrrToUpdate.CustShipAddr = customerAddrr.CustShipAddr;
-
-        custAddrrToUpdate.CustShipCountry = customerAddrr.CustShipCountry;
-
-        custAddrrToUpdate.CustShipState = customerAddrr.CustShipState;
-
-        custAddrrToUpdate.CustShipCity = customerAddrr.CustShipCity;
-
-        custAddrrToUpdate.CustShipPinCode = customerAddrr.CustShipPinCode;
-
-        //Commit the changes back to the database
-        try
+        if (customerMatches != null)
         {
-           updatedRecord =  designEntity.SaveChanges();
+
+            //Change the Entity object
+            customerMatches.CustFirstName = theCustomer.CustFirstName;
+
+            customerMatches.CustLastName = theCustomer.CustLastName;
+
+            customerMatches.CustMobNo = theCustomer.CustMobNo;
+
+            customerMatches.CustEmailAddr = theCustomer.CustEmailAddr;
+
+            customerMatches.CustImg = theCustomer.CustImg;
+
+            //Commit the changes back to the database
+            try
+            {
+                updatedRecord = designEntity.SaveChanges();
+
+            }
+            catch (Exception)
+            {
+
+                System.Diagnostics.Debug.WriteLine("Entity Update Error");
+            }
+
 
         }
-        catch (Exception)
+
+        if (updatedRecord > 0)
+        {
+            CustomerModel customerData = designEntity.customers.Where(c => c.CustId == theCustomer.CustId).Select(x => new CustomerModel
+            {
+                CustFirstName = x.CustFirstName,
+
+                CustLastName = x.CustLastName,
+
+                CustMobNo = (short)x.CustMobNo,
+
+                CustEmailAddr = x.CustEmailAddr,
+
+                CustImg = x.CustImg
+
+            }).FirstOrDefault();
+
+            return Ok(customerData);
+        }
+        
+        return NotFound();
+    }
+
+
+    [Route("api/customer/saveRewrittenAddressInfo")]
+    [HttpPost]
+    public IHttpActionResult UpdateCustomerAddress([FromBody]  CustomerAddressModel theCustomer)
+    {
+        //Instantiate the object
+        designEntity = new online_tshirt_designingEntities();
+
+        int updatedRecord = 0;
+
+        
+        //Execute the query and return the entity object 
+        customer_address customerMatches = designEntity.customer_address.FirstOrDefault((c) => c.CustAddrId == theCustomer.CustAddrId && c.CustId == theCustomer.CustId);
+
+        if(customerMatches == null)
+        {
+            //Generates random numbers for CustAddrId column
+            DateTime dTime = DateTime.Now;
+
+
+            //Sets Unique id to CustId & CustAddrId column
+            string id = Convert.ToString(dTime.Millisecond);
+
+            //Creates the new customer address model
+            customer_address newCustomerAddress = new customer_address
+            {
+                CustAddrId = id,
+
+                CustShipAddr = theCustomer.CustShipAddr,
+
+                CustShipCountry = theCustomer.CustShipCountry,
+
+                CustShipState = theCustomer.CustShipState,
+
+                CustShipCity = theCustomer.CustShipCity,
+
+                CustShipPinCode = theCustomer.CustShipPinCode,
+
+                CustId = theCustomer.CustId
+
+            };
+
+            try
+            {
+                //Finally commit the changes the changes and insert the record
+                //In the database
+                designEntity.customer_address.Add(newCustomerAddress);
+
+                updatedRecord = designEntity.SaveChanges();
+
+            }
+            catch (Exception error)
+            {
+
+                System.Diagnostics.Debug.WriteLine("Error in Linq", error);
+            }
+            
+        }
+
+        //Changes the entity object, if it matches 
+        else
         {
 
-            System.Diagnostics.Debug.WriteLine("Entity Update Error");
-        } 
+            customerMatches.CustShipAddr = theCustomer.CustShipAddr;
 
-        return Ok<string>("Address updated successfully");
+            customerMatches.CustShipCountry = theCustomer.CustShipCountry;
+
+            customerMatches.CustShipState = theCustomer.CustShipState;
+
+            customerMatches.CustShipCity = theCustomer.CustShipCity;
+
+            customerMatches.CustShipPinCode = theCustomer.CustShipPinCode;
+
+
+            try
+            {
+                //Finally commit the changes the changes and insert the record
+                //In the database
+
+                updatedRecord = designEntity.SaveChanges();
+
+            }
+            catch (Exception error)
+            {
+
+                System.Diagnostics.Debug.WriteLine("Error in Linq", error);
+            }
+
+        }
+
+        //IF records get updated successfully
+        if (updatedRecord > 0)
+        {
+            //Return this customerEntireData
+            var customerEntireData = from cust in designEntity.customers
+                                     join custAddr in designEntity.customer_address
+                                     on cust.CustId equals custAddr.CustId
+                                     where cust.CustId == theCustomer.CustId
+                                     select new
+                                     {
+                                         cust.CustId,
+                                         cust.CustFirstName,
+                                         cust.CustLastName,
+                                         cust.CustMobNo,
+                                         cust.CustEmailAddr,
+                                         cust.CustImg,
+
+                                         custAddr.CustAddrId,
+                                         custAddr.CustShipAddr,
+                                         custAddr.CustShipCountry,
+                                         custAddr.CustShipCity,
+                                         custAddr.CustShipState,
+                                         custAddr.CustShipPinCode
+
+                                     };
+            return Ok(customerEntireData);
+
+        }
+        return NotFound();
+
     }
     
     // PUT api/<controller>/5
@@ -380,18 +482,18 @@ public class CustomerController : ApiController
     // DELETE api/<controller>/5
     [Route("api/customer/deleteAddr")]
     [HttpDelete]
-    public IHttpActionResult DeleteCustomerAddress(string theId , string theAddrId )
+    public IHttpActionResult DeleteCustomerAddress(string theId, string theAddrId)
     {
         //Sets the return result from SaveChanges()
-        int updated = 0;
+        int deleted = 0;
 
         //Instantiate the obj
         designEntity = new online_tshirt_designingEntities();
 
         //Find an appropriate Customer Address
-     
+
         var matches = from c in designEntity.customer_address
-                      where c.CustAddrId == theAddrId && c.CustId ==  theId
+                      where c.CustAddrId == theAddrId && c.CustId == theId
                       select c;
 
         //Excute the query and return the Object
@@ -400,12 +502,12 @@ public class CustomerController : ApiController
         //Delete the record from the Database
         designEntity.customer_address.Remove(customerMatchedAddrr);
 
-        updated = designEntity.SaveChanges();
+        deleted = designEntity.SaveChanges();
 
-        if(updated > 0) return Ok(true);
+        if (deleted > 0) return Ok(true);
 
         return NotFound();
-                      
+
     }
 
 
