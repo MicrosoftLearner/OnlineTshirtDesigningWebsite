@@ -480,9 +480,9 @@ public class CustomerController : ApiController
     }
 
     // DELETE api/<controller>/5
-    [Route("api/customer/deleteAddr")]
+    [Route("api/customer/deleteAddr/{addrId}")]
     [HttpDelete]
-    public IHttpActionResult DeleteCustomerAddress(string theId, string theAddrId)
+    public IHttpActionResult DeleteCustomerAddress(string addrId)
     {
         //Sets the return result from SaveChanges()
         int deleted = 0;
@@ -492,15 +492,18 @@ public class CustomerController : ApiController
 
         //Find an appropriate Customer Address
 
-        var matches = from c in designEntity.customer_address
-                      where c.CustAddrId == theAddrId && c.CustId == theId
-                      select c;
+        //Execute the query and return the entity object 
+        customer_address customerMatches = designEntity.customer_address.FirstOrDefault((c) => c.CustAddrId == addrId);
 
-        //Excute the query and return the Object
-        customer_address customerMatchedAddrr = matches.Single();
+        if (customerMatches == null)
+        {
+           return NotFound();
+        }
+            //Excute the query and return the Object
+           // customer_address customerMatchedAddrr = matches.Single();
 
         //Delete the record from the Database
-        designEntity.customer_address.Remove(customerMatchedAddrr);
+        designEntity.customer_address.Remove(customerMatches);
 
         deleted = designEntity.SaveChanges();
 
