@@ -25,7 +25,6 @@ public partial class online_tshirt_designingEntities : DbContext
 
     public virtual DbSet<customer> customers { get; set; }
     public virtual DbSet<customer_address> customer_address { get; set; }
-    public virtual DbSet<customer_product_cart> customer_product_cart { get; set; }
     public virtual DbSet<home_banner> home_banner { get; set; }
     public virtual DbSet<inner_blogs> inner_blogs { get; set; }
     public virtual DbSet<product> products { get; set; }

@@ -1,61 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
 
+using System.Web.Http;
+using System.Web.Http.Cors;
+
+[EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
 public class CartController : ApiController
 {
     online_tshirt_designingEntities designEntity;
 
     // POST api/<controller>
-    [HttpPost]
-    [Route("api/product/AddToCart/{id}/{sessionID}")]
-    public IHttpActionResult AddToCart([FromUri] sbyte id, string sessionID)
+    [Route("api/cart/addToCart")]
+    [HttpPut]
+    public IHttpActionResult AddToCart([FromBody] short productId, string customerId )
     {
 
         designEntity = new online_tshirt_designingEntities();
 
-        //1st check the Product is already in cart or not  
-        var matchesCart = designEntity.product_cart.Where((c) => c.ProductId == id ).Select((c) => c.ProductCartId).FirstOrDefault();
+        int insertedRecord = 0;
 
-        if (matchesCart != null) return Ok<string>("Product is already added in the cart");
+        //1st checks the Product is already in cart or not  
+        var matchesCart = designEntity.product_cart.FirstOrDefault((c) => c.ProductId == productId) ;
 
-        //If product is not added in the cart
-        product prod = new product();
+        int cartLength = designEntity.product_cart.Select((c) => c).Count<product_cart>();
 
+        if (matchesCart != null) return NotFound();
 
-        //Change the  ProductCart obj 
-        product_cart pdCart = new product_cart
+        //Inserts in the Entity database, if no product is added
+        product_cart newCartEntry = new product_cart
         {
+            ProductId = productId,
 
-            ProductCartId = prod.DTime.Millisecond.ToString(),
-
-            ProductId = id,
-
-           
-
+            CustId = customerId
         };
 
-        //Commit the changes back to the database
         try
         {
-            designEntity.product_cart.Add(pdCart);
-            designEntity.SaveChanges();
+            //Commits the changes  and inserts the record
+            //In Entity database
+            designEntity.product_cart.Add(newCartEntry);
+
+            insertedRecord = designEntity.SaveChanges();
+
         }
         catch (Exception error)
         {
-            System.Diagnostics.Debug.WriteLine(error);
 
+            System.Diagnostics.Debug.WriteLine("Error in Linq", error);
         }
 
+        if (insertedRecord > 0)
+         return Ok(cartLength);
 
+        return NotFound();
+     
+    }
+
+    [Route("api/cart/getCart/{custId}")]
+    [HttpGet]
+    public IHttpActionResult GetCart(string custId)
+    {
+        CartModel cartModel = new CartModel();
+
+        designEntity = new online_tshirt_designingEntities();
+
+  
         //Return the product added in the cart
         var cart = from entProd in designEntity.products
+
                    join entCart in designEntity.product_cart
+
                    on entProd.ProductId equals entCart.ProductId
-                   where entCart.ProductId == id
+
+                   where entCart.CustId == custId
+
                    select new
                    {
                        //Send entire product Obj
@@ -71,25 +90,57 @@ public class CartController : ApiController
                        entProd.ProductSizeQuantM,
                        entProd.ProductSizeQuantXL,
                        entProd.ProductSizeQuantXXL,
-                       //Send product_cart's Objects properties
-                       ProductCartID = entCart.ProductCartId,
-                       ProductID = entCart.ProductId,
-                     
 
+                       entCart.ProductCartId,
+                       entCart.ProductQuantity,
+                       entCart.ProductQuantityPrice
+                    
                    };
 
-        return Ok(Tuple.Create(cart, false));
+        //Calculates the price 
+       
+        foreach (var item in cart)
+        {
+           cartModel.ProductPrice = (int)item.ProductPrice;
+
+        }
+
+        return Ok(new Tuple<IEnumerable<object>, double>(cart, cartModel.ProductPrice));
     }
 
-    [Route("api/product/DeleteFromCart/{id}")]
+    [Route("api/cart/escalateQuantity")]
+    [HttpPut]                                                 //(productId), (customerId), (quantity)
+    public IHttpActionResult IncreaseQuantity([FromBody] Tuple<short, string, short> paramsToCalculate)
+    {
+        designEntity = new online_tshirt_designingEntities();
+
+        var matchesProduct = designEntity.products//from statement
+            .Join(designEntity.product_cart,
+
+                  prod => prod.ProductId,
+
+                  cart => cart.ProductId,
+
+                  (prod, cart) => new Product{
+
+                      ProductId = prod.ProductId,
+                  })
+              .Where(productAndCart => productAndCart.ProductId == paramsToCalculate.Item1)
+
+              .FirstOrDefault();
+    }
+
+
+
+    [Route("api/product/deleteCart/{productId}")]
     [HttpDelete]
-    public void DeleteFromCart(sbyte id)
+    public IHttpActionResult DeleteFromCart(short productId)
     {
 
         designEntity = new online_tshirt_designingEntities();
 
         var matches = from p in designEntity.product_cart
-                      where p.ProductId == id
+                      where p.ProductId == productId
                       select p;
 
         //Execute the Query & return the Obj
@@ -99,70 +150,80 @@ public class CartController : ApiController
         designEntity.product_cart.Remove(pCart);
         designEntity.SaveChanges();
 
+        return Ok();
     }
+
+
+    [Route("api/product/getPrice")]
+    [HttpPost]
+    public IHttpActionResult GetPrice(short productId)
+    {
+        return Ok();
+    }
+
 
     [Route("api/product/SwipeCart/{sessionID}/{custID}")]
     [HttpGet]
     public IHttpActionResult SwipeCart(string sessionID, string custID)
     {
-        product prod = new product();
+        //product prod = new product();
 
-        //For Unique Id
-        sbyte counter = 0;
+        ////For Unique Id
+        //sbyte counter = 0;
 
-        //Check the product 1st
-        string pCartMatch = designEntity.product_cart.Where((p) => p.ProductId.ToString() == sessionID).Select((p) => p.ProductCartId).SingleOrDefault();
+        ////Check the product 1st
+        //string pCartMatch = designEntity.product_cart.Where((p) => p.ProductId.ToString() == sessionID).Select((p) => p.ProductCartId).SingleOrDefault();
 
-        //If pCartMatch hasn't got any products
-        if (String.IsNullOrEmpty(pCartMatch)) return Ok<bool>(true);
+        ////If pCartMatch hasn't got any products
+        //if (String.IsNullOrEmpty(pCartMatch)) return Ok<bool>(true);
 
-        //Save the product added in the ProductCart to CustomerProductCart 
-        //if pCartMatch has got any products
+        ////Save the product added in the ProductCart to CustomerProductCart 
+        ////if pCartMatch has got any products
 
-        IEnumerable<product_cart> prodAddedCart = from p in designEntity.product_cart
+        //IEnumerable<product_cart> prodAddedCart = from p in designEntity.product_cart
                                                 
-                                                  orderby p.ProductId
-                                                  select p;
+        //                                          orderby p.ProductId
+        //                                          select p;
 
-        //Creat List of CustomerProductCart to insert data 
-        //from ProductCart to CustomerProductCart
-        List<customer_product_cart> custProdCartList = designEntity.customer_product_cart.ToList();
+        ////Creat List of CustomerProductCart to insert data 
+        ////from ProductCart to CustomerProductCart
+        //List<customer_product_cart> custProdCartList = designEntity.customer_product_cart.ToList();
 
-        foreach (product_cart item in prodAddedCart)
-        {
-            custProdCartList.Add(new customer_product_cart()
-            {
-                CustCartId = (prod.DTime.Millisecond + counter++).ToString(),
+        //foreach (product_cart item in prodAddedCart)
+        //{
+        //    custProdCartList.Add(new customer_product_cart()
+        //    {
+        //        CustCartId = (prod.DTime.Millisecond + counter++).ToString(),
 
-                ProductId = item.ProductId,
+        //        ProductId = item.ProductId,
 
-                ProductCartId = item.ProductCartId,
+        //        ProductCartId = item.ProductCartId,
 
-                CustId = custID
-            });
-        }
+        //        CustId = custID
+        //    });
+        //}
 
-        foreach (customer_product_cart item in custProdCartList)
-        {
-            designEntity.customer_product_cart.Add(item);
-        }
+        //foreach (customer_product_cart item in custProdCartList)
+        //{
+        //    designEntity.customer_product_cart.Add(item);
+        //}
 
-        //Commit the changes back to the database
-        try
-        {
-            designEntity.SaveChanges();
-        }
-        catch (Exception error)
-        {
-            System.Diagnostics.Debug.WriteLine(error);
+        ////Commit the changes back to the database
+        //try
+        //{
+        //    designEntity.SaveChanges();
+        //}
+        //catch (Exception error)
+        //{
+        //    System.Diagnostics.Debug.WriteLine(error);
 
-        }
+        //}
 
-        //var prodAddedToCustProdCart = from p in designEntity.products
-        //                              join cp in designEntity.customer_product_cart
-        //                              on p.ProductId equals 
+        ////var prodAddedToCustProdCart = from p in designEntity.products
+        ////                              join cp in designEntity.customer_product_cart
+        ////                              on p.ProductId equals 
 
-        return Ok();
+      return Ok();
     }
 
 
@@ -170,84 +231,88 @@ public class CartController : ApiController
     [HttpPost]
     public IHttpActionResult AddToCustomerProductCart([FromUri] sbyte productID, string custID)
     {
-        designEntity = new online_tshirt_designingEntities();
+        //designEntity = new online_tshirt_designingEntities();
 
-        product prod = new product();
+        //product prod = new product();
 
-        customer_product_cart newCustomerProdCart;
+        //customer_product_cart newCustomerProdCart;
 
-        //1st check the product_cart table if it has got any added products
+        ////1st check the product_cart table if it has got any added products
 
-        //var pCartMatch = (from p in designEntity.product_cart
-        //                  where p.ProductId == productID && p.SessionId == sessionID
-        //                  select p.ProductCartId);
+        ////var pCartMatch = (from p in designEntity.product_cart
+        ////                  where p.ProductId == productID && p.SessionId == sessionID
+        ////                  select p.ProductCartId);
 
-        //string x =  pCartMatch.SingleOrDefault();
+        ////string x =  pCartMatch.SingleOrDefault();
 
-        string pCartMatch = designEntity.customer_product_cart.Where((p) => p.ProductId == productID && p.CustId == custID).Select((p) => p.ProductId.ToString()).SingleOrDefault();
+        //string pCartMatch = designEntity.customer_product_cart.Where((p) => p.ProductId == productID && p.CustId == custID).Select((p) => p.ProductId.ToString()).SingleOrDefault();
 
-        //If pCartMatch hasn't got any products i.e string is empty or null
-        if (String.IsNullOrEmpty(pCartMatch))
-        {
+        ////If pCartMatch hasn't got any products i.e string is empty or null
+        //if (String.IsNullOrEmpty(pCartMatch))
+        //{
 
-            newCustomerProdCart = new customer_product_cart
-            {
-                CustCartId = prod.DTime.Millisecond.ToString(),
+        //    newCustomerProdCart = new customer_product_cart
+        //    {
+        //        CustCartId = prod.DTime.Millisecond.ToString(),
 
-                ProductId = productID,
+        //        ProductId = productID,
 
-                ProductCartId = null,
+        //        ProductCartId = null,
 
-                CustId = custID
-            };
+        //        CustId = custID
+        //    };
 
-            //Commit the changes back to the database
-            try
-            {
-                designEntity.customer_product_cart.Add(newCustomerProdCart);
-                designEntity.SaveChanges();
-            }
-            catch (Exception error)
-            {
-                System.Diagnostics.Debug.WriteLine(error);
+        //    //Commit the changes back to the database
+        //    try
+        //    {
+        //        designEntity.customer_product_cart.Add(newCustomerProdCart);
+        //        designEntity.SaveChanges();
+        //    }
+        //    catch (Exception error)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine(error);
 
-            }
+        //    }
 
 
-            //Return the products added in the cart
-            var cart = from entProd in designEntity.products
-                       join entCart in designEntity.customer_product_cart
-                       on entProd.ProductId equals entCart.ProductId
-                       where entCart.ProductId == productID && entCart.CustId == custID
-                       select new
-                       {
-                           //Send entire product Obj
-                           entProd.ProductId,
-                           entProd.ProductCode,
-                           entProd.ProductCat,
-                           entProd.ProductName,
-                           entProd.ProductStyle,
-                           entProd.ProductColor,
-                           entProd.ProductImg,
-                           entProd.ProductDisc,
-                           entProd.ProductPrice,
-                           entProd.ProductSizeQuantM,
-                           entProd.ProductSizeQuantXL,
-                           entProd.ProductSizeQuantXXL,
-                           //Send product_cart's Objects properties
-                           ProductCartID = entCart.ProductCartId,
-                           ProductID = entCart.ProductId
+        //    //Return the products added in the cart
+        //    var cart = from entProd in designEntity.products
+        //               join entCart in designEntity.customer_product_cart
+        //               on entProd.ProductId equals entCart.ProductId
+        //               where entCart.ProductId == productID && entCart.CustId == custID
+        //               select new
+        //               {
+        //                   //Send entire product Obj
+        //                   entProd.ProductId,
+        //                   entProd.ProductCode,
+        //                   entProd.ProductCat,
+        //                   entProd.ProductName,
+        //                   entProd.ProductStyle,
+        //                   entProd.ProductColor,
+        //                   entProd.ProductImg,
+        //                   entProd.ProductDisc,
+        //                   entProd.ProductPrice,
+        //                   entProd.ProductSizeQuantM,
+        //                   entProd.ProductSizeQuantXL,
+        //                   entProd.ProductSizeQuantXXL,
+        //                   //Send product_cart's Objects properties
+        //                   ProductCartID = entCart.ProductCartId,
+        //                   ProductID = entCart.ProductId
 
-                       };
-            return Ok(cart);
-        }
+        //               };
+        //    return Ok(cart);
+        //}
 
         //If pCart has got the product
         return Ok<string>("The Product has already been added in the cart");
 
     }
 
-
+    /// <summary>
+    /// Its for Session based
+    /// </summary>
+    /// <param name="sessionID"></param>
+    /// <returns></returns>
     [Route("api/product/ShowProductCart/{sessionID}")]
     [HttpGet]
     public IHttpActionResult ShowProductCart(string sessionID)
@@ -280,58 +345,5 @@ public class CartController : ApiController
                           };
         return Ok(productCart);
     }
-
-    [Route("api/product/ShowCustomerCart/{custID}")]
-    [HttpGet]
-    public IHttpActionResult ShowCustomerCart(string custID)
-    {
-        //Return the products added in the cart
-        var customerProductCart = from entProd in designEntity.products
-                                  join entCart in designEntity.customer_product_cart
-                                  on entProd.ProductId equals entCart.ProductId
-                                  where entCart.CustId == custID
-
-                                  select new
-                                  {
-                                      //Send entire product Obj
-                                      entProd.ProductId,
-                                      entProd.ProductCode,
-                                      entProd.ProductCat,
-                                      entProd.ProductName,
-                                      entProd.ProductStyle,
-                                      entProd.ProductColor,
-                                      entProd.ProductImg,
-                                      entProd.ProductDisc,
-                                      entProd.ProductPrice,
-                                      entProd.ProductSizeQuantM,
-                                      entProd.ProductSizeQuantXL,
-                                      entProd.ProductSizeQuantXXL,
-                                      //Send product_cart's Objects properties
-                                      ProductCartID = entCart.ProductCartId,
-                                      ProductID = entCart.ProductId
-
-                                  };
-        return Ok(customerProductCart);
-    }
-
-    [Route("api/product/DeleteFromCart/{productID}/{custID}")]
-    [HttpGet]
-    public void DeleteFromCustomerCart(sbyte productID, string custID)
-    {
-
-        designEntity = new online_tshirt_designingEntities();
-
-        var matches = from p in designEntity.customer_product_cart
-                      where p.ProductId == productID && p.CustId == custID
-                      select p;
-
-        //Execute the Query & return the Obj
-        customer_product_cart pCart = matches.Single();
-
-        //Delete the Record from the Database
-        designEntity.customer_product_cart.Remove(pCart);
-        designEntity.SaveChanges();
-
-    }
-
+  
 }
