@@ -16,10 +16,10 @@
         <AssociationConnector Association="online_tshirt_designingModel.product_order_ibfk_1" ManuallyRouted="false" />
         <AssociationConnector Association="online_tshirt_designingModel.product_order_ibfk_2" ManuallyRouted="false" />
         <EntityTypeShape EntityType="online_tshirt_designingModel.home_banner1" Width="1.5" PointX="7.375" PointY="8.75" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.product_cart" Width="1.5" PointX="3" PointY="10.25" />
-        <AssociationConnector Association="online_tshirt_designingModel.fk_productId" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.product_cart" Width="1.5" PointX="3" PointY="0.75" />
         <AssociationConnector Association="online_tshirt_designingModel.fk_CustId" />
-      </Diagram>
+        <AssociationConnector Association="online_tshirt_designingModel.fk_productId" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

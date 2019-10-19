@@ -116,14 +116,14 @@ public partial class product
 
 public partial class product_cart
 {
-    public string ProductCartId { get; set; }
-    public short ProductId { get; set; }
-    public Nullable<double> ProductQuantityPrice { get; set; }
-    public string CustId { get; set; }
+    public int ProductCartId { get; set; }
     public Nullable<short> ProductQuantity { get; set; }
+    public Nullable<double> ProductQuantityPrice { get; set; }
+    public short ProductId { get; set; }
+    public string CustId { get; set; }
 
-    public virtual product product { get; set; }
     public virtual customer customer { get; set; }
+    public virtual product product { get; set; }
 }
 
 public partial class product_order

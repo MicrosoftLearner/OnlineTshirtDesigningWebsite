@@ -13,7 +13,7 @@ public class CartController : ApiController
     // POST api/<controller>
     [Route("api/cart/addToCart")]
     [HttpPut]
-    public IHttpActionResult AddToCart([FromBody] short productId, string customerId )
+    public IHttpActionResult AddToCart([FromBody] CartModel theCart )
     {
 
         designEntity = new online_tshirt_designingEntities();
@@ -21,18 +21,37 @@ public class CartController : ApiController
         int insertedRecord = 0;
 
         //1st checks the Product is already in cart or not  
-        var matchesCart = designEntity.product_cart.FirstOrDefault((c) => c.ProductId == productId) ;
+        var matchesCart =  designEntity.products//from statement
+            .Join(designEntity.product_cart, //Source table of inner join
 
-        int cartLength = designEntity.product_cart.Select((c) => c).Count<product_cart>();
+                  prod => prod.ProductId,  //Select the primarykey (the first part of the "on" clause in an sql "join" statement)
 
+                  cart => cart.ProductId,//Select the foreign key i.e on clause
+
+                  (prod, cart) => new { Prod = prod, Cart = cart } //Selection
+                    )
+              .Where(cart => (cart.Cart.ProductId == theCart.ProductId) && (cart.Cart.CustId == theCart.CustId))//Where statement
+
+              .FirstOrDefault();
+
+       
+            //designEntity.product_cart.FirstOrDefault((c) => c.ProductId == theCart.ProductId && c.CustId == theCart.CustId) ;
+
+        int cartLength = designEntity.product_cart.Select((c) => c).Where(c => c.CustId == theCart.CustId).Count();
+
+        //It states the product is in the cart
         if (matchesCart != null) return NotFound();
 
         //Inserts in the Entity database, if no product is added
         product_cart newCartEntry = new product_cart
         {
-            ProductId = productId,
+            ProductQuantity = theCart.ProductQuantity,
 
-            CustId = customerId
+            ProductQuantityPrice = theCart.ProductQuantityPrice,
+
+            ProductId = theCart.ProductId,
+            
+            CustId = theCart.CustId
         };
 
         try
@@ -86,7 +105,7 @@ public class CartController : ApiController
                        entProd.ProductColor,
                        entProd.ProductImg,
                        entProd.ProductDisc,
-                       entProd.ProductPrice,
+                    //   entProd.ProductPrice,
                        entProd.ProductSizeQuantM,
                        entProd.ProductSizeQuantXL,
                        entProd.ProductSizeQuantXXL,
@@ -94,18 +113,18 @@ public class CartController : ApiController
                        entCart.ProductCartId,
                        entCart.ProductQuantity,
                        entCart.ProductQuantityPrice
-                    
+                   
                    };
 
         //Calculates the price 
        
         foreach (var item in cart)
         {
-           cartModel.ProductPrice = (int)item.ProductPrice;
+           cartModel.ProductQuantityPrice = (int)item.ProductQuantityPrice;
 
         }
 
-        return Ok(new Tuple<IEnumerable<object>, double>(cart, cartModel.ProductPrice));
+        return Ok(new Tuple<IEnumerable<object>, double>(cart, cartModel.ProductQuantityPrice));
     }
 
     [Route("api/cart/escalateQuantity")]
@@ -114,20 +133,89 @@ public class CartController : ApiController
     {
         designEntity = new online_tshirt_designingEntities();
 
+        CartModel cartModel = new CartModel();
+
+        ProductCartModel pc = new ProductCartModel();
+
+        int updatedRecord = 0;
+
         var matchesProduct = designEntity.products//from statement
-            .Join(designEntity.product_cart,
+            .Join(designEntity.product_cart, //Source table of inner join
 
-                  prod => prod.ProductId,
+                  prod => prod.ProductId,  //Select the primarykey (the first part of the "on" clause in an sql "join" statement)
 
-                  cart => cart.ProductId,
+                  cart => cart.ProductId,//Select the foreign key i.e on clause
 
-                  (prod, cart) => new Product{
-
-                      ProductId = prod.ProductId,
-                  })
-              .Where(productAndCart => productAndCart.ProductId == paramsToCalculate.Item1)
+                  (prod, cart) => new {Prod = prod, Cart = cart } //Selection
+                    )
+              .Where(cart => (cart.Cart.ProductId == paramsToCalculate.Item1) && (cart.Cart.CustId == paramsToCalculate.Item2) )//Where statement
 
               .FirstOrDefault();
+
+        
+        //Sets the quantity 
+        cartModel.ProductQuantity = paramsToCalculate.Item3;
+
+        //Sets the price for selected individual product to be calculated
+        cartModel.ProductQuantityPrice = (int)matchesProduct.Prod.ProductPrice;
+
+        //Change the entity object
+        product_cart newProductCartEntry = matchesProduct.Cart;
+
+        newProductCartEntry.ProductQuantityPrice = cartModel.ProductQuantityPrice;
+
+       
+        try
+        {
+            //Commits the changes  and inserts the record
+            //In Entity database
+         
+            updatedRecord = designEntity.SaveChanges();
+
+        }
+        catch (Exception error)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Error in Linq", error);
+        }
+
+        if (updatedRecord > 0)
+        {
+            //Return the product added in the cart
+            var cart = from entProd in designEntity.products
+
+                       join entCart in designEntity.product_cart
+
+                       on entProd.ProductId equals entCart.ProductId
+
+                       where entCart.CustId == paramsToCalculate.Item2
+
+                       select new
+                       {
+                           //Send entire product Obj
+                           entProd.ProductId,
+                           entProd.ProductCode,
+                           entProd.ProductCat,
+                           entProd.ProductName,
+                           entProd.ProductStyle,
+                           entProd.ProductColor,
+                           entProd.ProductImg,
+                           entProd.ProductDisc,
+                           entProd.ProductPrice,
+                           entProd.ProductSizeQuantM,
+                           entProd.ProductSizeQuantXL,
+                           entProd.ProductSizeQuantXXL,
+
+                           entCart.ProductCartId,
+                           entCart.ProductQuantity,
+                           entCart.ProductQuantityPrice
+
+                       };
+
+            return Ok(cart);
+        }
+
+        return NotFound();
     }
 
 

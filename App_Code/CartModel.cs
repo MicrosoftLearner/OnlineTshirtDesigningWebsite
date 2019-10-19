@@ -11,9 +11,7 @@ public class CartModel
     public string ProductCartId { get; set; }
 
     public short ProductId { get; set; }
-
-    public double ProductQuantityPrice { get; set; }
-
+    
     public string CustId { get; set; }
    
     //Sets the product quantity i.e by default 1
@@ -33,18 +31,18 @@ public class CartModel
     }
 
     //Sets the initial product price to 0
-    private double productPrice = 0;
+    private double productQuantityPrice = 0;
 
-    public double ProductPrice
+    public double ProductQuantityPrice
     {
         get
         {
-            return productPrice;
+            return productQuantityPrice;
         }
 
         set
         {
-            productPrice += value * ProductQuantity;
+            productQuantityPrice += value * ProductQuantity;
         }
     }
 }
