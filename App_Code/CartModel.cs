@@ -42,7 +42,9 @@ public class CartModel
 
         set
         {
-            productQuantityPrice += value * ProductQuantity;
+            productQuantityPrice = value * ProductQuantity;
         }
     }
+
+    public double TotalProductPrice { get; set; }
 }

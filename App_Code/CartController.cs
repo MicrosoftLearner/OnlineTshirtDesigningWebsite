@@ -105,7 +105,7 @@ public class CartController : ApiController
                        entProd.ProductColor,
                        entProd.ProductImg,
                        entProd.ProductDisc,
-                    //   entProd.ProductPrice,
+                       entProd.ProductPrice,
                        entProd.ProductSizeQuantM,
                        entProd.ProductSizeQuantXL,
                        entProd.ProductSizeQuantXXL,
@@ -120,16 +120,18 @@ public class CartController : ApiController
        
         foreach (var item in cart)
         {
-           cartModel.ProductQuantityPrice = (int)item.ProductQuantityPrice;
+          // cartModel.ProductQuantityPrice = (int)item.ProductQuantityPrice;
+
+            cartModel.TotalProductPrice += (int)item.ProductQuantityPrice;
 
         }
 
-        return Ok(new Tuple<IEnumerable<object>, double>(cart, cartModel.ProductQuantityPrice));
+        return Ok(new Tuple<IEnumerable<object>, double>(cart, cartModel.TotalProductPrice));
     }
 
     [Route("api/cart/escalateQuantity")]
     [HttpPut]                                                 //(productId), (customerId), (quantity)
-    public IHttpActionResult IncreaseQuantity([FromBody] Tuple<short, string, short> paramsToCalculate)
+    public IHttpActionResult IncreaseQuantity([FromBody] CartModel theCart)
     {
         designEntity = new online_tshirt_designingEntities();
 
@@ -146,15 +148,15 @@ public class CartController : ApiController
 
                   cart => cart.ProductId,//Select the foreign key i.e on clause
 
-                  (prod, cart) => new {Prod = prod, Cart = cart } //Selection
+                  (prod, cart) => new { Prod = prod, Cart = cart } //Selection
                     )
-              .Where(cart => (cart.Cart.ProductId == paramsToCalculate.Item1) && (cart.Cart.CustId == paramsToCalculate.Item2) )//Where statement
+              .Where(cart => (cart.Cart.ProductId == theCart.ProductId) && (cart.Cart.CustId == theCart.CustId))//Where statement
 
               .FirstOrDefault();
 
-        
+
         //Sets the quantity 
-        cartModel.ProductQuantity = paramsToCalculate.Item3;
+        cartModel.ProductQuantity = theCart.ProductQuantity;
 
         //Sets the price for selected individual product to be calculated
         cartModel.ProductQuantityPrice = (int)matchesProduct.Prod.ProductPrice;
@@ -162,14 +164,16 @@ public class CartController : ApiController
         //Change the entity object
         product_cart newProductCartEntry = matchesProduct.Cart;
 
+        newProductCartEntry.ProductQuantity = cartModel.ProductQuantity;
+
         newProductCartEntry.ProductQuantityPrice = cartModel.ProductQuantityPrice;
 
-       
+
         try
         {
             //Commits the changes  and inserts the record
             //In Entity database
-         
+
             updatedRecord = designEntity.SaveChanges();
 
         }
@@ -188,7 +192,7 @@ public class CartController : ApiController
 
                        on entProd.ProductId equals entCart.ProductId
 
-                       where entCart.CustId == paramsToCalculate.Item2
+                       where entCart.CustId == theCart.CustId
 
                        select new
                        {
@@ -212,7 +216,23 @@ public class CartController : ApiController
 
                        };
 
-            return Ok(cart);
+            //Calculates the price
+
+            foreach (var item in cart)
+            {
+                //// Sets the quantity
+                //cartModel.ProductQuantity = (short)item.ProductQuantity;
+
+                ////Sets the quantity price
+                //cartModel.ProductQuantityPrice = (int)item.ProductQuantityPrice;
+
+                //Calcualtes the amount
+                cartModel.TotalProductPrice += (int)item.ProductQuantityPrice; 
+
+            }
+
+            return Ok(new Tuple<IEnumerable<object>, double>(cart, cartModel.TotalProductPrice));
+
         }
 
         return NotFound();
@@ -220,15 +240,15 @@ public class CartController : ApiController
 
 
 
-    [Route("api/product/deleteCart/{productId}")]
+    [Route("api/cart/deleteCart/{cartId}/{customerId}")]
     [HttpDelete]
-    public IHttpActionResult DeleteFromCart(short productId)
+    public IHttpActionResult DeleteFromCart(short cartId, string customerId)
     {
 
         designEntity = new online_tshirt_designingEntities();
 
         var matches = from p in designEntity.product_cart
-                      where p.ProductId == productId
+                      where p.ProductCartId == cartId && p.CustId == customerId
                       select p;
 
         //Execute the Query & return the Obj
