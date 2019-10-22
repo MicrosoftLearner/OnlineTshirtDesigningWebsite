@@ -25,6 +25,7 @@ public class Product
     public string ProductDisc { get; set; }
     public int ProductPrice { get; set; }
     public string ProductNewArrival { get; set; }
+    public string ProductSize { get; set; }
     public short ProductSizeQuantM { get; set; }
     public short ProductSizeQuantXL { get; set; }
     public short ProductSizeQuantXXL { get; set; }

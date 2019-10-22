@@ -121,6 +121,7 @@ public partial class product_cart
     public Nullable<double> ProductQuantityPrice { get; set; }
     public short ProductId { get; set; }
     public string CustId { get; set; }
+    public string ProductSize { get; set; }
 
     public virtual customer customer { get; set; }
     public virtual product product { get; set; }

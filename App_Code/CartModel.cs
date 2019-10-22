@@ -8,7 +8,7 @@ using System.Web;
 /// </summary>
 public class CartModel
 {
-    public string ProductCartId { get; set; }
+    public int ProductCartId { get; set; }
 
     public short ProductId { get; set; }
     
@@ -45,6 +45,8 @@ public class CartModel
             productQuantityPrice = value * ProductQuantity;
         }
     }
+
+    public string ProductSize { get; set; }
 
     public double TotalProductPrice { get; set; }
 }

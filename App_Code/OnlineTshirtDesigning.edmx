@@ -94,6 +94,7 @@
           <Property Name="ProductCartId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductQuantity" Type="smallint" />
           <Property Name="ProductQuantityPrice" Type="double" />
+          <Property Name="ProductSize" Type="char" MaxLength="30" />
           <Property Name="ProductId" Type="smallint" Nullable="false" />
           <Property Name="CustId" Type="varchar" MaxLength="155" Nullable="false" />
         </EntityType>
@@ -398,6 +399,7 @@
           <Property Name="CustId" Type="String" Nullable="false" MaxLength="155" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="customer" Relationship="online_tshirt_designingModel.fk_CustId" FromRole="product_cart" ToRole="customer" />
           <NavigationProperty Name="product" Relationship="online_tshirt_designingModel.fk_productId" FromRole="product_cart" ToRole="product" />
+          <Property Name="ProductSize" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="fk_CustId">
           <End Type="online_tshirt_designingModel.customer" Role="customer" Multiplicity="1">
@@ -537,6 +539,7 @@
           <EntitySetMapping Name="product_cart">
             <EntityTypeMapping TypeName="online_tshirt_designingModel.product_cart">
               <MappingFragment StoreEntitySet="product_cart">
+                <ScalarProperty Name="ProductSize" ColumnName="ProductSize" />
                 <ScalarProperty Name="CustId" ColumnName="CustId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="ProductQuantityPrice" ColumnName="ProductQuantityPrice" />

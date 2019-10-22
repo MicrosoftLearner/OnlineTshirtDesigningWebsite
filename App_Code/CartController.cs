@@ -30,7 +30,7 @@ public class CartController : ApiController
 
                   (prod, cart) => new { Prod = prod, Cart = cart } //Selection
                     )
-              .Where(cart => (cart.Cart.ProductId == theCart.ProductId) && (cart.Cart.CustId == theCart.CustId))//Where statement
+              .Where(cart => (cart.Cart.ProductId == theCart.ProductId) && (cart.Cart.CustId == theCart.CustId) &&(cart.Cart.ProductSize == theCart.ProductSize))//Where statement
 
               .FirstOrDefault();
 
@@ -48,6 +48,8 @@ public class CartController : ApiController
             ProductQuantity = theCart.ProductQuantity,
 
             ProductQuantityPrice = theCart.ProductQuantityPrice,
+
+            ProductSize = theCart.ProductSize,
 
             ProductId = theCart.ProductId,
             
@@ -70,7 +72,41 @@ public class CartController : ApiController
         }
 
         if (insertedRecord > 0)
-         return Ok(cartLength);
+        {
+            //Return the product added in the cart
+            var cart = from entProd in designEntity.products
+
+                       join entCart in designEntity.product_cart
+
+                       on entProd.ProductId equals entCart.ProductId
+
+                       where entCart.CustId == theCart.CustId
+
+                       select new
+                       {
+                           //Send entire product Obj
+                           entProd.ProductId,
+                           entProd.ProductCode,
+                           entProd.ProductCat,
+                           entProd.ProductName,
+                           entProd.ProductStyle,
+                           entProd.ProductColor,
+                           entProd.ProductImg,
+                           entProd.ProductDisc,
+                           entProd.ProductPrice,
+                           entProd.ProductSizeQuantM,
+                           entProd.ProductSizeQuantXL,
+                           entProd.ProductSizeQuantXXL,
+
+                           entCart.ProductCartId,
+                           entCart.ProductQuantity,
+                           entCart.ProductQuantityPrice,
+                           entCart.ProductSize
+
+                       };
+
+         return Ok(cart);
+        }
 
         return NotFound();
      
@@ -112,7 +148,8 @@ public class CartController : ApiController
 
                        entCart.ProductCartId,
                        entCart.ProductQuantity,
-                       entCart.ProductQuantityPrice
+                       entCart.ProductQuantityPrice,
+                       entCart.ProductSize
                    
                    };
 
@@ -150,7 +187,7 @@ public class CartController : ApiController
 
                   (prod, cart) => new { Prod = prod, Cart = cart } //Selection
                     )
-              .Where(cart => (cart.Cart.ProductId == theCart.ProductId) && (cart.Cart.CustId == theCart.CustId))//Where statement
+              .Where(cart => (cart.Cart.ProductCartId == theCart.ProductCartId) && (cart.Cart.CustId == theCart.CustId))//Where statement
 
               .FirstOrDefault();
 
@@ -212,7 +249,8 @@ public class CartController : ApiController
 
                            entCart.ProductCartId,
                            entCart.ProductQuantity,
-                           entCart.ProductQuantityPrice
+                           entCart.ProductQuantityPrice,
+                           entCart.ProductSize
 
                        };
 
@@ -230,7 +268,7 @@ public class CartController : ApiController
                 cartModel.TotalProductPrice += (int)item.ProductQuantityPrice; 
 
             }
-
+          
             return Ok(new Tuple<IEnumerable<object>, double>(cart, cartModel.TotalProductPrice));
 
         }
