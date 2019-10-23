@@ -347,7 +347,7 @@ public class CustomerController : ApiController
 
             return Ok(customerData);
         }
-        
+
         return NotFound();
     }
 
@@ -361,11 +361,11 @@ public class CustomerController : ApiController
 
         int updatedRecord = 0;
 
-        
+
         //Execute the query and return the entity object 
         customer_address customerMatches = designEntity.customer_address.FirstOrDefault((c) => c.CustAddrId == theCustomer.CustAddrId && c.CustId == theCustomer.CustId);
 
-        if(customerMatches == null)
+        if (customerMatches == null)
         {
             //Generates random numbers for CustAddrId column
             DateTime dTime = DateTime.Now;
@@ -407,7 +407,7 @@ public class CustomerController : ApiController
 
                 System.Diagnostics.Debug.WriteLine("Error in Linq", error);
             }
-            
+
         }
 
         //Changes the entity object, if it matches 
@@ -472,7 +472,50 @@ public class CustomerController : ApiController
         return NotFound();
 
     }
-    
+
+
+    [Route("api/customer/escalateQuantity")]
+    [HttpPut]                                                 //(productId), (customerId), (quantity)
+    public IHttpActionResult IncreaseQuantity([FromBody] CartModel theCart)
+    {
+        designEntity = new online_tshirt_designingEntities();
+
+        CartModel cartModel = new CartModel();
+
+        ProductCartModel pc = new ProductCartModel();
+
+        Product matchesProduct = designEntity.products
+
+              .Where(prod => prod.ProductId == theCart.ProductId)//Where statement
+
+              .Select(x => new Product
+              {
+                  ProductId = x.ProductId,
+                  ProductCode = x.ProductCode,
+                  ProductName = x.ProductName,
+                  ProductStyle = x.ProductStyle,
+                  ProductColor = x.ProductColor,
+                  ProductImg = x.ProductImg,
+                  ProductDisc = x.ProductDisc,
+                  ProductPrice = (int)x.ProductPrice,
+                  ProductSizeQuantM = (short)x.ProductSizeQuantM,
+                  ProductSizeQuantXL = (short)x.ProductSizeQuantXL,
+                  ProductSizeQuantXXL = (short)x.ProductSizeQuantXXL
+              })
+              .FirstOrDefault();
+
+
+        //Sets the quantity 
+        cartModel.ProductQuantity = theCart.ProductQuantity;
+
+        //Sets the price for selected individual product to be calculated
+        cartModel.ProductQuantityPrice = matchesProduct.ProductPrice;
+
+
+      //  cartModel.TotalProductPrice += matchesProduct.ProductPrice;
+
+        return Ok(cartModel.ProductQuantityPrice);
+    }
     // PUT api/<controller>/5
     [HttpPut]
     public void Put(int id, [FromBody]string value)
@@ -497,10 +540,10 @@ public class CustomerController : ApiController
 
         if (customerMatches == null)
         {
-           return NotFound();
+            return NotFound();
         }
-            //Excute the query and return the Object
-           // customer_address customerMatchedAddrr = matches.Single();
+        //Excute the query and return the Object
+        // customer_address customerMatchedAddrr = matches.Single();
 
         //Delete the record from the Database
         designEntity.customer_address.Remove(customerMatches);
