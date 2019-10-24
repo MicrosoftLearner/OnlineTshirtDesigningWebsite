@@ -505,7 +505,7 @@ public class CustomerController : ApiController
               .FirstOrDefault();
 
 
-        //Sets the quantity 
+        //Sets the quantity
         cartModel.ProductQuantity = theCart.ProductQuantity;
 
         //Sets the price for selected individual product to be calculated
