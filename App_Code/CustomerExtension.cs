@@ -23,6 +23,8 @@ public partial class customer
 
         //will replace the [CustFullName] word from Template 
 
+      
+
         //Use Srtring Bulder class to Replace multiple things 
         StringBuilder emailContentReplaceText = new StringBuilder(custMail.EmailContentText);
 
@@ -30,6 +32,7 @@ public partial class customer
 
         emailContentReplaceText.Replace("[CustEmail]", tupleCustomer.Item2);
 
+       
         //Set the replaced one text 
         custMail.EmailContentText = emailContentReplaceText.ToString();
 
@@ -40,6 +43,7 @@ public partial class customer
 
     }
     
+  
     //public static customer CreateProduct()
     // {
     //     return new customer() { };

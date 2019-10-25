@@ -512,10 +512,131 @@ public class CustomerController : ApiController
         cartModel.ProductQuantityPrice = matchesProduct.ProductPrice;
 
 
-      //  cartModel.TotalProductPrice += matchesProduct.ProductPrice;
+        //  cartModel.TotalProductPrice += matchesProduct.ProductPrice;
 
         return Ok(cartModel.ProductQuantityPrice);
     }
+
+    [Route("api/customer/saveOrder")]
+    [HttpPut]
+    public IHttpActionResult SaveCustomerOrder([FromBody] IEnumerable<CartModel> theCart)
+    {
+
+        designEntity = new online_tshirt_designingEntities();
+
+        //Takes each object
+        foreach (CartModel item in theCart)
+        {
+            customer_order newOrder = new customer_order
+            {
+                ProductPaymentMthd = "cod",
+
+                ProductQuantity = item.ProductQuantity,
+
+                ProductQuantityPrice = item.ProductQuantityPrice,
+
+                ProductSize = item.ProductSize,
+
+                TotalPrice = item.TotalProductPrice,
+
+                CustId = item.CustId,
+
+                ProductId = item.ProductId
+            };
+
+            saveInEntity(newOrder);
+        }
+
+        //Returns the customer order
+        var customerOrder = from order in designEntity.customer_order
+                            join cust in designEntity.customers on order.CustId equals cust.CustId
+                            join prod in designEntity.products on order.ProductId equals prod.ProductId
+                            orderby order.ProductOrderTime
+                            select new
+                            {
+                                order.ProductOrderTime,
+                                order.ProductPaymentMthd,
+                                order.ProductQuantity,
+                                order.ProductQuantityPrice,
+                                order.TotalPrice,
+
+                                cust.CustFirstName,
+                                cust.CustLastName,
+                                cust.CustMobNo,
+                                cust.CustEmailAddr,
+
+                                prod.ProductCode,
+                                prod.ProductCat,
+                                prod.ProductName,
+                                prod.ProductStyle,
+                                prod.ProductColor,
+                                prod.ProductImg,
+                                prod.ProductPrice
+                            };
+
+        return Ok(customerOrder);
+
+    }
+
+    [NonAction]
+    private void saveInEntity(customer_order newOrder)
+    {
+        try
+        {
+            //Finally commit the changes the changes and insert the record
+            //In the database
+            designEntity.customer_order.Add(newOrder);
+
+            designEntity.SaveChanges();
+
+        }
+        catch (Exception error)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Error in Linq", error);
+        }
+    }
+
+
+    [Route("api/customer/getSavedOrder/{custId}")]
+    [HttpGet]
+    public IHttpActionResult SavedCustomerOrder(string custId)
+    {
+        designEntity = new online_tshirt_designingEntities();
+        ////Returns the customer order
+        var customerOrder = from order in designEntity.customer_order
+                            join cust in designEntity.customers on order.CustId equals cust.CustId
+                            join prod in designEntity.products on order.ProductId equals prod.ProductId
+                            where order.CustId == custId
+                            orderby order.ProductOrderTime
+                            select new
+                            {
+                                order.ProductOrderTime,
+                                order.ProductPaymentMthd,
+                                order.ProductQuantity,
+                                order.ProductQuantityPrice,
+                                order.TotalPrice,
+                                order.ProductSize,
+
+                                cust.CustFirstName,
+                                cust.CustLastName,
+                                cust.CustMobNo,
+                                cust.CustEmailAddr,
+
+                                prod.ProductCode,
+                                prod.ProductCat,
+                                prod.ProductName,
+                                prod.ProductStyle,
+                                prod.ProductColor,
+                                prod.ProductImg,
+                                prod.ProductPrice
+                            };
+
+        return Ok(customerOrder);
+
+    }
+
+
     // PUT api/<controller>/5
     [HttpPut]
     public void Put(int id, [FromBody]string value)

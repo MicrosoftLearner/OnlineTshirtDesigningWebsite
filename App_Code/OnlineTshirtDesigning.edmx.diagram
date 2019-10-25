@@ -16,8 +16,9 @@
         <EntityTypeShape EntityType="online_tshirt_designingModel.product_cart" Width="1.5" PointX="4.25" PointY="0.5" />
         <AssociationConnector Association="online_tshirt_designingModel.fk_CustId" />
         <AssociationConnector Association="online_tshirt_designingModel.fk_productId" />
-        <EntityTypeShape EntityType="online_tshirt_designingModel.customer_order" Width="1.5" PointX="2.875" PointY="8.375" />
+        <EntityTypeShape EntityType="online_tshirt_designingModel.customer_order" Width="1.5" PointX="2.875" PointY="8.5" />
         <AssociationConnector Association="online_tshirt_designingModel.customer_order_ibfk_1" />
+        <AssociationConnector Association="online_tshirt_designingModel.fk_product_id" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

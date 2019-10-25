@@ -66,8 +66,13 @@ public partial class customer_order
     public string CustComment { get; set; }
     public double TotalPrice { get; set; }
     public string CustId { get; set; }
+    public short ProductQuantity { get; set; }
+    public short ProductId { get; set; }
+    public double ProductQuantityPrice { get; set; }
+    public string ProductSize { get; set; }
 
     public virtual customer customer { get; set; }
+    public virtual product product { get; set; }
 }
 
 public partial class home_banner
@@ -103,6 +108,7 @@ public partial class product
     public product()
     {
         this.product_cart = new HashSet<product_cart>();
+        this.customer_order = new HashSet<customer_order>();
     }
 
     public short ProductId { get; set; }
@@ -121,6 +127,8 @@ public partial class product
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
     public virtual ICollection<product_cart> product_cart { get; set; }
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+    public virtual ICollection<customer_order> customer_order { get; set; }
 }
 
 public partial class product_cart

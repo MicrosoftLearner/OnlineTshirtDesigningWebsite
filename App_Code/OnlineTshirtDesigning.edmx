@@ -47,8 +47,12 @@
           <Property Name="ProductOrderTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductPaymentMthd" Type="char" MaxLength="50" Nullable="false" />
           <Property Name="CustComment" Type="varchar" MaxLength="255" />
+          <Property Name="ProductQuantity" Type="smallint" Nullable="false" />
+          <Property Name="ProductQuantityPrice" Type="double" Nullable="false" />
+          <Property Name="ProductSize" Type="char" MaxLength="30" Nullable="false" />
           <Property Name="TotalPrice" Type="double" Nullable="false" />
           <Property Name="CustId" Type="varchar" MaxLength="155" Nullable="false" />
+          <Property Name="ProductId" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="home_banner">
           <Key>
@@ -151,6 +155,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_product_id">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="customer_order" Type="Self.customer_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="customer_order">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_productId">
           <End Role="product" Type="Self.product" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -186,6 +204,10 @@
           <AssociationSet Name="fk_CustId" Association="Self.fk_CustId">
             <End Role="customer" EntitySet="customer" />
             <End Role="product_cart" EntitySet="product_cart" />
+          </AssociationSet>
+          <AssociationSet Name="fk_product_id" Association="Self.fk_product_id">
+            <End Role="product" EntitySet="product" />
+            <End Role="customer_order" EntitySet="customer_order" />
           </AssociationSet>
           <AssociationSet Name="fk_productId" Association="Self.fk_productId">
             <End Role="product" EntitySet="product" />
@@ -262,6 +284,7 @@
           <Property Name="ProductSizeQuantXL" Type="Int16" />
           <Property Name="ProductSizeQuantXXL" Type="Int16" />
           <NavigationProperty Name="product_cart" Relationship="online_tshirt_designingModel.fk_productId" FromRole="product" ToRole="product_cart" />
+          <NavigationProperty Name="customer_order" Relationship="online_tshirt_designingModel.fk_product_id" FromRole="product" ToRole="customer_order" />
         </EntityType>
         <EntityType Name="admin">
           <Key>
@@ -311,6 +334,10 @@
           <EntitySet Name="customer_order" EntityType="online_tshirt_designingModel.customer_order" />
           <AssociationSet Name="customer_order_ibfk_1" Association="online_tshirt_designingModel.customer_order_ibfk_1">
             <End Role="customer" EntitySet="customers" />
+            <End Role="customer_order" EntitySet="customer_order" />
+          </AssociationSet>
+          <AssociationSet Name="fk_product_id" Association="online_tshirt_designingModel.fk_product_id">
+            <End Role="product" EntitySet="products" />
             <End Role="customer_order" EntitySet="customer_order" />
           </AssociationSet>
           </EntityContainer>
@@ -376,6 +403,11 @@
           <Property Name="TotalPrice" Type="Double" Nullable="false" />
           <Property Name="CustId" Type="String" Nullable="false" MaxLength="155" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="customer" Relationship="online_tshirt_designingModel.customer_order_ibfk_1" FromRole="customer_order" ToRole="customer" />
+          <Property Name="ProductQuantity" Type="Int16" Nullable="false" />
+          <Property Name="ProductId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="product" Relationship="online_tshirt_designingModel.fk_product_id" FromRole="customer_order" ToRole="product" />
+          <Property Name="ProductQuantityPrice" Type="Double" Nullable="false" />
+          <Property Name="ProductSize" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="customer_order_ibfk_1">
           <End Type="online_tshirt_designingModel.customer" Role="customer" Multiplicity="1">
@@ -388,6 +420,20 @@
             </Principal>
             <Dependent Role="customer_order">
               <PropertyRef Name="CustId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_product_id">
+          <End Type="online_tshirt_designingModel.product" Role="product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="online_tshirt_designingModel.customer_order" Role="customer_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="customer_order">
+              <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -501,6 +547,10 @@
           <EntitySetMapping Name="customer_order">
             <EntityTypeMapping TypeName="online_tshirt_designingModel.customer_order">
               <MappingFragment StoreEntitySet="customer_order">
+                <ScalarProperty Name="ProductSize" ColumnName="ProductSize" />
+                <ScalarProperty Name="ProductQuantityPrice" ColumnName="ProductQuantityPrice" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductQuantity" ColumnName="ProductQuantity" />
                 <ScalarProperty Name="CustId" ColumnName="CustId" />
                 <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
                 <ScalarProperty Name="CustComment" ColumnName="CustComment" />

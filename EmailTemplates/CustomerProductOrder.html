@@ -1,0 +1,430 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Hind+Vadodara:400,500,600" rel="stylesheet">
+    <style type="text/css">
+        /*Start of global classes*/
+
+        .align-bottom {
+            vertical-align: bottom;
+        }
+
+        .align-middle {
+            vertical-align: middle;
+        }
+
+        .align-top {
+            vertical-align: top;
+        }
+
+        .clearfix::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
+
+        .display-block {
+            display: block;
+        }
+
+        .display-inline {
+            display: inline-block;
+        }
+
+        .display-table {
+            display: table;
+        }
+
+        .display-row {
+            display: table-row;
+        }
+
+        .display-cell {
+            display: table-cell;
+        }
+
+        .img-responsive {
+            max-width: 100%;
+            display: block;
+            height: auto;
+        }
+
+        .list-unstyled {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .list-inline {
+            padding-left: 0;
+            margin-left: -5px;
+            list-style: none;
+        }
+
+            .list-inline > li {
+                padding-right: 5px;
+                padding-left: 5px;
+                display: inline-block;
+            }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .relate {
+            position: relative;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-uppercase {
+            text-transform: uppercase;
+        }
+
+        .text-lowercase {
+            text-transform: lowercase;
+        }
+
+        .text-capitalize {
+            text-transform: capitalize;
+        }
+
+        /*End of global classes*/
+
+        body {
+            font-family: 'Hind Vadodara', sans-serif;
+            font-size: 14px;
+        }
+
+        /*Start of emailer design*/
+
+        p {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        /* .brand-logo::after {
+            content: '';
+            width: 435px;
+            height: 2px;
+            position: absolute;
+            top: 50%;
+            left: 160px;
+            background: #341314;
+            -ms-transform: translateY(-50%);
+
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+        } */
+
+        table {
+            border-collapse: collapse;
+        }
+
+            table.order-product th {
+                width: 200px;
+                background-color: #ededed;
+                padding-top: 10px;
+                padding-right: 15px;
+                padding-bottom: 10px;
+                font-weight: normal;
+            }
+
+                table.order-product th h4 {
+                    margin: 5px 0;
+                    color: #341314;
+                    font-weight: normal;
+                }
+
+                table.order-product th:first-child {
+                    padding-left: 20px;
+                }
+
+                table.order-product th:last-child {
+                    padding-right: 20px;
+                }
+
+            table.order-product tr > td {
+                padding: 10px;
+            }
+
+            table.order-product > tbody > tr.cancelled-product-section > td:first-child {
+                border-top: 1px solid #e5e5e5;
+                border-bottom: 1px solid #e5e5e5;
+                border-left: 1px solid #e5e5e5;
+            }
+
+            table.order-product > tbody > tr.cancelled-product-section > td:last-child {
+                border-top: 1px solid #e5e5e5;
+                border-right: 1px solid #e5e5e5;
+                border-bottom: 1px solid #e5e5e5;
+            }
+
+            table.order-product > tr > th > address {
+                line-height: 1.3;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 12px;
+            }
+
+        /*End of emailer design*/
+    </style>
+</head>
+
+<body>
+    <table style="width: 600px; margin: 0 auto; border:1px solid #341314;color: #222;">
+        <tbody>
+            <tr>
+                <td style="padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;">
+                    <div style="width:100%; height:100%;display:table;position: relative;">
+                        <div style=" width: 120px; display:table-cell;overflow: hidden;vertical-align:middle;">
+                            <img src="http://umber.wohlig.co.in/img/home/logo.png" alt="Logo" style="max-width:100%; height:auto; display:block">
+                        </div>
+                        <div style="min-width: 78%; color:#341314; display:table-cell; text-align:right; vertical-align:middle;">
+                            <div style="padding: 20px 0 0; border-bottom: 2px solid #341314; margin-bottom: 2px">
+                                <span style="font-size: 13px; text-transform:uppercase;">order placed:[OrderTime]</span>
+                            </div>
+                            <!--<div style="line-height: 1.1;">
+                                <h4 style="text-transform:uppercase; margin: 0;letter-spacing: 1px;">order no</h4>
+                                <span>#<%= orderNo%></span>
+                            </div>-->
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;">
+                    <h3 style="text-transform:capitalize; margin: 5px 0;">
+                        hi
+                        [CustFirstName]
+                        [CustLastName],
+                    </h3>
+                    <p style="margin-top: 0; margin-bottom: 10px;">This is to confirm that your order has been delivered.Here are your order details.</p>
+                    <table>
+                        <thead style="text-align:left;">
+                            <tr>
+                                <!--<th style="width: 200px;
+                                    background-color: #ededed;
+                                    padding: 8px;
+                                    line-height: 1.42857143;
+                                    font-weight: normal;vertical-align:top;">
+                                    <h4 style=" margin: 5px 0 ; color:#341314; text-transform:uppercase;">billing address</h4>
+                                    <address style="line-height: 1.3;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;">
+                                        [CustShipAddr]
+                                        [CustShipCity]
+                                        [CustShipPincode]
+                                        [CustShipState]
+                                        [CustShipCountry]
+
+                                    </address>
+                                </th>-->
+                                <th style="width: 200px;
+                                    background-color: #ededed;
+                                    padding: 8px;
+                                    line-height: 1.42857143;
+                                    font-weight: normal;vertical-align:top;">
+                                    <h4 style=" margin: 5px 0 ; color:#341314; text-transform:uppercase;">shipping address</h4>
+                                    <address style="line-height: 1.3;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;">
+                                        [CustShipAddr]
+                                        [CustShipCity]
+                                        [CustShipPincode]
+                                        [CustShipState]
+                                        [CustShipCountry]
+                                    </address>
+                                </th>
+                                <th style="width: 200px;
+                                    background-color: #ededed;
+                                    padding: 8px;
+                                    line-height: 1.42857143;
+                                    font-weight: normal;vertical-align:top;">
+                                    <div style="line-height: 1">
+                                        <div>
+                                            <h4 style="margin: 5px 0 ; color:#341314; text-transform:uppercase;">payment method</h4>
+                                            <span style="font-size: 12px;">[PaymentMethod]</span>
+                                        </div>
+                                        <!--<div>
+                                            <h4 style="margin: 5px 0 ; color:#341314; text-transform:uppercase;">order status</h4>
+                                            <span style="font-size: 12px;"><%= orderStatus%></span>
+                                        </div>-->
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(var i=0; i
+                            <order.length; i++) {%>
+                                <tr>
+                                    <td colspan="2" style="padding: 8px;
+                                        line-height: 1.42857143;
+                                        vertical-align: top;border-top: 1px solid #e5e5e5;
+                                        border-bottom: 1px solid #e5e5e5;
+                                        border-left: 1px solid #e5e5e5;">
+                                        <div style="display: table-cell; vertical-align: top;">
+                                            <div style="width: 85px; height: 100px;margin: 0 auto; overflow: hidden;">
+                                                <img src="<%= order[i].product.images[0].image%>" alt="Orderd Product" class="img-responsive">
+                                            </div>
+                                        </div>
+                                        <div style="display: table-cell; vertical-align: top;">
+                                            <div style="padding: 5px 10px">
+                                                <h4 style="margin: 5px 0; text-transform: uppercase;">
+                                                    <%=order[i].product.productName%>
+                                                </h4>
+                                                <span style="display: block;font-size: 12px; text-transform: capitalize;">product code: <span style="text-transform: uppercase"><%=order[i].product.productId%></span></span>
+                                                <span style="display: block; font-size: 12px;">Size: <%= order[i].product.size.name%></span>
+                                                <span style="display: block; font-size: 12px;">Qty: <%= order[i].quantity%></span>
+                                                <span style="display: block; font-size: 12px;">Style: <%= order[i].product.style%></span>
+                                                <span style="display: block; font-size: 12px;">Color: <%= order[i].color%></span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td style="padding: 8px;
+    line-height: 1.42857143;
+    border-top: 1px solid #e5e5e5;
+            border-right: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5; text-align: left; vertical-align:top">
+                                        <div style="margin: 10px 0; color: #341314; font-weight:bold;">
+                                            &#8377;
+                                            <%=order[i].product.price%>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <%}%>
+                                <tr>
+                                    <td colspan="3" style="padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;">
+                                        <div style="float:right; text-align: right;">
+                                            <h3 style="margin: 5px 0; letter-spacing: 1px; color: #341314; text-transform:uppercase;">payment information</h3>
+
+                                            <div style="padding: 0 10px; color:#222;display: inline-block; line-height: 1.3; text-align:right; vertical-align:top;">
+                                                <span style="display:block;text-transform:capitalize;">items (s) Sub Total:</span>
+                                                <span style="display:block;text-transform:capitalize;">shipping:</span>
+                                                <span style="display:block;text-transform:capitalize;">discount:</span>
+                                                <span style="display:block;text-transform:capitalize;"> total:   </span>
+                                                <span style="display:block;text-transform:capitalize;">tax:</span>
+                                                <span style="display:block;text-transform:capitalize;">grand total:</span>
+                                            </div>
+
+                                            <div style="display:inline-block; line-height: 1.3; vertical-align:top;">
+                                                <span class=" clearfix" style="display:block;">
+                                                    <span style="float: left"> &#8377;</span>
+                                                    <%= totalAmount%>
+                                                </span>
+                                                <span class="clearfix" style="display:block;">
+                                                    <span style="float: left"> &#8377;</span>
+                                                    <%= shipping%>
+                                                </span>
+                                                <span class=" clearfix" style="display:block;">
+                                                    <span style="float: left"> &#8377;</span>
+                                                    <%= discount%>
+                                                </span>
+                                                <span class=" clearfix" style="display:block;">
+                                                    <span style="float: left"> &#8377;</span>
+                                                    <%= totalAmount +shipping -discount%>
+                                                </span>
+                                                <span class=" clearfix" style="display:block;">
+                                                    <span style="float: left"> &#8377;</span>
+                                                    <%= tax%>
+                                                </span>
+                                                <span class=" clearfix" style="display:block;">
+                                                    <span style="float: left"> &#8377;</span>
+                                                    <%= totalAmount +shipping -discount +tax%>
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top; background: #F5F5F5;">
+                                        <div>
+                                            <ul style="padding-left: 0;margin-top: 0; list-style-type: none;">
+                                                <li style="margin-left:0">
+                                                    You can check your order status <a href="http://umber.wohlig.co.in/myaccount/orderTab"
+                                                                                       style="color: #341314;">here</a>
+                                                </li>
+                                                <li style="margin-left:0">For any order related any queries with respect to yor order placed,<br>                                                        contact us: +91 8754410505</li>
+                                            </ul>
+                                            <p>Thank you for shopping with Burnt Umber.We hope you had a good experience!</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style=" padding: 8px;background: #341314; color:white;font-size: 11px;line-height: 1.42857143;vertical-align: middle;text-align: center;"
+                    colspan="3">
+                    Burntumber Fashion Pvt Ltd© Copyright 2018
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 8px;font-size: 11px;line-height: 1.42857143;vertical-align: middle;background: #341314;">
+                    <div style="width: 100%; height: 100%;display:table;">
+                        <div style="width:47%;color:white;display:table-cell; text-align:right; vertical-align:middle">
+                            <div>Follow us on</div>
+                        </div>
+                        <div style="color:white;display:table-cell; text-align:left; vertical-align:middle">
+
+                            <ul style="padding-left: 0;margin: 0;list-style: none;">
+
+                                <li style="width: 22px;height: 22px;padding: 0 5px;margin-left: 0;display:inline-block; vertical-align:middle;">
+                                    <div style="width:100%;height:100%; display:table">
+                                        <a href="" style="width: 100%;height: 100%;border: 1px dashed white;background: transparent;color:white;display:table-cell; text-align:center; vertical-align:middle;">
+                                            <img src="http://umber.wohlig.co.in/img/emailer/facebook.png" alt="Click on Facebook" width="12" height="12" style="vertical-align: middle;">
+                                        </a>
+                                    </div>
+                                </li>
+                                <li style="width: 22px;height: 22px;padding: 0 5px;margin-left: 0;display:inline-block; vertical-align:middle;">
+                                    <div style="width:100%;height:100%; display:table"> <a href="" style="width: 100%;height: 100%;border: 1px dashed white;background: transparent;color:white;display:table-cell; text-align:center; vertical-align:middle;"><img src="http://umber.wohlig.co.in/img/emailer/twitter.png" alt="Click on twiter" width="12" height="12" style="vertical-align: middle;"></a></div>
+                                </li>
+                                <li style="width: 22px;height: 22px;padding: 0 5px;margin-left: 0;display:inline-block; vertical-align:middle;">
+                                    <div style="width:100%;height:100%; display:table">
+                                        <a href="" style="width: 100%;height: 100%;border: 1px dashed white;background: transparent;color:white;display:table-cell; text-align:center; vertical-align:middle;">
+                                            <img src="http://umber.wohlig.co.in/img/emailer/instagram.png" alt="Click on instagram" width="12" height="12" style="vertical-align: middle;">
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</body>
+</html>
