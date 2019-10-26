@@ -618,6 +618,7 @@ public class CustomerController : ApiController
                                 order.TotalPrice,
                                 order.ProductSize,
 
+                                cust.CustId,
                                 cust.CustFirstName,
                                 cust.CustLastName,
                                 cust.CustMobNo,
